@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Star, Plus, Filter, Leaf, Search } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Star, Plus, Filter, Leaf, Search, Eye } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -109,32 +109,42 @@ const Menu = () => {
                 className="group bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  {item.isVeg && (
-                    <div className="absolute top-3 left-3 bg-accent text-accent-foreground px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
-                      <Leaf className="w-3 h-3" /> Veg
+                <Link to={`/food/${item.id}`} className="block">
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {item.isVeg && (
+                      <div className="absolute top-3 left-3 bg-accent text-accent-foreground px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                        <Leaf className="w-3 h-3" /> Veg
+                      </div>
+                    )}
+                    {item.isPopular && (
+                      <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-medium">
+                        Popular
+                      </div>
+                    )}
+                    <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1">
+                      <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
+                      <span className="text-xs font-medium">{item.rating}</span>
                     </div>
-                  )}
-                  {item.isPopular && (
-                    <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-medium">
-                      Popular
+                    {/* View Details Overlay */}
+                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <div className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+                        <Eye className="w-4 h-4" /> View Details
+                      </div>
                     </div>
-                  )}
-                  <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1">
-                    <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
-                    <span className="text-xs font-medium">{item.rating}</span>
                   </div>
-                </div>
+                </Link>
 
                 <div className="p-4">
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-1 line-clamp-1">
-                    {item.name}
-                  </h3>
+                  <Link to={`/food/${item.id}`}>
+                    <h3 className="font-display text-lg font-semibold text-foreground mb-1 line-clamp-1 hover:text-primary transition-colors">
+                      {item.name}
+                    </h3>
+                  </Link>
                   <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
                     {item.description}
                   </p>
@@ -146,14 +156,24 @@ const Menu = () => {
                     <p className="font-bold text-xl text-primary">
                       ₹{item.price}
                     </p>
-                    <Button
-                      size="sm"
-                      variant="hero"
-                      onClick={() => handleAddToCart(item)}
-                      className="rounded-full"
-                    >
-                      <Plus className="w-4 h-4 mr-1" /> Add
-                    </Button>
+                    <div className="flex gap-2">
+                      <Link to={`/food/${item.id}`}>
+                        <Button size="sm" variant="outline" className="rounded-full px-3">
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                      <Button
+                        size="sm"
+                        variant="hero"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleAddToCart(item);
+                        }}
+                        className="rounded-full"
+                      >
+                        <Plus className="w-4 h-4 mr-1" /> Add
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
