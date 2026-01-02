@@ -9,6 +9,7 @@ import Cities from "./pages/Cities";
 import CityDetail from "./pages/CityDetail";
 import Restaurants from "./pages/Restaurants";
 import Menu from "./pages/Menu";
+import FoodDetail from "./pages/FoodDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/cities/:cityId" element={<CityDetail />} />
             <Route path="/restaurants" element={<Restaurants />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/food/:foodId" element={<FoodDetail />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
