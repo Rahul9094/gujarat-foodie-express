@@ -1,0 +1,179 @@
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Star, Plus, Filter, Leaf, Search } from 'lucide-react';
+import Layout from '@/components/layout/Layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { foodItems, categories, restaurants } from '@/data/mockData';
+import { useCart } from '@/context/CartContext';
+import { toast } from 'sonner';
+
+const Menu = () => {
+  const [searchParams] = useSearchParams();
+  const initialCategory = searchParams.get('category') || 'all';
+  
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [vegOnly, setVegOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const { addToCart } = useCart();
+
+  const filteredItems = foodItems.filter(item => {
+    const categoryMatch = selectedCategory === 'all' || item.categoryId === selectedCategory;
+    const vegMatch = !vegOnly || item.isVeg;
+    const searchMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return categoryMatch && vegMatch && searchMatch;
+  });
+
+  const handleAddToCart = (item: typeof foodItems[0]) => {
+    addToCart(item);
+    toast.success(`${item.name} added to cart!`);
+  };
+
+  const getRestaurantName = (restaurantId: string) => {
+    return restaurants.find(r => r.id === restaurantId)?.name || 'Unknown';
+  };
+
+  return (
+    <Layout>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <div className="bg-gradient-warm py-12">
+          <div className="container mx-auto px-4">
+            <h1 className="font-display text-4xl font-bold text-foreground mb-4">
+              Explore Our Menu
+            </h1>
+            <p className="text-muted-foreground max-w-2xl">
+              Discover authentic Gujarati dishes from thalis to street food
+            </p>
+          </div>
+        </div>
+
+        {/* Search & Filters */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="bg-card rounded-xl shadow-card p-4 space-y-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                placeholder="Search dishes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            {/* Category Filters */}
+            <div className="flex flex-wrap items-center gap-2">
+              <Filter className="w-5 h-5 text-muted-foreground" />
+              <Button
+                variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCategory('all')}
+              >
+                All
+              </Button>
+              {categories.map(category => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category.id)}
+                >
+                  {category.name}
+                </Button>
+              ))}
+              <div className="border-l border-border pl-2">
+                <Button
+                  variant={vegOnly ? 'accent' : 'outline'}
+                  size="sm"
+                  onClick={() => setVegOnly(!vegOnly)}
+                >
+                  <Leaf className="w-4 h-4 mr-1" /> Veg Only
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Menu Grid */}
+        <div className="container mx-auto px-4 pb-16">
+          <div className="mb-4 text-muted-foreground">
+            Showing {filteredItems.length} items
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredItems.map((item, index) => (
+              <div
+                key={item.id}
+                className="group bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  {item.isVeg && (
+                    <div className="absolute top-3 left-3 bg-accent text-accent-foreground px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                      <Leaf className="w-3 h-3" /> Veg
+                    </div>
+                  )}
+                  {item.isPopular && (
+                    <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-medium">
+                      Popular
+                    </div>
+                  )}
+                  <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1">
+                    <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
+                    <span className="text-xs font-medium">{item.rating}</span>
+                  </div>
+                </div>
+
+                <div className="p-4">
+                  <h3 className="font-display text-lg font-semibold text-foreground mb-1 line-clamp-1">
+                    {item.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
+                    {item.description}
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    by {getRestaurantName(item.restaurantId)}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold text-xl text-primary">
+                      ₹{item.price}
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="hero"
+                      onClick={() => handleAddToCart(item)}
+                      className="rounded-full"
+                    >
+                      <Plus className="w-4 h-4 mr-1" /> Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredItems.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground mb-4">
+                No items found with the selected filters.
+              </p>
+              <Button variant="outline" onClick={() => { setSelectedCategory('all'); setVegOnly(false); setSearchQuery(''); }}>
+                Clear Filters
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default Menu;
