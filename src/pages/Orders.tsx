@@ -125,8 +125,7 @@ const Orders = () => {
 
           <div className="mt-8 p-6 bg-secondary rounded-xl text-center">
             <p className="text-muted-foreground text-sm">
-              Note: Order history will be available once the backend is connected.
-              Currently showing demo data.
+              Note: This is a demo project for college semester. Order history shown above is sample data for demonstration purposes.
             </p>
           </div>
         </div>

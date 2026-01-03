@@ -80,15 +80,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-background/70 text-sm">
                 <MapPin className="w-4 h-4 text-primary" />
-                Ahmedabad, Gujarat, India
+                Patan, Gujarat, India
               </li>
               <li className="flex items-center gap-2 text-background/70 text-sm">
                 <Phone className="w-4 h-4 text-primary" />
-                +91 98765 43210
+                +91 78638 21747
               </li>
               <li className="flex items-center gap-2 text-background/70 text-sm">
                 <Mail className="w-4 h-4 text-primary" />
-                hello@gujaratfoodexpress.com
+                rahulsinh123123123@gmail.com
               </li>
             </ul>
           </div>
@@ -96,7 +96,7 @@ const Footer = () => {
 
         <div className="border-t border-background/20 mt-8 pt-8 text-center">
           <p className="text-background/60 text-sm">
-            © 2024 Gujarat Food Express. College Semester Project.
+            © 2026 Gujarat Food Express. College Semester Project.
           </p>
           <p className="text-background/40 text-xs mt-1">
             Made with ❤️ for Gujarat's culinary heritage
