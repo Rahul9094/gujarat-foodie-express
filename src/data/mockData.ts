@@ -44,7 +44,7 @@ export interface FoodItem {
 
 export interface Review {
   id: string;
-  userId: string;
+  oderId: string;
   userName: string;
   rating: number;
   comment: string;
@@ -57,7 +57,7 @@ export const cities: City[] = [
   {
     id: "ahmedabad",
     name: "Ahmedabad",
-    image: "https://images.unsplash.com/photo-1595658658481-d53d3f999875?w=400",
+    image: "https://images.unsplash.com/photo-1569596082827-c5a15ed5498c?w=400",
     restaurantCount: 45,
     coordinates: { lat: 23.0225, lng: 72.5714 }
   },
@@ -88,6 +88,20 @@ export const cities: City[] = [
     image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400",
     restaurantCount: 20,
     coordinates: { lat: 21.7645, lng: 72.1519 }
+  },
+  {
+    id: "patan",
+    name: "Patan",
+    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400",
+    restaurantCount: 15,
+    coordinates: { lat: 23.8500, lng: 72.1266 }
+  },
+  {
+    id: "gandhinagar",
+    name: "Gandhinagar",
+    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400",
+    restaurantCount: 22,
+    coordinates: { lat: 23.2156, lng: 72.6369 }
   }
 ];
 
@@ -107,7 +121,7 @@ export const categories: Category[] = [
   {
     id: "sweets",
     name: "Sweets & Mithai",
-    image: "https://images.unsplash.com/photo-1605197788044-5a5e5e5f5f5f?w=400",
+    image: "https://images.unsplash.com/photo-1666190020241-e9aa5e89feea?w=400",
     itemCount: 28
   },
   {
@@ -190,6 +204,54 @@ export const restaurants: Restaurant[] = [
     priceRange: "₹₹",
     cityId: "bhavnagar",
     isVeg: true
+  },
+  {
+    id: "r7",
+    name: "Patan Sweets Corner",
+    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    cuisine: "Sweets & Snacks",
+    rating: 4.6,
+    reviewCount: 134,
+    deliveryTime: "20-30 min",
+    priceRange: "₹₹",
+    cityId: "patan",
+    isVeg: true
+  },
+  {
+    id: "r8",
+    name: "Gandhinagar Food Plaza",
+    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
+    cuisine: "Multi Cuisine",
+    rating: 4.3,
+    reviewCount: 98,
+    deliveryTime: "25-35 min",
+    priceRange: "₹₹",
+    cityId: "gandhinagar",
+    isVeg: true
+  },
+  {
+    id: "r9",
+    name: "Surti Ghari House",
+    image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=400",
+    cuisine: "Traditional Sweets",
+    rating: 4.8,
+    reviewCount: 267,
+    deliveryTime: "15-25 min",
+    priceRange: "₹₹",
+    cityId: "surat",
+    isVeg: true
+  },
+  {
+    id: "r10",
+    name: "Baroda Bhojanalaya",
+    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    cuisine: "Gujarati Thali",
+    rating: 4.5,
+    reviewCount: 189,
+    deliveryTime: "30-40 min",
+    priceRange: "₹₹",
+    cityId: "vadodara",
+    isVeg: true
   }
 ];
 
@@ -251,20 +313,20 @@ export const foodItems: FoodItem[] = [
     name: "Mohanthal",
     description: "Rich besan-based sweet with ghee and dry fruits - a Gujarati festive favorite",
     price: 120,
-    image: "https://images.unsplash.com/photo-1605197788044-5a5e5e5f5f5f?w=400",
+    image: "https://images.unsplash.com/photo-1666190020241-e9aa5e89feea?w=400",
     rating: 4.5,
     reviewCount: 98,
     restaurantId: "r2",
     categoryId: "sweets",
     isVeg: true,
-    isPopular: false
+    isPopular: true
   },
   {
     id: "f6",
     name: "Basundi",
-    description: "Thick sweetened milk dessert with cardamom and saffron",
+    description: "Thick sweetened milk dessert with cardamom and saffron, garnished with nuts",
     price: 90,
-    image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400",
+    image: "https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=400",
     rating: 4.7,
     reviewCount: 134,
     restaurantId: "r1",
@@ -349,13 +411,117 @@ export const foodItems: FoodItem[] = [
     categoryId: "street-food",
     isVeg: true,
     isPopular: false
+  },
+  {
+    id: "f13",
+    name: "Surti Ghari",
+    description: "Famous Surat sweet made with puff pastry, mawa and dry fruits - a festive delicacy",
+    price: 150,
+    image: "https://images.unsplash.com/photo-1589119908995-c6837fa14848?w=400",
+    rating: 4.9,
+    reviewCount: 287,
+    restaurantId: "r9",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f14",
+    name: "Khandvi",
+    description: "Thin rolled gram flour snack with coconut and mustard tempering",
+    price: 70,
+    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    rating: 4.6,
+    reviewCount: 145,
+    restaurantId: "r7",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f15",
+    name: "Shrikhand",
+    description: "Creamy sweetened strained yogurt flavored with saffron and cardamom",
+    price: 80,
+    image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=400",
+    rating: 4.7,
+    reviewCount: 178,
+    restaurantId: "r1",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f16",
+    name: "Undhiyu",
+    description: "Traditional winter dish with mixed vegetables, fenugreek dumplings cooked in earthen pot",
+    price: 180,
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
+    rating: 4.8,
+    reviewCount: 234,
+    restaurantId: "r2",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f17",
+    name: "Thepla",
+    description: "Spiced flatbread made with fenugreek leaves, perfect for travel snack",
+    price: 40,
+    image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400",
+    rating: 4.5,
+    reviewCount: 167,
+    restaurantId: "r8",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: false
+  },
+  {
+    id: "f18",
+    name: "Mango Lassi",
+    description: "Refreshing yogurt drink blended with fresh mango pulp and cardamom",
+    price: 60,
+    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400",
+    rating: 4.6,
+    reviewCount: 189,
+    restaurantId: "r10",
+    categoryId: "fast-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f19",
+    name: "Jalebi",
+    description: "Crispy deep-fried sweet spirals soaked in sugar syrup, served hot",
+    price: 50,
+    image: "https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?w=400",
+    rating: 4.7,
+    reviewCount: 234,
+    restaurantId: "r7",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f20",
+    name: "Handvo",
+    description: "Savory rice and lentil cake with bottle gourd and spices, baked to perfection",
+    price: 90,
+    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    rating: 4.5,
+    reviewCount: 123,
+    restaurantId: "r8",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: false
   }
 ];
 
 export const reviews: Review[] = [
   {
     id: "rev1",
-    userId: "u1",
+    oderId: "u1@gmail.com",
     userName: "Priya Shah",
     rating: 5,
     comment: "Best thali in Ahmedabad! The dal and kadhi were absolutely delicious.",
@@ -364,7 +530,7 @@ export const reviews: Review[] = [
   },
   {
     id: "rev2",
-    userId: "u2",
+    oderId: "u2@gmail.com",
     userName: "Rahul Patel",
     rating: 4,
     comment: "Authentic taste of Gujarat. Highly recommended for visitors.",
@@ -373,7 +539,7 @@ export const reviews: Review[] = [
   },
   {
     id: "rev3",
-    userId: "u3",
+    oderId: "u3@gmail.com",
     userName: "Meera Joshi",
     rating: 5,
     comment: "The dhokla here is so soft and fluffy! Just like homemade.",

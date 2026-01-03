@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Star, Plus, Minus, MapPin, Clock, Phone, ArrowLeft, Leaf, ShoppingCart, Navigation } from 'lucide-react';
+import { Star, Plus, Minus, MapPin, Clock, Phone, ArrowLeft, Leaf, ShoppingCart, Navigation, Trash2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { foodItems, restaurants, cities, reviews } from '@/data/mockData';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 const FoodDetail = () => {
@@ -31,7 +32,14 @@ const FoodDetail = () => {
     }
   }, [foodId]);
 
+  const { user } = useAuth();
+
   const handleSubmitReview = () => {
+    if (!user) {
+      toast.error('Please login to write a review');
+      return;
+    }
+    
     if (!reviewComment.trim()) {
       toast.error('Please write a review comment');
       return;
@@ -39,8 +47,8 @@ const FoodDetail = () => {
     
     const newReview = {
       id: `rev_${Date.now()}`,
-      userId: 'guest',
-      userName: 'Guest User',
+      oderId: user.email,
+      userName: user.name,
       rating: reviewRating,
       comment: reviewComment,
       date: new Date().toISOString().split('T')[0],
@@ -56,6 +64,15 @@ const FoodDetail = () => {
     setReviewComment('');
     setReviewRating(5);
     toast.success('Review submitted successfully!');
+  };
+
+  const handleDeleteReview = (reviewId: string) => {
+    const storedReviews = JSON.parse(localStorage.getItem(`reviews_${foodId}`) || '[]');
+    const updatedStoredReviews = storedReviews.filter((r: any) => r.id !== reviewId);
+    localStorage.setItem(`reviews_${foodId}`, JSON.stringify(updatedStoredReviews));
+    
+    setLocalReviews(localReviews.filter(r => r.id !== reviewId));
+    toast.success('Review deleted successfully!');
   };
 
   if (!food || !restaurant || !city) {
@@ -372,7 +389,7 @@ const FoodDetail = () => {
             </div>
           )}
 
-          {localReviews.length > 0 ? (
+        {localReviews.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-4">
               {localReviews.map((review, index) => (
                 <div
@@ -380,23 +397,35 @@ const FoodDetail = () => {
                   className="bg-card rounded-xl p-6 shadow-card animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="font-semibold text-primary">
-                        {review.userName.charAt(0)}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">{review.userName}</p>
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3 h-3 ${i < review.rating ? 'text-spice-turmeric fill-spice-turmeric' : 'text-muted'}`}
-                          />
-                        ))}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="font-semibold text-primary">
+                          {review.userName.charAt(0)}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">{review.userName}</p>
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-3 h-3 ${i < review.rating ? 'text-spice-turmeric fill-spice-turmeric' : 'text-muted'}`}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
+                    {review.id.startsWith('rev_') && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteReview(review.id)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                   <p className="text-muted-foreground">{review.comment}</p>
                   <p className="text-xs text-muted-foreground mt-2">

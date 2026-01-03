@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,16 +36,29 @@ const Login = () => {
 
     setIsLoading(true);
 
-    // Simulate authentication
-    setTimeout(() => {
+    try {
       if (isLogin) {
-        toast.success('Welcome back! Login successful.');
+        const success = await login(formData.email, formData.password);
+        if (success) {
+          toast.success('Welcome back! Login successful.');
+          navigate('/');
+        } else {
+          toast.error('Invalid email or password');
+        }
       } else {
-        toast.success('Account created successfully!');
+        const success = await signup(formData.name, formData.email, formData.password);
+        if (success) {
+          toast.success('Account created successfully!');
+          navigate('/');
+        } else {
+          toast.error('Email already registered');
+        }
       }
+    } catch (error) {
+      toast.error('Something went wrong');
+    } finally {
       setIsLoading(false);
-      navigate('/');
-    }, 1500);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,14 +175,6 @@ const Login = () => {
                 >
                   {isLogin ? 'Sign Up' : 'Sign In'}
                 </button>
-              </p>
-            </div>
-
-            {/* Info */}
-            <div className="mt-6 p-4 bg-secondary rounded-lg">
-              <p className="text-xs text-muted-foreground text-center">
-                Note: This is a demo project. Authentication will be functional 
-                once connected to a backend database.
               </p>
             </div>
           </div>
