@@ -59,23 +59,23 @@ const Cities = () => {
           </div>
         </div>
 
-        {/* Map Section Placeholder */}
+        {/* Map Section */}
         <div className="container mx-auto px-4 pb-16">
           <div className="bg-card rounded-2xl p-8 shadow-card">
             <h2 className="font-display text-2xl font-bold text-foreground mb-4 text-center">
               Gujarat Delivery Coverage
             </h2>
-            <div className="aspect-video bg-secondary rounded-xl flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  Interactive map coming soon!
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Currently delivering in: Ahmedabad, Surat, Vadodara, Rajkot, Bhavnagar
-                </p>
-              </div>
+            <div className="aspect-video rounded-xl overflow-hidden">
+              <iframe
+                title="Gujarat Delivery Map"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=68.5%2C20.0%2C75.0%2C24.5&layer=mapnik&marker=22.3%2C72.0"
+                className="w-full h-full border-0"
+                loading="lazy"
+              />
             </div>
+            <p className="text-sm text-muted-foreground mt-4 text-center">
+              Currently delivering in: Ahmedabad, Surat, Vadodara, Rajkot, Bhavnagar
+            </p>
           </div>
         </div>
       </div>

@@ -57,7 +57,7 @@ export const cities: City[] = [
   {
     id: "ahmedabad",
     name: "Ahmedabad",
-    image: "https://images.unsplash.com/photo-1569596082827-c5c2cf8a9923?w=400",
+    image: "https://images.unsplash.com/photo-1595658658481-d53d3f999875?w=400",
     restaurantCount: 45,
     coordinates: { lat: 23.0225, lng: 72.5714 }
   },
@@ -264,7 +264,7 @@ export const foodItems: FoodItem[] = [
     name: "Basundi",
     description: "Thick sweetened milk dessert with cardamom and saffron",
     price: 90,
-    image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400",
+    image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400",
     rating: 4.7,
     reviewCount: 134,
     restaurantId: "r1",

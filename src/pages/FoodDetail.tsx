@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, Plus, Minus, MapPin, Clock, Phone, ArrowLeft, Leaf, ShoppingCart, Navigation } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
@@ -12,11 +12,51 @@ const FoodDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [localReviews, setLocalReviews] = useState<typeof reviews>([]);
 
   const food = foodItems.find(f => f.id === foodId);
   const restaurant = food ? restaurants.find(r => r.id === food.restaurantId) : null;
   const city = restaurant ? cities.find(c => c.id === restaurant.cityId) : null;
-  const foodReviews = reviews.filter(r => r.itemId === foodId);
+  
+  useEffect(() => {
+    const storedReviews = localStorage.getItem(`reviews_${foodId}`);
+    const dbReviews = reviews.filter(r => r.itemId === foodId);
+    if (storedReviews) {
+      setLocalReviews([...dbReviews, ...JSON.parse(storedReviews)]);
+    } else {
+      setLocalReviews(dbReviews);
+    }
+  }, [foodId]);
+
+  const handleSubmitReview = () => {
+    if (!reviewComment.trim()) {
+      toast.error('Please write a review comment');
+      return;
+    }
+    
+    const newReview = {
+      id: `rev_${Date.now()}`,
+      userId: 'guest',
+      userName: 'Guest User',
+      rating: reviewRating,
+      comment: reviewComment,
+      date: new Date().toISOString().split('T')[0],
+      itemId: foodId,
+    };
+    
+    const existingReviews = JSON.parse(localStorage.getItem(`reviews_${foodId}`) || '[]');
+    const updatedReviews = [...existingReviews, newReview];
+    localStorage.setItem(`reviews_${foodId}`, JSON.stringify(updatedReviews));
+    
+    setLocalReviews([...localReviews, newReview]);
+    setShowReviewForm(false);
+    setReviewComment('');
+    setReviewRating(5);
+    toast.success('Review submitted successfully!');
+  };
 
   if (!food || !restaurant || !city) {
     return (
@@ -278,13 +318,63 @@ const FoodDetail = () => {
 
         {/* Reviews Section */}
         <div className="container mx-auto px-4 py-12">
-          <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-            Customer Reviews
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display text-2xl font-bold text-foreground">
+              Customer Reviews
+            </h2>
+            <Button variant="outline" onClick={() => setShowReviewForm(!showReviewForm)}>
+              {showReviewForm ? 'Cancel' : 'Write a Review'}
+            </Button>
+          </div>
 
-          {foodReviews.length > 0 ? (
+          {/* Review Form */}
+          {showReviewForm && (
+            <div className="bg-card rounded-xl p-6 shadow-card mb-6 animate-fade-in">
+              <h3 className="font-semibold text-foreground mb-4">Write Your Review</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Rating
+                  </label>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setReviewRating(star)}
+                        className="p-1"
+                      >
+                        <Star
+                          className={`w-6 h-6 transition-colors ${
+                            star <= reviewRating
+                              ? 'text-spice-turmeric fill-spice-turmeric'
+                              : 'text-muted hover:text-spice-turmeric'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Your Review
+                  </label>
+                  <textarea
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Share your experience with this dish..."
+                    className="w-full p-3 rounded-lg border border-border bg-background text-foreground resize-none h-24"
+                  />
+                </div>
+                <Button variant="hero" onClick={handleSubmitReview}>
+                  Submit Review
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {localReviews.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-4">
-              {foodReviews.map((review, index) => (
+              {localReviews.map((review, index) => (
                 <div
                   key={review.id}
                   className="bg-card rounded-xl p-6 shadow-card animate-fade-in"
@@ -324,9 +414,6 @@ const FoodDetail = () => {
               <p className="text-muted-foreground">
                 No reviews yet. Be the first to review this dish!
               </p>
-              <Button variant="outline" className="mt-4">
-                Write a Review
-              </Button>
             </div>
           )}
         </div>

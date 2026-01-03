@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Cities from "./pages/Cities";
 import CityDetail from "./pages/CityDetail";
 import Restaurants from "./pages/Restaurants";
+import RestaurantDetail from "./pages/RestaurantDetail";
 import Menu from "./pages/Menu";
 import FoodDetail from "./pages/FoodDetail";
 import Cart from "./pages/Cart";
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/cities" element={<Cities />} />
             <Route path="/cities/:cityId" element={<CityDetail />} />
             <Route path="/restaurants" element={<Restaurants />} />
+            <Route path="/restaurants/:restaurantId" element={<RestaurantDetail />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/food/:foodId" element={<FoodDetail />} />
             <Route path="/cart" element={<Cart />} />
