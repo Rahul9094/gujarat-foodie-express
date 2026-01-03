@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, MapPin, User } from 'lucide-react';
+import { ShoppingCart, Menu, X, MapPin, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getTotalItems } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
   const location = useLocation();
   const totalItems = getTotalItems();
 
@@ -70,12 +79,44 @@ const Navbar = () => {
               </Button>
             </Link>
 
-            <Link to="/login">
-              <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Login
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-xs font-semibold text-primary">
+                        {user?.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="max-w-[100px] truncate">{user?.name}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-2 py-1.5">
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/orders" className="cursor-pointer">
+                      My Orders
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="text-destructive cursor-pointer">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/login">
+                <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Login
+                </Button>
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -107,12 +148,30 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="outline" className="w-full mt-2">
-                  <User className="w-4 h-4 mr-2" />
-                  Login / Sign Up
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <div className="px-4 py-2 mt-2 bg-secondary/50 rounded-lg">
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                  <Link to="/orders" onClick={() => setIsMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      My Orders
+                    </Button>
+                  </Link>
+                  <Button variant="destructive" className="w-full" onClick={() => { logout(); setIsMenuOpen(false); }}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="w-full mt-2">
+                    <User className="w-4 h-4 mr-2" />
+                    Login / Sign Up
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         )}

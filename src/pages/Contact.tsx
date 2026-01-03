@@ -26,12 +26,21 @@ const Contact = () => {
 
     setIsSubmitting(true);
 
-    // Simulate form submission
+    // Create mailto link to send email
+    const mailtoLink = `mailto:rahulsinh123123123@gmail.com?subject=${encodeURIComponent(
+      formData.subject || 'Contact from Gujarat Food Express'
+    )}&body=${encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    )}`;
+
+    // Open email client
+    window.location.href = mailtoLink;
+
     setTimeout(() => {
-      toast.success('Message sent successfully! We will get back to you soon.');
+      toast.success('Opening email client... Please send the email to complete your message.');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setIsSubmitting(false);
-    }, 1500);
+    }, 1000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -146,8 +155,7 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Address</h3>
                       <p className="text-muted-foreground">
-                        123 Food Street, Ahmedabad<br />
-                        Gujarat, India - 380001
+                        Patan, Gujarat, India
                       </p>
                     </div>
                   </div>
@@ -159,8 +167,9 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Phone</h3>
                       <p className="text-muted-foreground">
-                        +91 98765 43210<br />
-                        +91 87654 32109
+                        <a href="tel:+917863821747" className="hover:text-primary">
+                          +91 78638 21747
+                        </a>
                       </p>
                     </div>
                   </div>
@@ -172,8 +181,9 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Email</h3>
                       <p className="text-muted-foreground">
-                        hello@gujaratfoodexpress.com<br />
-                        support@gujaratfoodexpress.com
+                        <a href="mailto:rahulsinh123123123@gmail.com" className="hover:text-primary">
+                          rahulsinh123123123@gmail.com
+                        </a>
                       </p>
                     </div>
                   </div>
@@ -202,7 +212,7 @@ const Contact = () => {
                   <div>
                     <p className="font-medium text-foreground">What are the delivery areas?</p>
                     <p className="text-muted-foreground">
-                      We currently deliver in Ahmedabad, Surat, Vadodara, Rajkot, and Bhavnagar.
+                      We currently deliver in Ahmedabad, Surat, Vadodara, Rajkot, Bhavnagar, Patan, and Gandhinagar.
                     </p>
                   </div>
                   <div>

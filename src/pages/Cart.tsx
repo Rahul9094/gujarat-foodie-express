@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, LogIn } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const deliveryFee = cartItems.length > 0 ? 40 : 0;
   const totalWithDelivery = getTotalPrice() + deliveryFee;
 
@@ -132,12 +134,28 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Link to="/checkout">
-                  <Button variant="hero" className="w-full" size="lg">
-                    Proceed to Checkout
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/checkout">
+                    <Button variant="hero" className="w-full" size="lg">
+                      Proceed to Checkout
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="p-3 bg-secondary/50 rounded-lg text-center">
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Please login to place your order
+                      </p>
+                    </div>
+                    <Link to="/login">
+                      <Button variant="hero" className="w-full" size="lg">
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Login to Continue
+                      </Button>
+                    </Link>
+                  </div>
+                )}
 
                 <p className="text-xs text-muted-foreground text-center mt-4">
                   By placing an order you agree to our Terms of Service
