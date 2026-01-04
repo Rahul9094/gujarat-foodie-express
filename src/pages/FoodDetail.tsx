@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Star, Plus, Minus, MapPin, Clock, Phone, ArrowLeft, Leaf, ShoppingCart, Navigation, Trash2 } from 'lucide-react';
+import { Star, Plus, Minus, MapPin, Clock, Phone, ArrowLeft, Leaf, ShoppingCart, Navigation, Trash2, Pencil } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { foodItems, restaurants, cities, reviews } from '@/data/mockData';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import mohanthalImage from '@/assets/mohanthal.webp';
 
 const FoodDetail = () => {
   const { foodId } = useParams();
@@ -17,6 +18,9 @@ const FoodDetail = () => {
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [localReviews, setLocalReviews] = useState<typeof reviews>([]);
+  const [editingReview, setEditingReview] = useState<string | null>(null);
+  const [editRating, setEditRating] = useState(5);
+  const [editComment, setEditComment] = useState('');
 
   const food = foodItems.find(f => f.id === foodId);
   const restaurant = food ? restaurants.find(r => r.id === food.restaurantId) : null;
@@ -75,6 +79,41 @@ const FoodDetail = () => {
     toast.success('Review deleted successfully!');
   };
 
+  const handleEditReview = (review: typeof reviews[0]) => {
+    setEditingReview(review.id);
+    setEditRating(review.rating);
+    setEditComment(review.comment);
+  };
+
+  const handleSaveEdit = (reviewId: string) => {
+    if (!editComment.trim()) {
+      toast.error('Please write a review comment');
+      return;
+    }
+
+    const storedReviews = JSON.parse(localStorage.getItem(`reviews_${foodId}`) || '[]');
+    const updatedStoredReviews = storedReviews.map((r: any) => 
+      r.id === reviewId ? { ...r, rating: editRating, comment: editComment } : r
+    );
+    localStorage.setItem(`reviews_${foodId}`, JSON.stringify(updatedStoredReviews));
+    
+    setLocalReviews(localReviews.map(r => 
+      r.id === reviewId ? { ...r, rating: editRating, comment: editComment } : r
+    ));
+    
+    setEditingReview(null);
+    setEditComment('');
+    setEditRating(5);
+    toast.success('Review updated successfully!');
+  };
+
+  const getItemImage = () => {
+    if (food?.name === 'Mohanthal') {
+      return mohanthalImage;
+    }
+    return food?.image || '';
+  };
+
   if (!food || !restaurant || !city) {
     return (
       <Layout>
@@ -119,7 +158,7 @@ const FoodDetail = () => {
             <div className="relative animate-fade-in">
               <div className="aspect-square rounded-2xl overflow-hidden shadow-card">
                 <img
-                  src={food.image}
+                  src={getItemImage()}
                   alt={food.name}
                   className="w-full h-full object-cover"
                 />
@@ -417,24 +456,77 @@ const FoodDetail = () => {
                       </div>
                     </div>
                     {review.id.startsWith('rev_') && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteReview(review.id)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEditReview(review)}
+                          className="text-primary hover:text-primary hover:bg-primary/10"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteReview(review.id)}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
-                  <p className="text-muted-foreground">{review.comment}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {new Date(review.date).toLocaleDateString('en-IN', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
+                  
+                  {editingReview === review.id ? (
+                    <div className="space-y-3 mt-3">
+                      <div>
+                        <label className="block text-sm font-medium text-foreground mb-2">
+                          Rating
+                        </label>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              onClick={() => setEditRating(star)}
+                              className="p-1"
+                            >
+                              <Star
+                                className={`w-5 h-5 transition-colors ${
+                                  star <= editRating
+                                    ? 'text-spice-turmeric fill-spice-turmeric'
+                                    : 'text-muted hover:text-spice-turmeric'
+                                }`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <textarea
+                        value={editComment}
+                        onChange={(e) => setEditComment(e.target.value)}
+                        className="w-full p-3 rounded-lg border border-border bg-background text-foreground resize-none h-20"
+                      />
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="hero" onClick={() => handleSaveEdit(review.id)}>
+                          Save
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditingReview(null)}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-muted-foreground">{review.comment}</p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {new Date(review.date).toLocaleDateString('en-IN', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </p>
+                    </>
+                  )}
                 </div>
               ))}
             </div>

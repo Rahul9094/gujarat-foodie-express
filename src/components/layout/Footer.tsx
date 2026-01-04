@@ -66,11 +66,27 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">We Deliver In</h4>
             <ul className="space-y-2">
-              <li className="text-background/70 text-sm">Ahmedabad</li>
-              <li className="text-background/70 text-sm">Surat</li>
-              <li className="text-background/70 text-sm">Vadodara</li>
-              <li className="text-background/70 text-sm">Rajkot</li>
-              <li className="text-background/70 text-sm">Bhavnagar</li>
+              <li>
+                <Link to="/cities/ahmedabad" className="text-background/70 hover:text-primary transition-colors text-sm">Ahmedabad</Link>
+              </li>
+              <li>
+                <Link to="/cities/surat" className="text-background/70 hover:text-primary transition-colors text-sm">Surat</Link>
+              </li>
+              <li>
+                <Link to="/cities/vadodara" className="text-background/70 hover:text-primary transition-colors text-sm">Vadodara</Link>
+              </li>
+              <li>
+                <Link to="/cities/rajkot" className="text-background/70 hover:text-primary transition-colors text-sm">Rajkot</Link>
+              </li>
+              <li>
+                <Link to="/cities/bhavnagar" className="text-background/70 hover:text-primary transition-colors text-sm">Bhavnagar</Link>
+              </li>
+              <li>
+                <Link to="/cities/patan" className="text-background/70 hover:text-primary transition-colors text-sm">Patan</Link>
+              </li>
+              <li>
+                <Link to="/cities/gandhinagar" className="text-background/70 hover:text-primary transition-colors text-sm">Gandhinagar</Link>
+              </li>
             </ul>
           </div>
 
