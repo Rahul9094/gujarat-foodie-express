@@ -1,37 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, Truck, ShoppingBag, X } from 'lucide-react';
+import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
-// Mock orders data - in a real app this would come from the database
-const mockOrders = [
-  {
-    id: 'GFE12345678',
-    date: '2024-01-15',
-    status: 'delivered',
-    items: [
-      { name: 'Gujarati Thali', quantity: 2, price: 350 },
-      { name: 'Dhokla', quantity: 1, price: 80 },
-    ],
-    total: 780,
-    address: 'Patan, Gujarat, India',
-    paymentMethod: 'Cash on Delivery',
-  },
-  {
-    id: 'GFE12345679',
-    date: '2024-01-14',
-    status: 'in_progress',
-    items: [
-      { name: 'Fafda Jalebi', quantity: 2, price: 60 },
-    ],
-    total: 160,
-    address: 'Ahmedabad, Gujarat, India',
-    paymentMethod: 'Online Payment',
-  },
-];
+export interface Order {
+  id: string;
+  date: string;
+  status: 'pending' | 'in_progress' | 'delivered';
+  items: { name: string; quantity: number; price: number }[];
+  total: number;
+  address: string;
+  paymentMethod: string;
+  userEmail: string;
+}
 
 const statusConfig = {
   pending: { icon: Clock, label: 'Pending', color: 'text-spice-turmeric' },
@@ -40,22 +25,88 @@ const statusConfig = {
 };
 
 const Orders = () => {
-  const [selectedOrder, setSelectedOrder] = useState<typeof mockOrders[0] | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const { addToCart } = useCart();
+  const { user, isAuthenticated } = useAuth();
 
-  const handleReorder = (order: typeof mockOrders[0]) => {
+  // Load user-specific orders
+  useEffect(() => {
+    if (user?.email) {
+      const allOrders: Order[] = JSON.parse(localStorage.getItem('gujaratFoodOrders') || '[]');
+      const userOrders = allOrders.filter(order => order.userEmail === user.email);
+      setOrders(userOrders);
+    } else {
+      setOrders([]);
+    }
+  }, [user]);
+
+  const handleReorder = (order: Order) => {
     toast.success(`Items from order ${order.id} added to cart!`);
   };
+
+  const handleClearDeliveredOrders = () => {
+    if (!user?.email) return;
+    
+    const allOrders: Order[] = JSON.parse(localStorage.getItem('gujaratFoodOrders') || '[]');
+    const updatedOrders = allOrders.filter(
+      order => order.userEmail !== user.email || order.status !== 'delivered'
+    );
+    localStorage.setItem('gujaratFoodOrders', JSON.stringify(updatedOrders));
+    
+    const userOrders = updatedOrders.filter(order => order.userEmail === user.email);
+    setOrders(userOrders);
+    toast.success('All delivered orders cleared!');
+  };
+
+  const deliveredOrdersCount = orders.filter(o => o.status === 'delivered').length;
+
+  if (!isAuthenticated) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-background py-8">
+          <div className="container mx-auto px-4 text-center py-16">
+            <div className="w-24 h-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
+              <ShoppingBag className="w-12 h-12 text-muted-foreground" />
+            </div>
+            <h2 className="font-display text-xl font-bold text-foreground mb-2">
+              Please login to view your orders
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              You need to be logged in to see your order history.
+            </p>
+            <Link to="/login">
+              <Button variant="hero" size="lg">
+                Login
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
       <div className="min-h-screen bg-background py-8">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground mb-8">
-            My Orders
-          </h1>
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+            <h1 className="font-display text-3xl font-bold text-foreground">
+              My Orders
+            </h1>
+            {deliveredOrdersCount > 0 && (
+              <Button 
+                variant="outline" 
+                onClick={handleClearDeliveredOrders}
+                className="text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Clear Delivered Orders ({deliveredOrdersCount})
+              </Button>
+            )}
+          </div>
 
-          {mockOrders.length === 0 ? (
+          {orders.length === 0 ? (
             <div className="text-center py-16">
               <div className="w-24 h-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
                 <ShoppingBag className="w-12 h-12 text-muted-foreground" />
@@ -74,7 +125,7 @@ const Orders = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              {mockOrders.map((order, index) => {
+              {orders.map((order, index) => {
                 const status = statusConfig[order.status as keyof typeof statusConfig];
                 const StatusIcon = status.icon;
 

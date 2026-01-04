@@ -1,4 +1,11 @@
 // Gujarat Food Express Mock Data
+import cityAhmedabad from '@/assets/city-ahmedabad.webp';
+import citySurat from '@/assets/city-surat.jpg';
+import cityVadodara from '@/assets/city-vadodara.webp';
+import cityRajkot from '@/assets/city-rajkot.jpeg';
+import cityBhavnagar from '@/assets/city-bhavnagar.webp';
+import cityPatan from '@/assets/city-patan.jpg';
+import mohanthalImage from '@/assets/mohanthal.webp';
 
 export interface City {
   id: string;
@@ -57,50 +64,50 @@ export const cities: City[] = [
   {
     id: "ahmedabad",
     name: "Ahmedabad",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Sabarmati_Ashram%2C_Gandhi%27s_living_quarters.jpg/1280px-Sabarmati_Ashram%2C_Gandhi%27s_living_quarters.jpg",
-    restaurantCount: 45,
+    image: cityAhmedabad,
+    restaurantCount: 2,
     coordinates: { lat: 23.0225, lng: 72.5714 }
   },
   {
     id: "surat",
     name: "Surat",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Surat_Cityscape.jpg/1280px-Surat_Cityscape.jpg",
-    restaurantCount: 38,
+    image: citySurat,
+    restaurantCount: 2,
     coordinates: { lat: 21.1702, lng: 72.8311 }
   },
   {
     id: "vadodara",
     name: "Vadodara",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Lakshmi_Vilas_Palace.jpg/1280px-Lakshmi_Vilas_Palace.jpg",
-    restaurantCount: 32,
+    image: cityVadodara,
+    restaurantCount: 2,
     coordinates: { lat: 22.3072, lng: 73.1812 }
   },
   {
     id: "rajkot",
     name: "Rajkot",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Watson_Museum_Rajkot.jpg/1280px-Watson_Museum_Rajkot.jpg",
-    restaurantCount: 28,
+    image: cityRajkot,
+    restaurantCount: 1,
     coordinates: { lat: 22.3039, lng: 70.8022 }
   },
   {
     id: "bhavnagar",
     name: "Bhavnagar",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Takhteshwar_Temple%2C_Bhavnagar.jpg/1280px-Takhteshwar_Temple%2C_Bhavnagar.jpg",
-    restaurantCount: 20,
+    image: cityBhavnagar,
+    restaurantCount: 1,
     coordinates: { lat: 21.7645, lng: 72.1519 }
   },
   {
     id: "patan",
     name: "Patan",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Patan_Stepwell.jpg/1280px-Patan_Stepwell.jpg",
-    restaurantCount: 15,
+    image: cityPatan,
+    restaurantCount: 1,
     coordinates: { lat: 23.8500, lng: 72.1266 }
   },
   {
     id: "gandhinagar",
     name: "Gandhinagar",
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Akshardham_Gandhinagar.jpg/1280px-Akshardham_Gandhinagar.jpg",
-    restaurantCount: 22,
+    restaurantCount: 1,
     coordinates: { lat: 23.2156, lng: 72.6369 }
   }
 ];
@@ -121,7 +128,7 @@ export const categories: Category[] = [
   {
     id: "sweets",
     name: "Sweets & Mithai",
-    image: "https://www.ثبت.com/wp-content/uploads/2024/01/indian-sweets.jpg",
+    image: "https://www.theflavoursofindia.co.uk/wp-content/uploads/2021/10/indian-sweets.jpg",
     itemCount: 28
   },
   {
@@ -313,7 +320,7 @@ export const foodItems: FoodItem[] = [
     name: "Mohanthal",
     description: "Rich besan-based sweet with ghee and dry fruits - a Gujarati festive favorite",
     price: 120,
-    image: "/src/assets/mohanthal.webp",
+    image: mohanthalImage,
     rating: 4.5,
     reviewCount: 98,
     restaurantId: "r2",
