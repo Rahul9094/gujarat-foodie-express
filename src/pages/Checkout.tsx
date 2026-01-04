@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { Order } from './Orders';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -37,7 +40,34 @@ const Checkout = () => {
       return;
     }
 
+    if (!user?.email) {
+      toast.error('Please login to place an order');
+      navigate('/login');
+      return;
+    }
+
     setIsProcessing(true);
+
+    // Create order and save to localStorage
+    const newOrder: Order = {
+      id: `GFE${Date.now()}`,
+      date: new Date().toISOString().split('T')[0],
+      status: 'pending',
+      items: cartItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      total: totalWithDelivery,
+      address: `${formData.address}, ${formData.city}${formData.pincode ? `, ${formData.pincode}` : ''}, Gujarat, India`,
+      paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment',
+      userEmail: user.email
+    };
+
+    // Save order to localStorage
+    const existingOrders: Order[] = JSON.parse(localStorage.getItem('gujaratFoodOrders') || '[]');
+    existingOrders.push(newOrder);
+    localStorage.setItem('gujaratFoodOrders', JSON.stringify(existingOrders));
 
     // Simulate order processing
     setTimeout(() => {
