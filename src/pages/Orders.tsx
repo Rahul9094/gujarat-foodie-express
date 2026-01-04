@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, Truck, ShoppingBag } from 'lucide-react';
+import { Package, Clock, CheckCircle, Truck, ShoppingBag, X } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/context/CartContext';
+import { toast } from 'sonner';
 
 // Mock orders data - in a real app this would come from the database
 const mockOrders = [
@@ -14,6 +17,8 @@ const mockOrders = [
       { name: 'Dhokla', quantity: 1, price: 80 },
     ],
     total: 780,
+    address: 'Patan, Gujarat, India',
+    paymentMethod: 'Cash on Delivery',
   },
   {
     id: 'GFE12345679',
@@ -23,6 +28,8 @@ const mockOrders = [
       { name: 'Fafda Jalebi', quantity: 2, price: 60 },
     ],
     total: 160,
+    address: 'Ahmedabad, Gujarat, India',
+    paymentMethod: 'Online Payment',
   },
 ];
 
@@ -33,6 +40,13 @@ const statusConfig = {
 };
 
 const Orders = () => {
+  const [selectedOrder, setSelectedOrder] = useState<typeof mockOrders[0] | null>(null);
+  const { addToCart } = useCart();
+
+  const handleReorder = (order: typeof mockOrders[0]) => {
+    toast.success(`Items from order ${order.id} added to cart!`);
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-background py-8">
@@ -108,11 +122,19 @@ const Orders = () => {
                     </div>
 
                     <div className="mt-4 pt-4 border-t border-border flex gap-3">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setSelectedOrder(order)}
+                      >
                         View Details
                       </Button>
                       {order.status === 'delivered' && (
-                        <Button variant="secondary" size="sm">
+                        <Button 
+                          variant="secondary" 
+                          size="sm"
+                          onClick={() => handleReorder(order)}
+                        >
                           Reorder
                         </Button>
                       )}
@@ -122,14 +144,85 @@ const Orders = () => {
               })}
             </div>
           )}
-
-          <div className="mt-8 p-6 bg-secondary rounded-xl text-center">
-            <p className="text-muted-foreground text-sm">
-              Note: This is a demo project for college semester. Order history shown above is sample data for demonstration purposes.
-            </p>
-          </div>
         </div>
       </div>
+
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <div className="fixed inset-0 bg-foreground/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-xl p-6 shadow-xl max-w-lg w-full max-h-[80vh] overflow-y-auto animate-fade-in">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display text-xl font-bold text-foreground">
+                Order Details
+              </h2>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => setSelectedOrder(null)}
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Package className="w-5 h-5 text-primary" />
+                <span className="font-bold text-foreground">{selectedOrder.id}</span>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <h3 className="font-semibold text-foreground mb-2">Order Items</h3>
+                <div className="space-y-2">
+                  {selectedOrder.items.map((item, idx) => (
+                    <div key={idx} className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        {item.name} × {item.quantity}
+                      </span>
+                      <span>₹{item.price * item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <h3 className="font-semibold text-foreground mb-2">Delivery Address</h3>
+                <p className="text-sm text-muted-foreground">{selectedOrder.address}</p>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <h3 className="font-semibold text-foreground mb-2">Payment Method</h3>
+                <p className="text-sm text-muted-foreground">{selectedOrder.paymentMethod}</p>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <h3 className="font-semibold text-foreground mb-2">Order Date</h3>
+                <p className="text-sm text-muted-foreground">
+                  {new Date(selectedOrder.date).toLocaleDateString('en-IN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+
+              <div className="border-t border-border pt-4 flex justify-between items-center">
+                <span className="font-bold text-lg">Total</span>
+                <span className="font-bold text-lg text-primary">₹{selectedOrder.total}</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Button 
+                variant="hero" 
+                className="w-full"
+                onClick={() => setSelectedOrder(null)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };

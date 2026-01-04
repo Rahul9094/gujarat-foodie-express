@@ -57,49 +57,49 @@ export const cities: City[] = [
   {
     id: "ahmedabad",
     name: "Ahmedabad",
-    image: "https://images.unsplash.com/photo-1569596082827-c5a15ed5498c?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Sabarmati_Ashram%2C_Gandhi%27s_living_quarters.jpg/1280px-Sabarmati_Ashram%2C_Gandhi%27s_living_quarters.jpg",
     restaurantCount: 45,
     coordinates: { lat: 23.0225, lng: 72.5714 }
   },
   {
     id: "surat",
     name: "Surat",
-    image: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Surat_Cityscape.jpg/1280px-Surat_Cityscape.jpg",
     restaurantCount: 38,
     coordinates: { lat: 21.1702, lng: 72.8311 }
   },
   {
     id: "vadodara",
     name: "Vadodara",
-    image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Lakshmi_Vilas_Palace.jpg/1280px-Lakshmi_Vilas_Palace.jpg",
     restaurantCount: 32,
     coordinates: { lat: 22.3072, lng: 73.1812 }
   },
   {
     id: "rajkot",
     name: "Rajkot",
-    image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Watson_Museum_Rajkot.jpg/1280px-Watson_Museum_Rajkot.jpg",
     restaurantCount: 28,
     coordinates: { lat: 22.3039, lng: 70.8022 }
   },
   {
     id: "bhavnagar",
     name: "Bhavnagar",
-    image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Takhteshwar_Temple%2C_Bhavnagar.jpg/1280px-Takhteshwar_Temple%2C_Bhavnagar.jpg",
     restaurantCount: 20,
     coordinates: { lat: 21.7645, lng: 72.1519 }
   },
   {
     id: "patan",
     name: "Patan",
-    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Patan_Stepwell.jpg/1280px-Patan_Stepwell.jpg",
     restaurantCount: 15,
     coordinates: { lat: 23.8500, lng: 72.1266 }
   },
   {
     id: "gandhinagar",
     name: "Gandhinagar",
-    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Akshardham_Gandhinagar.jpg/1280px-Akshardham_Gandhinagar.jpg",
     restaurantCount: 22,
     coordinates: { lat: 23.2156, lng: 72.6369 }
   }
@@ -121,7 +121,7 @@ export const categories: Category[] = [
   {
     id: "sweets",
     name: "Sweets & Mithai",
-    image: "https://images.unsplash.com/photo-1666190020241-e9aa5e89feea?w=400",
+    image: "https://www.ثبت.com/wp-content/uploads/2024/01/indian-sweets.jpg",
     itemCount: 28
   },
   {
@@ -313,7 +313,7 @@ export const foodItems: FoodItem[] = [
     name: "Mohanthal",
     description: "Rich besan-based sweet with ghee and dry fruits - a Gujarati festive favorite",
     price: 120,
-    image: "https://images.unsplash.com/photo-1666190020241-e9aa5e89feea?w=400",
+    image: "/src/assets/mohanthal.webp",
     rating: 4.5,
     reviewCount: 98,
     restaurantId: "r2",
@@ -326,7 +326,7 @@ export const foodItems: FoodItem[] = [
     name: "Basundi",
     description: "Thick sweetened milk dessert with cardamom and saffron, garnished with nuts",
     price: 90,
-    image: "https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=400",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/03/basundi-recipe-1.jpg",
     rating: 4.7,
     reviewCount: 134,
     restaurantId: "r1",
@@ -404,7 +404,7 @@ export const foodItems: FoodItem[] = [
     name: "Ghughra",
     description: "Sweet or savory filled pastries - a Gujarati version of samosa with unique spices",
     price: 70,
-    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2018/11/gujiya-recipe-1.jpg",
     rating: 4.4,
     reviewCount: 123,
     restaurantId: "r2",
@@ -417,7 +417,7 @@ export const foodItems: FoodItem[] = [
     name: "Surti Ghari",
     description: "Famous Surat sweet made with puff pastry, mawa and dry fruits - a festive delicacy",
     price: 150,
-    image: "https://images.unsplash.com/photo-1589119908995-c6837fa14848?w=400",
+    image: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/Neha_Mathur/Surti_Ghari.jpg",
     rating: 4.9,
     reviewCount: 287,
     restaurantId: "r9",
@@ -430,7 +430,7 @@ export const foodItems: FoodItem[] = [
     name: "Khandvi",
     description: "Thin rolled gram flour snack with coconut and mustard tempering",
     price: 70,
-    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/05/khandvi-recipe-1.jpg",
     rating: 4.6,
     reviewCount: 145,
     restaurantId: "r7",
@@ -443,7 +443,7 @@ export const foodItems: FoodItem[] = [
     name: "Shrikhand",
     description: "Creamy sweetened strained yogurt flavored with saffron and cardamom",
     price: 80,
-    image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=400",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/04/shrikhand-1.jpg",
     rating: 4.7,
     reviewCount: 178,
     restaurantId: "r1",
@@ -495,7 +495,7 @@ export const foodItems: FoodItem[] = [
     name: "Jalebi",
     description: "Crispy deep-fried sweet spirals soaked in sugar syrup, served hot",
     price: 50,
-    image: "https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?w=400",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2022/12/jalebi-recipe-1.jpg",
     rating: 4.7,
     reviewCount: 234,
     restaurantId: "r7",
@@ -508,7 +508,7 @@ export const foodItems: FoodItem[] = [
     name: "Handvo",
     description: "Savory rice and lentil cake with bottle gourd and spices, baked to perfection",
     price: 90,
-    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/08/handvo-recipe-1.jpg",
     rating: 4.5,
     reviewCount: 123,
     restaurantId: "r8",
