@@ -6,6 +6,16 @@ import cityRajkot from '@/assets/city-rajkot.jpeg';
 import cityBhavnagar from '@/assets/city-bhavnagar.webp';
 import cityPatan from '@/assets/city-patan.jpg';
 import mohanthalImage from '@/assets/mohanthal.webp';
+import basundiImage from '@/assets/basundi.jpg';
+import fafdaJalebiImage from '@/assets/fafda-jalebi.jpeg';
+import ghughraImage from '@/assets/ghughra.webp';
+import handvoImage from '@/assets/handvo.jpeg';
+import jalebiImage from '@/assets/jalebi.jpeg';
+import khamanDhoklaImage from '@/assets/khaman-dhokla.jpg';
+import khandviImage from '@/assets/khandvi.jpg';
+import mangoLassiImage from '@/assets/mango-lassi.jpg';
+import paniPuriImage from '@/assets/pani-puri.jpg';
+import surtiGhariImage from '@/assets/surti-ghari.jpeg';
 
 export interface City {
   id: string;
@@ -281,7 +291,7 @@ export const foodItems: FoodItem[] = [
     name: "Khaman Dhokla",
     description: "Soft and spongy steamed gram flour cakes topped with mustard seeds and curry leaves",
     price: 80,
-    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400",
+    image: khamanDhoklaImage,
     rating: 4.7,
     reviewCount: 189,
     restaurantId: "r3",
@@ -294,7 +304,7 @@ export const foodItems: FoodItem[] = [
     name: "Fafda Jalebi",
     description: "Crispy gram flour strips served with sweet jalebis - the perfect Sunday breakfast combo",
     price: 60,
-    image: "https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?w=400",
+    image: fafdaJalebiImage,
     rating: 4.8,
     reviewCount: 312,
     restaurantId: "r3",
@@ -333,7 +343,7 @@ export const foodItems: FoodItem[] = [
     name: "Basundi",
     description: "Thick sweetened milk dessert with cardamom and saffron, garnished with nuts",
     price: 90,
-    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/03/basundi-recipe-1.jpg",
+    image: basundiImage,
     rating: 4.7,
     reviewCount: 134,
     restaurantId: "r1",
@@ -372,7 +382,7 @@ export const foodItems: FoodItem[] = [
     name: "Pani Puri",
     description: "Crispy puris filled with spiced potato and tangy tamarind water",
     price: 50,
-    image: "https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=400",
+    image: paniPuriImage,
     rating: 4.5,
     reviewCount: 345,
     restaurantId: "r4",
@@ -411,7 +421,7 @@ export const foodItems: FoodItem[] = [
     name: "Ghughra",
     description: "Sweet or savory filled pastries - a Gujarati version of samosa with unique spices",
     price: 70,
-    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2018/11/gujiya-recipe-1.jpg",
+    image: ghughraImage,
     rating: 4.4,
     reviewCount: 123,
     restaurantId: "r2",
@@ -424,7 +434,7 @@ export const foodItems: FoodItem[] = [
     name: "Surti Ghari",
     description: "Famous Surat sweet made with puff pastry, mawa and dry fruits - a festive delicacy",
     price: 150,
-    image: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/Neha_Mathur/Surti_Ghari.jpg",
+    image: surtiGhariImage,
     rating: 4.9,
     reviewCount: 287,
     restaurantId: "r9",
@@ -437,7 +447,7 @@ export const foodItems: FoodItem[] = [
     name: "Khandvi",
     description: "Thin rolled gram flour snack with coconut and mustard tempering",
     price: 70,
-    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/05/khandvi-recipe-1.jpg",
+    image: khandviImage,
     rating: 4.6,
     reviewCount: 145,
     restaurantId: "r7",
@@ -489,7 +499,7 @@ export const foodItems: FoodItem[] = [
     name: "Mango Lassi",
     description: "Refreshing yogurt drink blended with fresh mango pulp and cardamom",
     price: 60,
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400",
+    image: mangoLassiImage,
     rating: 4.6,
     reviewCount: 189,
     restaurantId: "r10",
@@ -502,7 +512,7 @@ export const foodItems: FoodItem[] = [
     name: "Jalebi",
     description: "Crispy deep-fried sweet spirals soaked in sugar syrup, served hot",
     price: 50,
-    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2022/12/jalebi-recipe-1.jpg",
+    image: jalebiImage,
     rating: 4.7,
     reviewCount: 234,
     restaurantId: "r7",
@@ -515,7 +525,7 @@ export const foodItems: FoodItem[] = [
     name: "Handvo",
     description: "Savory rice and lentil cake with bottle gourd and spices, baked to perfection",
     price: 90,
-    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/08/handvo-recipe-1.jpg",
+    image: handvoImage,
     rating: 4.5,
     reviewCount: 123,
     restaurantId: "r8",
