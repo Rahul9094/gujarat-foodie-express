@@ -5,6 +5,7 @@ import cityVadodara from '@/assets/city-vadodara.webp';
 import cityRajkot from '@/assets/city-rajkot.jpeg';
 import cityBhavnagar from '@/assets/city-bhavnagar.webp';
 import cityPatan from '@/assets/city-patan.jpg';
+import cityGandhinagar from '@/assets/city-gandhinagar.jpeg';
 import mohanthalImage from '@/assets/mohanthal.webp';
 import basundiImage from '@/assets/basundi.jpg';
 import fafdaJalebiImage from '@/assets/fafda-jalebi.jpeg';
@@ -16,6 +17,9 @@ import khandviImage from '@/assets/khandvi.jpg';
 import mangoLassiImage from '@/assets/mango-lassi.jpg';
 import paniPuriImage from '@/assets/pani-puri.jpg';
 import surtiGhariImage from '@/assets/surti-ghari.jpeg';
+import sweetsMithaiImage from '@/assets/sweets-mithai.jpg';
+import shrikhandImage from '@/assets/shrikhand.jpg';
+import surtiLochoImage from '@/assets/surti-locho.jpg';
 
 export interface City {
   id: string;
@@ -116,7 +120,7 @@ export const cities: City[] = [
   {
     id: "gandhinagar",
     name: "Gandhinagar",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Akshardham_Gandhinagar.jpg/1280px-Akshardham_Gandhinagar.jpg",
+    image: cityGandhinagar,
     restaurantCount: 1,
     coordinates: { lat: 23.2156, lng: 72.6369 }
   }
@@ -138,7 +142,7 @@ export const categories: Category[] = [
   {
     id: "sweets",
     name: "Sweets & Mithai",
-    image: "https://www.theflavoursofindia.co.uk/wp-content/uploads/2021/10/indian-sweets.jpg",
+    image: sweetsMithaiImage,
     itemCount: 28
   },
   {
@@ -317,7 +321,7 @@ export const foodItems: FoodItem[] = [
     name: "Surti Locho",
     description: "Surat's famous soft and spicy snack made from chana dal, served with sev and chutney",
     price: 50,
-    image: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400",
+    image: surtiLochoImage,
     rating: 4.6,
     reviewCount: 167,
     restaurantId: "r3",
@@ -460,7 +464,7 @@ export const foodItems: FoodItem[] = [
     name: "Shrikhand",
     description: "Creamy sweetened strained yogurt flavored with saffron and cardamom",
     price: 80,
-    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/04/shrikhand-1.jpg",
+    image: shrikhandImage,
     rating: 4.7,
     reviewCount: 178,
     restaurantId: "r1",
