@@ -9,7 +9,16 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
 
+// Validation schema for checkout form
+const checkoutSchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
+  phone: z.string().regex(/^\+?[0-9]{10,15}$/, 'Please enter a valid phone number (10-15 digits)'),
+  address: z.string().trim().min(5, 'Address must be at least 5 characters').max(500, 'Address must be less than 500 characters'),
+  city: z.string().trim().min(2, 'City must be at least 2 characters').max(100, 'City must be less than 100 characters'),
+  pincode: z.string().regex(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits').optional().or(z.literal('')),
+});
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
@@ -35,8 +44,12 @@ const Checkout = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.phone || !formData.address || !formData.city) {
-      toast.error('Please fill in all required fields');
+    // Validate form data using Zod schema
+    const validationResult = checkoutSchema.safeParse(formData);
+    
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      toast.error(firstError.message);
       return;
     }
 
@@ -45,6 +58,9 @@ const Checkout = () => {
       navigate('/login');
       return;
     }
+
+    // Use validated data
+    const validatedData = validationResult.data;
 
     setIsProcessing(true);
 
@@ -58,7 +74,7 @@ const Checkout = () => {
           price: item.price
         })),
         total: totalWithDelivery,
-        address: `${formData.address}, ${formData.city}${formData.pincode ? `, ${formData.pincode}` : ''}, Gujarat, India`,
+        address: `${validatedData.address}, ${validatedData.city}${validatedData.pincode ? `, ${validatedData.pincode}` : ''}, Gujarat, India`,
         payment_method: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment',
         status: 'pending'
       });
