@@ -38,20 +38,20 @@ const Login = () => {
 
     try {
       if (isLogin) {
-        const success = await login(formData.email, formData.password);
-        if (success) {
+        const result = await login(formData.email, formData.password);
+        if (result.success) {
           toast.success('Welcome back! Login successful.');
           navigate('/');
         } else {
-          toast.error('Invalid email or password');
+          toast.error(result.error || 'Invalid email or password');
         }
       } else {
-        const success = await signup(formData.name, formData.email, formData.password);
-        if (success) {
+        const result = await signup(formData.name, formData.email, formData.password);
+        if (result.success) {
           toast.success('Account created successfully!');
           navigate('/');
         } else {
-          toast.error('Email already registered');
+          toast.error(result.error || 'Failed to create account');
         }
       }
     } catch (error) {
