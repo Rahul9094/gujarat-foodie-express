@@ -6,6 +6,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
+  email: z.string().trim().email('Invalid email address').max(255, 'Email must be less than 255 characters'),
+  subject: z.string().max(200, 'Subject must be less than 200 characters').optional(),
+  message: z.string().trim().min(1, 'Message is required').max(2000, 'Message must be less than 2000 characters'),
+});
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -19,28 +28,41 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.message) {
-      toast.error('Please fill in all required fields');
+    // Validate form data
+    const result = contactSchema.safeParse(formData);
+    if (!result.success) {
+      const firstError = result.error.errors[0];
+      toast.error(firstError.message);
       return;
     }
 
     setIsSubmitting(true);
 
-    // Create mailto link to send email
-    const mailtoLink = `mailto:rahulsinh123123123@gmail.com?subject=${encodeURIComponent(
-      formData.subject || 'Contact from Gujarat Food Express'
-    )}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    )}`;
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim() || null,
+          message: formData.message.trim(),
+        });
 
-    // Open email client
-    window.location.href = mailtoLink;
+      if (error) {
+        throw error;
+      }
 
-    setTimeout(() => {
-      toast.success('Opening email client... Please send the email to complete your message.');
+      toast.success('Your message has been sent successfully!', {
+        description: 'We will get back to you soon.',
+        duration: 5000,
+      });
       setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      console.error('Error submitting message:', error);
+      toast.error('Failed to send message. Please try again.');
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -81,6 +103,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
+                        maxLength={100}
                         required
                       />
                     </div>
@@ -93,6 +116,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="john@example.com"
+                        maxLength={255}
                         required
                       />
                     </div>
@@ -106,6 +130,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="How can we help?"
+                      maxLength={200}
                     />
                   </div>
 
@@ -118,6 +143,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Write your message here..."
                       rows={5}
+                      maxLength={2000}
                       required
                     />
                   </div>

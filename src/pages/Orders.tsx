@@ -6,16 +6,17 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface Order {
   id: string;
-  date: string;
-  status: 'pending' | 'in_progress' | 'delivered';
+  created_at: string;
+  status: string;
   items: { name: string; quantity: number; price: number }[];
   total: number;
   address: string;
-  paymentMethod: string;
-  userEmail: string;
+  payment_method: string;
+  user_email: string;
 }
 
 const statusConfig = {
@@ -27,39 +28,90 @@ const statusConfig = {
 const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { supabaseUser, isAuthenticated, loading: authLoading } = useAuth();
 
-  // Load user-specific orders
+  // Load user-specific orders from Supabase
   useEffect(() => {
-    if (user?.email) {
-      const allOrders: Order[] = JSON.parse(localStorage.getItem('gujaratFoodOrders') || '[]');
-      const userOrders = allOrders.filter(order => order.userEmail === user.email);
-      setOrders(userOrders);
-    } else {
+    if (supabaseUser?.id) {
+      fetchOrders();
+    } else if (!authLoading) {
       setOrders([]);
+      setLoading(false);
     }
-  }, [user]);
+  }, [supabaseUser, authLoading]);
 
-  const handleReorder = (order: Order) => {
-    toast.success(`Items from order ${order.id} added to cart!`);
+  const fetchOrders = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('user_id', supabaseUser?.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching orders:', error);
+      toast.error('Failed to load orders');
+    } else {
+      const ordersData = (data || []).map(order => ({
+        ...order,
+        items: order.items as Array<{ name: string; quantity: number; price: number }>
+      }));
+      setOrders(ordersData);
+    }
+    setLoading(false);
   };
 
-  const handleClearDeliveredOrders = () => {
-    if (!user?.email) return;
+  const handleReorder = (order: Order) => {
+    order.items.forEach(item => {
+      addToCart({
+        id: `reorder-${Date.now()}-${item.name}`,
+        name: item.name,
+        price: item.price,
+        image: '',
+        rating: 0,
+        reviewCount: 0,
+        restaurantId: '',
+        cityId: '',
+        description: '',
+        category: ''
+      } as any);
+    });
+    toast.success(`Items from order added to cart!`);
+  };
+
+  const handleClearDeliveredOrders = async () => {
+    if (!supabaseUser?.id) return;
     
-    const allOrders: Order[] = JSON.parse(localStorage.getItem('gujaratFoodOrders') || '[]');
-    const updatedOrders = allOrders.filter(
-      order => order.userEmail !== user.email || order.status !== 'delivered'
-    );
-    localStorage.setItem('gujaratFoodOrders', JSON.stringify(updatedOrders));
+    const deliveredOrders = orders.filter(o => o.status === 'delivered');
     
-    const userOrders = updatedOrders.filter(order => order.userEmail === user.email);
-    setOrders(userOrders);
+    for (const order of deliveredOrders) {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', order.id);
+      
+      if (error) {
+        console.error('Error deleting order:', error);
+      }
+    }
+    
+    fetchOrders();
     toast.success('All delivered orders cleared!');
   };
 
   const deliveredOrdersCount = orders.filter(o => o.status === 'delivered').length;
+
+  if (authLoading || loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-background py-8 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -126,7 +178,7 @@ const Orders = () => {
           ) : (
             <div className="space-y-6">
               {orders.map((order, index) => {
-                const status = statusConfig[order.status as keyof typeof statusConfig];
+                const status = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.pending;
                 const StatusIcon = status.icon;
 
                 return (
@@ -139,10 +191,10 @@ const Orders = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <Package className="w-5 h-5 text-primary" />
-                          <span className="font-bold text-foreground">{order.id}</span>
+                          <span className="font-bold text-foreground">#{order.id.slice(0, 8)}</span>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Ordered on {new Date(order.date).toLocaleDateString('en-IN', {
+                          Ordered on {new Date(order.created_at).toLocaleDateString('en-IN', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',
@@ -218,7 +270,7 @@ const Orders = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Package className="w-5 h-5 text-primary" />
-                <span className="font-bold text-foreground">{selectedOrder.id}</span>
+                <span className="font-bold text-foreground">#{selectedOrder.id.slice(0, 8)}</span>
               </div>
 
               <div className="border-t border-border pt-4">
@@ -242,13 +294,13 @@ const Orders = () => {
 
               <div className="border-t border-border pt-4">
                 <h3 className="font-semibold text-foreground mb-2">Payment Method</h3>
-                <p className="text-sm text-muted-foreground">{selectedOrder.paymentMethod}</p>
+                <p className="text-sm text-muted-foreground">{selectedOrder.payment_method}</p>
               </div>
 
               <div className="border-t border-border pt-4">
                 <h3 className="font-semibold text-foreground mb-2">Order Date</h3>
                 <p className="text-sm text-muted-foreground">
-                  {new Date(selectedOrder.date).toLocaleDateString('en-IN', {
+                  {new Date(selectedOrder.created_at).toLocaleDateString('en-IN', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
