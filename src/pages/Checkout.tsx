@@ -8,12 +8,12 @@ import { Label } from '@/components/ui/label';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { Order } from './Orders';
+import { supabase } from '@/integrations/supabase/client';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, supabaseUser } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -40,7 +40,7 @@ const Checkout = () => {
       return;
     }
 
-    if (!user?.email) {
+    if (!supabaseUser?.id || !user?.email) {
       toast.error('Please login to place an order');
       navigate('/login');
       return;
@@ -48,33 +48,34 @@ const Checkout = () => {
 
     setIsProcessing(true);
 
-    // Create order and save to localStorage
-    const newOrder: Order = {
-      id: `GFE${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
-      status: 'pending',
-      items: cartItems.map(item => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price
-      })),
-      total: totalWithDelivery,
-      address: `${formData.address}, ${formData.city}${formData.pincode ? `, ${formData.pincode}` : ''}, Gujarat, India`,
-      paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment',
-      userEmail: user.email
-    };
+    try {
+      const { error } = await supabase.from('orders').insert({
+        user_id: supabaseUser.id,
+        user_email: user.email,
+        items: cartItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        total: totalWithDelivery,
+        address: `${formData.address}, ${formData.city}${formData.pincode ? `, ${formData.pincode}` : ''}, Gujarat, India`,
+        payment_method: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment',
+        status: 'pending'
+      });
 
-    // Save order to localStorage
-    const existingOrders: Order[] = JSON.parse(localStorage.getItem('gujaratFoodOrders') || '[]');
-    existingOrders.push(newOrder);
-    localStorage.setItem('gujaratFoodOrders', JSON.stringify(existingOrders));
+      if (error) {
+        throw error;
+      }
 
-    // Simulate order processing
-    setTimeout(() => {
       clearCart();
       toast.success('Order placed successfully!');
       navigate('/order-success');
-    }, 2000);
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast.error('Failed to place order. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (cartItems.length === 0) {
