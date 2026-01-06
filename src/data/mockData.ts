@@ -20,6 +20,15 @@ import surtiGhariImage from '@/assets/surti-ghari.jpeg';
 import sweetsMithaiImage from '@/assets/sweets-mithai.jpg';
 import shrikhandImage from '@/assets/shrikhand.jpg';
 import surtiLochoImage from '@/assets/surti-locho.jpg';
+import sandwichImage from '@/assets/sandwich.jpeg';
+import noodlesImage from '@/assets/noodles.jpeg';
+import manchurianImage from '@/assets/manchurian.jpeg';
+import frenchFriesImage from '@/assets/french-fries.jpeg';
+import pizzaImage from '@/assets/pizza.jpeg';
+import patraImage from '@/assets/patra.jpeg';
+import punjabiThaliImage from '@/assets/punjabi-thali.jpeg';
+import southIndianThaliImage from '@/assets/south-indian-thali.jpeg';
+import kajuKatliImage from '@/assets/kaju-katli.webp';
 
 export interface City {
   id: string;
@@ -129,9 +138,9 @@ export const cities: City[] = [
 export const categories: Category[] = [
   {
     id: "thali",
-    name: "Gujarati Thali",
+    name: "Thalis & Dishes",
     image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400",
-    itemCount: 24
+    itemCount: 28
   },
   {
     id: "street-food",
@@ -143,13 +152,13 @@ export const categories: Category[] = [
     id: "sweets",
     name: "Sweets & Mithai",
     image: sweetsMithaiImage,
-    itemCount: 28
+    itemCount: 32
   },
   {
     id: "fast-food",
     name: "Fast Food",
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
-    itemCount: 42
+    itemCount: 48
   }
 ];
 
@@ -162,7 +171,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.8,
     reviewCount: 342,
     deliveryTime: "30-40 min",
-    priceRange: "₹₹₹",
+    priceRange: "₹₹",
     cityId: "ahmedabad",
     isVeg: true
   },
@@ -174,7 +183,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.9,
     reviewCount: 256,
     deliveryTime: "35-45 min",
-    priceRange: "₹₹₹₹",
+    priceRange: "₹₹",
     cityId: "ahmedabad",
     isVeg: true
   },
@@ -198,7 +207,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.6,
     reviewCount: 421,
     deliveryTime: "25-35 min",
-    priceRange: "₹₹",
+    priceRange: "₹",
     cityId: "vadodara",
     isVeg: true
   },
@@ -222,7 +231,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.4,
     reviewCount: 156,
     deliveryTime: "35-45 min",
-    priceRange: "₹₹",
+    priceRange: "₹",
     cityId: "bhavnagar",
     isVeg: true
   },
@@ -234,7 +243,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.6,
     reviewCount: 134,
     deliveryTime: "20-30 min",
-    priceRange: "₹₹",
+    priceRange: "₹",
     cityId: "patan",
     isVeg: true
   },
@@ -246,7 +255,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.3,
     reviewCount: 98,
     deliveryTime: "25-35 min",
-    priceRange: "₹₹",
+    priceRange: "₹",
     cityId: "gandhinagar",
     isVeg: true
   },
@@ -258,7 +267,7 @@ export const restaurants: Restaurant[] = [
     rating: 4.8,
     reviewCount: 267,
     deliveryTime: "15-25 min",
-    priceRange: "₹₹",
+    priceRange: "₹",
     cityId: "surat",
     isVeg: true
   },
@@ -270,18 +279,19 @@ export const restaurants: Restaurant[] = [
     rating: 4.5,
     reviewCount: 189,
     deliveryTime: "30-40 min",
-    priceRange: "₹₹",
+    priceRange: "₹",
     cityId: "vadodara",
     isVeg: true
   }
 ];
 
 export const foodItems: FoodItem[] = [
+  // Thalis & Dishes
   {
     id: "f1",
     name: "Unlimited Gujarati Thali",
     description: "A complete traditional Gujarati meal with dal, kadhi, rotli, rice, sabzi, farsan, and sweets",
-    price: 350,
+    price: 149,
     image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400",
     rating: 4.9,
     reviewCount: 245,
@@ -291,10 +301,63 @@ export const foodItems: FoodItem[] = [
     isPopular: true
   },
   {
+    id: "f7",
+    name: "Kathiyawadi Thali",
+    description: "Spicy and flavorful thali from the Kathiyawad region with unique preparations",
+    price: 129,
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
+    rating: 4.8,
+    reviewCount: 201,
+    restaurantId: "r5",
+    categoryId: "thali",
+    isVeg: false,
+    isPopular: true
+  },
+  {
+    id: "f16",
+    name: "Undhiyu",
+    description: "Traditional winter dish with mixed vegetables, fenugreek dumplings cooked in earthen pot",
+    price: 89,
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
+    rating: 4.8,
+    reviewCount: 234,
+    restaurantId: "r2",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f21",
+    name: "Punjabi Thali",
+    description: "Authentic North Indian thali with dal makhani, paneer, naan, rice, raita and pickle",
+    price: 139,
+    image: punjabiThaliImage,
+    rating: 4.7,
+    reviewCount: 187,
+    restaurantId: "r1",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f22",
+    name: "South Indian Thali",
+    description: "Traditional South Indian meal with sambar, rasam, rice, poriyal, curd and papad",
+    price: 119,
+    image: southIndianThaliImage,
+    rating: 4.8,
+    reviewCount: 156,
+    restaurantId: "r6",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  // Street Food
+  {
     id: "f2",
     name: "Khaman Dhokla",
     description: "Soft and spongy steamed gram flour cakes topped with mustard seeds and curry leaves",
-    price: 80,
+    price: 35,
     image: khamanDhoklaImage,
     rating: 4.7,
     reviewCount: 189,
@@ -307,7 +370,7 @@ export const foodItems: FoodItem[] = [
     id: "f3",
     name: "Fafda Jalebi",
     description: "Crispy gram flour strips served with sweet jalebis - the perfect Sunday breakfast combo",
-    price: 60,
+    price: 30,
     image: fafdaJalebiImage,
     rating: 4.8,
     reviewCount: 312,
@@ -320,7 +383,7 @@ export const foodItems: FoodItem[] = [
     id: "f4",
     name: "Surti Locho",
     description: "Surat's famous soft and spicy snack made from chana dal, served with sev and chutney",
-    price: 50,
+    price: 25,
     image: surtiLochoImage,
     rating: 4.6,
     reviewCount: 167,
@@ -330,49 +393,10 @@ export const foodItems: FoodItem[] = [
     isPopular: true
   },
   {
-    id: "f5",
-    name: "Mohanthal",
-    description: "Rich besan-based sweet with ghee and dry fruits - a Gujarati festive favorite",
-    price: 120,
-    image: mohanthalImage,
-    rating: 4.5,
-    reviewCount: 98,
-    restaurantId: "r2",
-    categoryId: "sweets",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f6",
-    name: "Basundi",
-    description: "Thick sweetened milk dessert with cardamom and saffron, garnished with nuts",
-    price: 90,
-    image: basundiImage,
-    rating: 4.7,
-    reviewCount: 134,
-    restaurantId: "r1",
-    categoryId: "sweets",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f7",
-    name: "Kathiyawadi Thali",
-    description: "Spicy and flavorful thali from the Kathiyawad region with unique preparations",
-    price: 299,
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
-    rating: 4.8,
-    reviewCount: 201,
-    restaurantId: "r5",
-    categoryId: "thali",
-    isVeg: false,
-    isPopular: true
-  },
-  {
     id: "f8",
     name: "Dabeli",
     description: "Spicy potato filling in a pav with special dabeli masala, pomegranate, and sev",
-    price: 40,
+    price: 20,
     image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400",
     rating: 4.6,
     reviewCount: 278,
@@ -385,7 +409,7 @@ export const foodItems: FoodItem[] = [
     id: "f9",
     name: "Pani Puri",
     description: "Crispy puris filled with spiced potato and tangy tamarind water",
-    price: 50,
+    price: 25,
     image: paniPuriImage,
     rating: 4.5,
     reviewCount: 345,
@@ -395,10 +419,142 @@ export const foodItems: FoodItem[] = [
     isPopular: true
   },
   {
+    id: "f12",
+    name: "Ghughra",
+    description: "Sweet or savory filled pastries - a Gujarati version of samosa with unique spices",
+    price: 30,
+    image: ghughraImage,
+    rating: 4.4,
+    reviewCount: 123,
+    restaurantId: "r2",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: false
+  },
+  {
+    id: "f14",
+    name: "Khandvi",
+    description: "Thin rolled gram flour snack with coconut and mustard tempering",
+    price: 35,
+    image: khandviImage,
+    rating: 4.6,
+    reviewCount: 145,
+    restaurantId: "r7",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f17",
+    name: "Thepla",
+    description: "Spiced flatbread made with fenugreek leaves, perfect for travel snack",
+    price: 20,
+    image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400",
+    rating: 4.5,
+    reviewCount: 167,
+    restaurantId: "r8",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: false
+  },
+  {
+    id: "f20",
+    name: "Handvo",
+    description: "Savory rice and lentil cake with bottle gourd and spices, baked to perfection",
+    price: 40,
+    image: handvoImage,
+    rating: 4.5,
+    reviewCount: 123,
+    restaurantId: "r8",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: false
+  },
+  // Sweets & Mithai
+  {
+    id: "f5",
+    name: "Mohanthal",
+    description: "Rich besan-based sweet with ghee and dry fruits - a Gujarati festive favorite",
+    price: 45,
+    image: mohanthalImage,
+    rating: 4.5,
+    reviewCount: 98,
+    restaurantId: "r2",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f6",
+    name: "Basundi",
+    description: "Thick sweetened milk dessert with cardamom and saffron, garnished with nuts",
+    price: 40,
+    image: basundiImage,
+    rating: 4.7,
+    reviewCount: 134,
+    restaurantId: "r1",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f13",
+    name: "Surti Ghari",
+    description: "Famous Surat sweet made with puff pastry, mawa and dry fruits - a festive delicacy",
+    price: 55,
+    image: surtiGhariImage,
+    rating: 4.9,
+    reviewCount: 287,
+    restaurantId: "r9",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f15",
+    name: "Shrikhand",
+    description: "Creamy sweetened strained yogurt flavored with saffron and cardamom",
+    price: 35,
+    image: shrikhandImage,
+    rating: 4.7,
+    reviewCount: 178,
+    restaurantId: "r1",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f19",
+    name: "Jalebi",
+    description: "Crispy deep-fried sweet spirals soaked in sugar syrup, served hot",
+    price: 25,
+    image: jalebiImage,
+    rating: 4.7,
+    reviewCount: 234,
+    restaurantId: "r7",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f23",
+    name: "Kaju Katli",
+    description: "Premium cashew-based diamond-shaped sweet with silver foil - perfect for celebrations",
+    price: 60,
+    image: kajuKatliImage,
+    rating: 4.9,
+    reviewCount: 312,
+    restaurantId: "r9",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  // Fast Food
+  {
     id: "f10",
     name: "Veg Cheese Burger",
     description: "Crispy veg patty with melted cheese, fresh veggies, and special sauce",
-    price: 120,
+    price: 59,
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
     rating: 4.3,
     reviewCount: 156,
@@ -411,7 +567,7 @@ export const foodItems: FoodItem[] = [
     id: "f11",
     name: "Masala Dosa",
     description: "Crispy rice crepe filled with spiced potato masala, served with sambar and chutney",
-    price: 90,
+    price: 49,
     image: "https://images.unsplash.com/photo-1630383249896-424e482df921?w=400",
     rating: 4.6,
     reviewCount: 198,
@@ -421,88 +577,10 @@ export const foodItems: FoodItem[] = [
     isPopular: true
   },
   {
-    id: "f12",
-    name: "Ghughra",
-    description: "Sweet or savory filled pastries - a Gujarati version of samosa with unique spices",
-    price: 70,
-    image: ghughraImage,
-    rating: 4.4,
-    reviewCount: 123,
-    restaurantId: "r2",
-    categoryId: "street-food",
-    isVeg: true,
-    isPopular: false
-  },
-  {
-    id: "f13",
-    name: "Surti Ghari",
-    description: "Famous Surat sweet made with puff pastry, mawa and dry fruits - a festive delicacy",
-    price: 150,
-    image: surtiGhariImage,
-    rating: 4.9,
-    reviewCount: 287,
-    restaurantId: "r9",
-    categoryId: "sweets",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f14",
-    name: "Khandvi",
-    description: "Thin rolled gram flour snack with coconut and mustard tempering",
-    price: 70,
-    image: khandviImage,
-    rating: 4.6,
-    reviewCount: 145,
-    restaurantId: "r7",
-    categoryId: "street-food",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f15",
-    name: "Shrikhand",
-    description: "Creamy sweetened strained yogurt flavored with saffron and cardamom",
-    price: 80,
-    image: shrikhandImage,
-    rating: 4.7,
-    reviewCount: 178,
-    restaurantId: "r1",
-    categoryId: "sweets",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f16",
-    name: "Undhiyu",
-    description: "Traditional winter dish with mixed vegetables, fenugreek dumplings cooked in earthen pot",
-    price: 180,
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
-    rating: 4.8,
-    reviewCount: 234,
-    restaurantId: "r2",
-    categoryId: "thali",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f17",
-    name: "Thepla",
-    description: "Spiced flatbread made with fenugreek leaves, perfect for travel snack",
-    price: 40,
-    image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400",
-    rating: 4.5,
-    reviewCount: 167,
-    restaurantId: "r8",
-    categoryId: "street-food",
-    isVeg: true,
-    isPopular: false
-  },
-  {
     id: "f18",
     name: "Mango Lassi",
     description: "Refreshing yogurt drink blended with fresh mango pulp and cardamom",
-    price: 60,
+    price: 29,
     image: mangoLassiImage,
     rating: 4.6,
     reviewCount: 189,
@@ -512,30 +590,82 @@ export const foodItems: FoodItem[] = [
     isPopular: true
   },
   {
-    id: "f19",
-    name: "Jalebi",
-    description: "Crispy deep-fried sweet spirals soaked in sugar syrup, served hot",
-    price: 50,
-    image: jalebiImage,
-    rating: 4.7,
-    reviewCount: 234,
-    restaurantId: "r7",
-    categoryId: "sweets",
+    id: "f24",
+    name: "Sandwich",
+    description: "Grilled vegetable sandwich with fresh tomato, cucumber, cheese and green chutney",
+    price: 39,
+    image: sandwichImage,
+    rating: 4.4,
+    reviewCount: 178,
+    restaurantId: "r8",
+    categoryId: "fast-food",
     isVeg: true,
     isPopular: true
   },
   {
-    id: "f20",
-    name: "Handvo",
-    description: "Savory rice and lentil cake with bottle gourd and spices, baked to perfection",
-    price: 90,
-    image: handvoImage,
+    id: "f25",
+    name: "Noodles",
+    description: "Spicy Indo-Chinese hakka noodles with vegetables and soy sauce",
+    price: 55,
+    image: noodlesImage,
     rating: 4.5,
-    reviewCount: 123,
-    restaurantId: "r8",
-    categoryId: "street-food",
+    reviewCount: 203,
+    restaurantId: "r4",
+    categoryId: "fast-food",
     isVeg: true,
-    isPopular: false
+    isPopular: true
+  },
+  {
+    id: "f26",
+    name: "Manchurian",
+    description: "Crispy veg balls in tangy Indo-Chinese gravy with bell peppers and spring onions",
+    price: 65,
+    image: manchurianImage,
+    rating: 4.6,
+    reviewCount: 167,
+    restaurantId: "r4",
+    categoryId: "fast-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f27",
+    name: "French Fries",
+    description: "Golden crispy potato fries served with tomato ketchup and mayo dip",
+    price: 45,
+    image: frenchFriesImage,
+    rating: 4.3,
+    reviewCount: 234,
+    restaurantId: "r8",
+    categoryId: "fast-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f28",
+    name: "Pizza",
+    description: "Delicious vegetable pizza with cheese, olives, capsicum and onions",
+    price: 99,
+    image: pizzaImage,
+    rating: 4.5,
+    reviewCount: 289,
+    restaurantId: "r4",
+    categoryId: "fast-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f29",
+    name: "Patra",
+    description: "Traditional Gujarati dish made with colocasia leaves stuffed with spiced gram flour",
+    price: 35,
+    image: patraImage,
+    rating: 4.7,
+    reviewCount: 145,
+    restaurantId: "r3",
+    categoryId: "fast-food",
+    isVeg: true,
+    isPopular: true
   }
 ];
 
