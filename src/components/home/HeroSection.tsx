@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
+import dhoklaImage from '@/assets/khaman-dhokla.jpg';
+import fafdaImage from '@/assets/fafda-jalebi.jpeg';
+import basundiImage from '@/assets/basundi.jpg';
+import paniPuriImage from '@/assets/pani-puri.jpg';
 const HeroSection = () => {
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -93,7 +96,7 @@ const HeroSection = () => {
               {/* Floating Food Cards */}
               <div className="absolute top-10 left-10 bg-card p-3 rounded-xl shadow-card animate-fade-in" style={{ animationDelay: '0.2s' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=100&h=100&fit=crop"
+                  src={dhoklaImage}
                   alt="Dhokla"
                   className="w-16 h-16 rounded-lg object-cover"
                 />
@@ -102,7 +105,7 @@ const HeroSection = () => {
 
               <div className="absolute top-20 right-0 bg-card p-3 rounded-xl shadow-card animate-fade-in" style={{ animationDelay: '0.4s' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?w=100&h=100&fit=crop"
+                  src={fafdaImage}
                   alt="Fafda"
                   className="w-16 h-16 rounded-lg object-cover"
                 />
@@ -111,7 +114,7 @@ const HeroSection = () => {
 
               <div className="absolute bottom-20 left-0 bg-card p-3 rounded-xl shadow-card animate-fade-in" style={{ animationDelay: '0.6s' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=100&h=100&fit=crop"
+                  src={basundiImage}
                   alt="Basundi"
                   className="w-16 h-16 rounded-lg object-cover"
                 />
@@ -120,7 +123,7 @@ const HeroSection = () => {
 
               <div className="absolute bottom-10 right-10 bg-card p-3 rounded-xl shadow-card animate-fade-in" style={{ animationDelay: '0.8s' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=100&h=100&fit=crop"
+                  src={paniPuriImage}
                   alt="Pani Puri"
                   className="w-16 h-16 rounded-lg object-cover"
                 />
