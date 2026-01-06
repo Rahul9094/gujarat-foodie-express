@@ -26,19 +26,28 @@ const About = () => {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Gujarat Food Express is a college semester project designed to showcase the rich 
-                  culinary heritage of Gujarat through a modern food delivery platform. Our mission 
-                  is to make authentic Gujarati cuisine accessible to everyone across the state.
+                  Gujarat Food Express was born from a deep love for the authentic flavors that 
+                  have been passed down through generations of Gujarati families. Our journey 
+                  began with a simple mission: to bring the true essence of Gujarat's culinary 
+                  heritage to every home across the state.
                 </p>
                 <p>
-                  From the famous Gujarati Thali with its perfect balance of sweet and savory, 
-                  to the beloved street foods like Dhokla and Fafda-Jalebi, we bring the essence 
-                  of Gujarat's food culture right to your doorstep.
+                  From the perfectly spiced Undhiyu that warms your soul to the delicate sweetness 
+                  of Basundi, every dish we serve carries the spirit of traditional Gujarati kitchens. 
+                  Our recipes are crafted using age-old techniques, authentic spices, and the freshest 
+                  ingredients to ensure that each bite takes you on a journey through Gujarat's rich 
+                  culinary landscape.
                 </p>
                 <p>
-                  This project demonstrates a full-stack web application built with modern 
-                  technologies including React, Node.js, Express.js, and MongoDB, implementing 
-                  real-world features like user authentication, cart management, and order processing.
+                  We take immense pride in celebrating Gujarat's vibrant food culture - from the 
+                  bustling streets of Ahmedabad serving piping hot Fafda-Jalebi to the coastal 
+                  delicacies of Surat. Our passionate team of chefs and dedicated partners work 
+                  tirelessly to preserve these cherished traditions while making them accessible 
+                  to food lovers everywhere.
+                </p>
+                <p>
+                  At Gujarat Food Express, food is not just sustenance - it's a celebration of 
+                  our heritage, our community, and our love for authentic Gujarati flavors.
                 </p>
               </div>
             </div>
@@ -109,36 +118,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* Project Info */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="bg-card rounded-2xl p-8 shadow-card max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-              College Semester Project
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              This project is developed as part of a web development course to demonstrate 
-              practical implementation of modern web technologies and best practices.
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-              <div className="bg-secondary rounded-lg p-3">
-                <p className="font-medium text-foreground">React</p>
-                <p className="text-muted-foreground">Frontend</p>
-              </div>
-              <div className="bg-secondary rounded-lg p-3">
-                <p className="font-medium text-foreground">Node.js</p>
-                <p className="text-muted-foreground">Backend</p>
-              </div>
-              <div className="bg-secondary rounded-lg p-3">
-                <p className="font-medium text-foreground">MongoDB</p>
-                <p className="text-muted-foreground">Database</p>
-              </div>
-              <div className="bg-secondary rounded-lg p-3">
-                <p className="font-medium text-foreground">Express</p>
-                <p className="text-muted-foreground">API</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </Layout>
   );
