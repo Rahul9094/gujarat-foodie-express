@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
+import QRPaymentModal from '@/components/checkout/QRPaymentModal';
 
 // Validation schema for checkout form
 const checkoutSchema = z.object({
@@ -25,6 +26,11 @@ const Checkout = () => {
   const { user, supabaseUser } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [pendingOrderData, setPendingOrderData] = useState<{
+    address: string;
+    paymentMethod: string;
+  } | null>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -61,7 +67,25 @@ const Checkout = () => {
 
     // Use validated data
     const validatedData = validationResult.data;
+    const fullAddress = `${validatedData.address}, ${validatedData.city}${validatedData.pincode ? `, ${validatedData.pincode}` : ''}, Gujarat, India`;
 
+    // If online payment, show QR modal
+    if (paymentMethod === 'online') {
+      setPendingOrderData({
+        address: fullAddress,
+        paymentMethod: 'Online Payment (UPI)'
+      });
+      setShowQRModal(true);
+      return;
+    }
+
+    // For COD, proceed directly
+    await placeOrder(fullAddress, 'Cash on Delivery');
+  };
+
+  const placeOrder = async (address: string, paymentMethodText: string) => {
+    if (!supabaseUser?.id || !user?.email) return;
+    
     setIsProcessing(true);
 
     try {
@@ -74,9 +98,9 @@ const Checkout = () => {
           price: item.price
         })),
         total: totalWithDelivery,
-        address: `${validatedData.address}, ${validatedData.city}${validatedData.pincode ? `, ${validatedData.pincode}` : ''}, Gujarat, India`,
-        payment_method: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment',
-        status: 'pending'
+        address,
+        payment_method: paymentMethodText,
+        status: paymentMethodText.includes('Online') ? 'confirmed' : 'pending'
       });
 
       if (error) {
@@ -85,12 +109,24 @@ const Checkout = () => {
 
       clearCart();
       toast.success('Order placed successfully!');
-      navigate('/order-success');
+      navigate('/order-success', { 
+        state: { 
+          paymentMethod: paymentMethodText,
+          isOnlinePayment: paymentMethodText.includes('Online')
+        } 
+      });
     } catch (error) {
       console.error('Error placing order:', error);
       toast.error('Failed to place order. Please try again.');
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleOnlinePaymentComplete = async () => {
+    if (pendingOrderData) {
+      setShowQRModal(false);
+      await placeOrder(pendingOrderData.address, pendingOrderData.paymentMethod);
     }
   };
 
@@ -281,12 +317,20 @@ const Checkout = () => {
                     size="lg"
                     disabled={isProcessing}
                   >
-                    {isProcessing ? 'Processing...' : `Place Order • ₹${totalWithDelivery}`}
+                    {isProcessing ? 'Processing...' : paymentMethod === 'online' ? `Pay Online • ₹${totalWithDelivery}` : `Place Order • ₹${totalWithDelivery}`}
                   </Button>
                 </div>
               </div>
             </div>
           </form>
+
+          {/* QR Payment Modal */}
+          <QRPaymentModal
+            isOpen={showQRModal}
+            onClose={() => setShowQRModal(false)}
+            onPaymentComplete={handleOnlinePaymentComplete}
+            amount={totalWithDelivery}
+          />
         </div>
       </div>
     </Layout>
