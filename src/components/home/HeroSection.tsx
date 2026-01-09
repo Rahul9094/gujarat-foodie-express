@@ -74,8 +74,8 @@ const HeroSection = () => {
                   <MapPin className="w-6 h-6 text-spice-turmeric" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">5 Cities</p>
-                  <p className="text-xs text-muted-foreground">Coverage</p>
+                  <p className="font-bold text-foreground">7 Cities</p>
+                  <p className="text-xs text-muted-foreground">Covered</p>
                 </div>
               </div>
             </div>

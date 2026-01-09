@@ -29,6 +29,12 @@ import patraImage from '@/assets/patra.jpeg';
 import punjabiThaliImage from '@/assets/punjabi-thali.jpeg';
 import southIndianThaliImage from '@/assets/south-indian-thali.jpeg';
 import kajuKatliImage from '@/assets/kaju-katli.webp';
+import choleBhatureImage from '@/assets/chole-bhature.jpeg';
+import dalBatiImage from '@/assets/dal-bati.jpeg';
+import gulabJamunImage from '@/assets/gulab-jamun.jpeg';
+import idliImage from '@/assets/idli.jpeg';
+import pavBhajiImage from '@/assets/pav-bhaji.jpeg';
+import rajasthaniThaliImage from '@/assets/rajasthani-thali.jpeg';
 
 export interface City {
   id: string;
@@ -88,49 +94,49 @@ export const cities: City[] = [
     id: "ahmedabad",
     name: "Ahmedabad",
     image: cityAhmedabad,
-    restaurantCount: 2,
+    restaurantCount: 5,
     coordinates: { lat: 23.0225, lng: 72.5714 }
   },
   {
     id: "surat",
     name: "Surat",
     image: citySurat,
-    restaurantCount: 2,
+    restaurantCount: 5,
     coordinates: { lat: 21.1702, lng: 72.8311 }
   },
   {
     id: "vadodara",
     name: "Vadodara",
     image: cityVadodara,
-    restaurantCount: 2,
+    restaurantCount: 5,
     coordinates: { lat: 22.3072, lng: 73.1812 }
   },
   {
     id: "rajkot",
     name: "Rajkot",
     image: cityRajkot,
-    restaurantCount: 1,
+    restaurantCount: 5,
     coordinates: { lat: 22.3039, lng: 70.8022 }
   },
   {
     id: "bhavnagar",
     name: "Bhavnagar",
     image: cityBhavnagar,
-    restaurantCount: 1,
+    restaurantCount: 5,
     coordinates: { lat: 21.7645, lng: 72.1519 }
   },
   {
     id: "patan",
     name: "Patan",
     image: cityPatan,
-    restaurantCount: 1,
+    restaurantCount: 5,
     coordinates: { lat: 23.8500, lng: 72.1266 }
   },
   {
     id: "gandhinagar",
     name: "Gandhinagar",
     image: cityGandhinagar,
-    restaurantCount: 1,
+    restaurantCount: 5,
     coordinates: { lat: 23.2156, lng: 72.6369 }
   }
 ];
@@ -163,6 +169,7 @@ export const categories: Category[] = [
 ];
 
 export const restaurants: Restaurant[] = [
+  // Ahmedabad - 5 restaurants
   {
     id: "r1",
     name: "Vishalla Heritage Restaurant",
@@ -188,6 +195,43 @@ export const restaurants: Restaurant[] = [
     isVeg: true
   },
   {
+    id: "r11",
+    name: "Gordhan Thal",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    cuisine: "Gujarati Thali",
+    rating: 4.6,
+    reviewCount: 189,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "ahmedabad",
+    isVeg: true
+  },
+  {
+    id: "r12",
+    name: "Honest Restaurant",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400",
+    cuisine: "Multi Cuisine",
+    rating: 4.5,
+    reviewCount: 421,
+    deliveryTime: "20-30 min",
+    priceRange: "₹",
+    cityId: "ahmedabad",
+    isVeg: true
+  },
+  {
+    id: "r13",
+    name: "Sankalp Restaurant",
+    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
+    cuisine: "South Indian",
+    rating: 4.4,
+    reviewCount: 312,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "ahmedabad",
+    isVeg: true
+  },
+  // Surat - 5 restaurants
+  {
     id: "r3",
     name: "Surat Locho House",
     image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
@@ -197,66 +241,6 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "surat",
-    isVeg: true
-  },
-  {
-    id: "r4",
-    name: "Mandvi ni Pol Dhaba",
-    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400",
-    cuisine: "Home Style Gujarati",
-    rating: 4.6,
-    reviewCount: 421,
-    deliveryTime: "25-35 min",
-    priceRange: "₹",
-    cityId: "vadodara",
-    isVeg: true
-  },
-  {
-    id: "r5",
-    name: "Rajkot Kathiyawadi Rasoi",
-    image: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400",
-    cuisine: "Kathiyawadi",
-    rating: 4.7,
-    reviewCount: 178,
-    deliveryTime: "30-40 min",
-    priceRange: "₹₹",
-    cityId: "rajkot",
-    isVeg: false
-  },
-  {
-    id: "r6",
-    name: "Nilkanth Dining Hall",
-    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
-    cuisine: "Pure Veg Thali",
-    rating: 4.4,
-    reviewCount: 156,
-    deliveryTime: "35-45 min",
-    priceRange: "₹",
-    cityId: "bhavnagar",
-    isVeg: true
-  },
-  {
-    id: "r7",
-    name: "Patan Sweets Corner",
-    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
-    cuisine: "Sweets & Snacks",
-    rating: 4.6,
-    reviewCount: 134,
-    deliveryTime: "20-30 min",
-    priceRange: "₹",
-    cityId: "patan",
-    isVeg: true
-  },
-  {
-    id: "r8",
-    name: "Gandhinagar Food Plaza",
-    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
-    cuisine: "Multi Cuisine",
-    rating: 4.3,
-    reviewCount: 98,
-    deliveryTime: "25-35 min",
-    priceRange: "₹",
-    cityId: "gandhinagar",
     isVeg: true
   },
   {
@@ -272,6 +256,55 @@ export const restaurants: Restaurant[] = [
     isVeg: true
   },
   {
+    id: "r14",
+    name: "Poncho Mexican Grill",
+    image: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400",
+    cuisine: "Fast Food",
+    rating: 4.3,
+    reviewCount: 156,
+    deliveryTime: "25-35 min",
+    priceRange: "₹₹",
+    cityId: "surat",
+    isVeg: false
+  },
+  {
+    id: "r15",
+    name: "New Poona Cutting",
+    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    cuisine: "Beverages & Snacks",
+    rating: 4.6,
+    reviewCount: 234,
+    deliveryTime: "15-20 min",
+    priceRange: "₹",
+    cityId: "surat",
+    isVeg: true
+  },
+  {
+    id: "r16",
+    name: "Surat Kitchen",
+    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
+    cuisine: "Home Style Gujarati",
+    rating: 4.7,
+    reviewCount: 189,
+    deliveryTime: "30-40 min",
+    priceRange: "₹",
+    cityId: "surat",
+    isVeg: true
+  },
+  // Vadodara - 5 restaurants
+  {
+    id: "r4",
+    name: "Mandvi ni Pol Dhaba",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400",
+    cuisine: "Home Style Gujarati",
+    rating: 4.6,
+    reviewCount: 421,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "vadodara",
+    isVeg: true
+  },
+  {
     id: "r10",
     name: "Baroda Bhojanalaya",
     image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
@@ -281,6 +314,286 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     priceRange: "₹",
     cityId: "vadodara",
+    isVeg: true
+  },
+  {
+    id: "r17",
+    name: "Kalyan Bhel",
+    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    cuisine: "Street Food",
+    rating: 4.4,
+    reviewCount: 312,
+    deliveryTime: "15-25 min",
+    priceRange: "₹",
+    cityId: "vadodara",
+    isVeg: true
+  },
+  {
+    id: "r18",
+    name: "Vadodara Express",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    cuisine: "Fast Food",
+    rating: 4.3,
+    reviewCount: 178,
+    deliveryTime: "20-30 min",
+    priceRange: "₹",
+    cityId: "vadodara",
+    isVeg: true
+  },
+  {
+    id: "r19",
+    name: "Patang Hotel",
+    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400",
+    cuisine: "Multi Cuisine",
+    rating: 4.6,
+    reviewCount: 256,
+    deliveryTime: "30-40 min",
+    priceRange: "₹₹",
+    cityId: "vadodara",
+    isVeg: true
+  },
+  // Rajkot - 5 restaurants
+  {
+    id: "r5",
+    name: "Rajkot Kathiyawadi Rasoi",
+    image: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400",
+    cuisine: "Kathiyawadi",
+    rating: 4.7,
+    reviewCount: 178,
+    deliveryTime: "30-40 min",
+    priceRange: "₹₹",
+    cityId: "rajkot",
+    isVeg: false
+  },
+  {
+    id: "r20",
+    name: "Marwadi Bhojanalaya",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+    cuisine: "Rajasthani",
+    rating: 4.5,
+    reviewCount: 145,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "rajkot",
+    isVeg: true
+  },
+  {
+    id: "r21",
+    name: "Rainbow Restaurant",
+    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
+    cuisine: "Multi Cuisine",
+    rating: 4.4,
+    reviewCount: 234,
+    deliveryTime: "20-30 min",
+    priceRange: "₹",
+    cityId: "rajkot",
+    isVeg: true
+  },
+  {
+    id: "r22",
+    name: "Lords Inn Kitchen",
+    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
+    cuisine: "Fine Dining",
+    rating: 4.6,
+    reviewCount: 167,
+    deliveryTime: "35-45 min",
+    priceRange: "₹₹",
+    cityId: "rajkot",
+    isVeg: true
+  },
+  {
+    id: "r23",
+    name: "Rajkot Snacks Corner",
+    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    cuisine: "Street Food",
+    rating: 4.5,
+    reviewCount: 289,
+    deliveryTime: "15-25 min",
+    priceRange: "₹",
+    cityId: "rajkot",
+    isVeg: true
+  },
+  // Bhavnagar - 5 restaurants
+  {
+    id: "r6",
+    name: "Nilkanth Dining Hall",
+    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
+    cuisine: "Pure Veg Thali",
+    rating: 4.4,
+    reviewCount: 156,
+    deliveryTime: "35-45 min",
+    priceRange: "₹",
+    cityId: "bhavnagar",
+    isVeg: true
+  },
+  {
+    id: "r24",
+    name: "Bhavnagar Bhojanalaya",
+    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    cuisine: "Gujarati Thali",
+    rating: 4.5,
+    reviewCount: 178,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "bhavnagar",
+    isVeg: true
+  },
+  {
+    id: "r25",
+    name: "Takhteshwar Dining",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+    cuisine: "Traditional Gujarati",
+    rating: 4.3,
+    reviewCount: 134,
+    deliveryTime: "30-40 min",
+    priceRange: "₹",
+    cityId: "bhavnagar",
+    isVeg: true
+  },
+  {
+    id: "r26",
+    name: "Coastal Kitchen",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    cuisine: "Seafood",
+    rating: 4.6,
+    reviewCount: 145,
+    deliveryTime: "35-45 min",
+    priceRange: "₹₹",
+    cityId: "bhavnagar",
+    isVeg: false
+  },
+  {
+    id: "r27",
+    name: "Bhavnagar Fast Food",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400",
+    cuisine: "Fast Food",
+    rating: 4.2,
+    reviewCount: 189,
+    deliveryTime: "15-25 min",
+    priceRange: "₹",
+    cityId: "bhavnagar",
+    isVeg: true
+  },
+  // Patan - 5 restaurants
+  {
+    id: "r7",
+    name: "Patan Sweets Corner",
+    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    cuisine: "Sweets & Snacks",
+    rating: 4.6,
+    reviewCount: 134,
+    deliveryTime: "20-30 min",
+    priceRange: "₹",
+    cityId: "patan",
+    isVeg: true
+  },
+  {
+    id: "r28",
+    name: "Rani Ki Vav Restaurant",
+    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400",
+    cuisine: "Traditional Gujarati",
+    rating: 4.5,
+    reviewCount: 112,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "patan",
+    isVeg: true
+  },
+  {
+    id: "r29",
+    name: "Patan Thali House",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+    cuisine: "Gujarati Thali",
+    rating: 4.4,
+    reviewCount: 98,
+    deliveryTime: "30-40 min",
+    priceRange: "₹",
+    cityId: "patan",
+    isVeg: true
+  },
+  {
+    id: "r30",
+    name: "Heritage Diner",
+    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
+    cuisine: "Multi Cuisine",
+    rating: 4.3,
+    reviewCount: 87,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "patan",
+    isVeg: true
+  },
+  {
+    id: "r31",
+    name: "Patan Express",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    cuisine: "Fast Food",
+    rating: 4.2,
+    reviewCount: 123,
+    deliveryTime: "15-25 min",
+    priceRange: "₹",
+    cityId: "patan",
+    isVeg: true
+  },
+  // Gandhinagar - 5 restaurants
+  {
+    id: "r8",
+    name: "Gandhinagar Food Plaza",
+    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
+    cuisine: "Multi Cuisine",
+    rating: 4.3,
+    reviewCount: 98,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "gandhinagar",
+    isVeg: true
+  },
+  {
+    id: "r32",
+    name: "Capital Diner",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400",
+    cuisine: "North Indian",
+    rating: 4.5,
+    reviewCount: 156,
+    deliveryTime: "30-40 min",
+    priceRange: "₹₹",
+    cityId: "gandhinagar",
+    isVeg: true
+  },
+  {
+    id: "r33",
+    name: "Mahatma Thali",
+    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    cuisine: "Gujarati Thali",
+    rating: 4.6,
+    reviewCount: 178,
+    deliveryTime: "25-35 min",
+    priceRange: "₹",
+    cityId: "gandhinagar",
+    isVeg: true
+  },
+  {
+    id: "r34",
+    name: "Infocity Bites",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    cuisine: "Fast Food",
+    rating: 4.4,
+    reviewCount: 234,
+    deliveryTime: "15-25 min",
+    priceRange: "₹",
+    cityId: "gandhinagar",
+    isVeg: true
+  },
+  {
+    id: "r35",
+    name: "Sector 21 Kitchen",
+    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400",
+    cuisine: "Home Style",
+    rating: 4.5,
+    reviewCount: 145,
+    deliveryTime: "20-30 min",
+    priceRange: "₹",
+    cityId: "gandhinagar",
     isVeg: true
   }
 ];
@@ -664,6 +977,85 @@ export const foodItems: FoodItem[] = [
     reviewCount: 145,
     restaurantId: "r3",
     categoryId: "fast-food",
+    isVeg: true,
+    isPopular: true
+  },
+  // New Food Items
+  {
+    id: "f30",
+    name: "Chole Bhature",
+    description: "Spicy chickpea curry served with fluffy deep-fried bread - a North Indian classic",
+    price: 69,
+    image: choleBhatureImage,
+    rating: 4.7,
+    reviewCount: 234,
+    restaurantId: "r12",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f31",
+    name: "Dal Bati Churma",
+    description: "Rajasthani specialty - baked wheat balls with dal and sweet churma",
+    price: 89,
+    image: dalBatiImage,
+    rating: 4.8,
+    reviewCount: 167,
+    restaurantId: "r20",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f32",
+    name: "Rajasthani Thali",
+    description: "Complete Rajasthani meal with dal, bati, churma, gatte and traditional sweets",
+    price: 129,
+    image: rajasthaniThaliImage,
+    rating: 4.7,
+    reviewCount: 189,
+    restaurantId: "r20",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f33",
+    name: "Gulab Jamun",
+    description: "Soft milk-solid dumplings soaked in rose-flavored sugar syrup",
+    price: 35,
+    image: gulabJamunImage,
+    rating: 4.8,
+    reviewCount: 312,
+    restaurantId: "r7",
+    categoryId: "sweets",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f34",
+    name: "Idli Sambhar",
+    description: "Steamed rice cakes served with lentil soup and coconut chutney",
+    price: 39,
+    image: idliImage,
+    rating: 4.6,
+    reviewCount: 198,
+    restaurantId: "r13",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f35",
+    name: "Pav Bhaji",
+    description: "Spiced mixed vegetable curry served with buttery toasted bread",
+    price: 55,
+    image: pavBhajiImage,
+    rating: 4.7,
+    reviewCount: 289,
+    restaurantId: "r4",
+    categoryId: "street-food",
     isVeg: true,
     isPopular: true
   }

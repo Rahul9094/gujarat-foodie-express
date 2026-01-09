@@ -112,7 +112,7 @@ const Footer = () => {
 
         <div className="border-t border-background/20 mt-8 pt-8 text-center">
           <p className="text-background/60 text-sm">
-            © 2026 Gujarat Food Express. College Semester Project.
+            © 2026 Gujarat Food Express. All rights reserved.
           </p>
           <p className="text-background/40 text-xs mt-1">
             Made with ❤️ for Gujarat's culinary heritage

@@ -12,14 +12,14 @@ const features = [
     description: 'All our partner restaurants follow strict hygiene protocols',
   },
   {
-    icon: Clock,
-    title: 'Live Tracking',
-    description: 'Track your order in real-time from kitchen to doorstep',
-  },
-  {
     icon: Heart,
     title: 'Made with Love',
     description: 'Authentic recipes prepared by skilled local chefs',
+  },
+  {
+    icon: Clock,
+    title: 'Fresh & Hot',
+    description: 'Food prepared fresh and delivered hot to your door',
   },
 ];
 
