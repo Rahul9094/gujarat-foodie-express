@@ -53,16 +53,16 @@ const About = () => {
             </div>
             <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <img
-                src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600"
-                alt="Gujarati Thali"
+                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600"
+                alt="Restaurant Interior"
                 className="rounded-2xl shadow-card"
               />
               <div className="absolute -bottom-6 -left-6 bg-card rounded-xl p-4 shadow-card">
-                <p className="font-display text-2xl font-bold text-primary">5+</p>
+                <p className="font-display text-2xl font-bold text-primary">7+</p>
                 <p className="text-sm text-muted-foreground">Cities Covered</p>
               </div>
               <div className="absolute -top-6 -right-6 bg-card rounded-xl p-4 shadow-card">
-                <p className="font-display text-2xl font-bold text-primary">100+</p>
+                <p className="font-display text-2xl font-bold text-primary">35+</p>
                 <p className="text-sm text-muted-foreground">Restaurants</p>
               </div>
             </div>
