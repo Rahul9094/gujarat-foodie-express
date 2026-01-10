@@ -62,6 +62,7 @@ export interface Restaurant {
   priceRange: string;
   cityId: string;
   isVeg: boolean;
+  menuCategories?: string[];
 }
 
 export interface FoodItem {
@@ -165,11 +166,30 @@ export const categories: Category[] = [
     name: "Fast Food",
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
     itemCount: 48
+  },
+  {
+    id: "chinese",
+    name: "Chinese",
+    image: noodlesImage,
+    itemCount: 24
+  },
+  {
+    id: "south-indian",
+    name: "South Indian",
+    image: idliImage,
+    itemCount: 20
+  },
+  {
+    id: "desserts",
+    name: "Desserts",
+    image: gulabJamunImage,
+    itemCount: 18
   }
 ];
 
+// 35 unique restaurants with unique names and photos
 export const restaurants: Restaurant[] = [
-  // Ahmedabad - 5 restaurants (unique names & images)
+  // Ahmedabad - 5 restaurants
   {
     id: "r1",
     name: "Vishalla Heritage Restaurant",
@@ -180,7 +200,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     priceRange: "₹₹",
     cityId: "ahmedabad",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets", "fast-food"]
   },
   {
     id: "r2",
@@ -192,7 +213,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "35-45 min",
     priceRange: "₹₹",
     cityId: "ahmedabad",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "sweets", "street-food"]
   },
   {
     id: "r11",
@@ -204,7 +226,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "ahmedabad",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
   {
     id: "r12",
@@ -216,7 +239,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "ahmedabad",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "south-indian", "thali"]
   },
   {
     id: "r13",
@@ -228,9 +252,10 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "ahmedabad",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["south-indian", "fast-food", "sweets"]
   },
-  // Surat - 5 restaurants (unique names & images)
+  // Surat - 5 restaurants
   {
     id: "r3",
     name: "Surat Locho Corner",
@@ -241,7 +266,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "surat",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["street-food", "sweets", "fast-food"]
   },
   {
     id: "r9",
@@ -253,7 +279,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "15-25 min",
     priceRange: "₹",
     cityId: "surat",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["sweets", "desserts", "street-food"]
   },
   {
     id: "r14",
@@ -265,7 +292,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "25-35 min",
     priceRange: "₹₹",
     cityId: "surat",
-    isVeg: false
+    isVeg: false,
+    menuCategories: ["fast-food", "chinese", "thali"]
   },
   {
     id: "r15",
@@ -277,7 +305,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "15-20 min",
     priceRange: "₹",
     cityId: "surat",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "desserts", "sweets"]
   },
   {
     id: "r16",
@@ -289,9 +318,10 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     priceRange: "₹",
     cityId: "surat",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
-  // Vadodara - 5 restaurants (unique names & images)
+  // Vadodara - 5 restaurants
   {
     id: "r4",
     name: "Mandvi Pol Dhaba",
@@ -302,7 +332,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "vadodara",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "fast-food", "chinese"]
   },
   {
     id: "r10",
@@ -314,7 +345,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     priceRange: "₹",
     cityId: "vadodara",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "sweets", "street-food"]
   },
   {
     id: "r17",
@@ -326,7 +358,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "15-25 min",
     priceRange: "₹",
     cityId: "vadodara",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["street-food", "fast-food", "sweets"]
   },
   {
     id: "r18",
@@ -338,7 +371,8 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "vadodara",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "desserts"]
   },
   {
     id: "r19",
@@ -350,9 +384,10 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     priceRange: "₹₹",
     cityId: "vadodara",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "south-indian", "chinese", "sweets"]
   },
-  // Rajkot - 5 restaurants (unique names & images)
+  // Rajkot - 5 restaurants
   {
     id: "r5",
     name: "Kathiyawadi Rasoi",
@@ -363,19 +398,21 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     priceRange: "₹₹",
     cityId: "rajkot",
-    isVeg: false
+    isVeg: false,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
   {
     id: "r20",
     name: "Saurashtra Bhojanalaya",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+    image: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=400",
     cuisine: "Rajasthani",
     rating: 4.5,
     reviewCount: 145,
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "rajkot",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
   {
     id: "r21",
@@ -387,19 +424,21 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "rajkot",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "south-indian"]
   },
   {
     id: "r22",
     name: "Jubilee Circle Diner",
-    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
+    image: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=400",
     cuisine: "Fine Dining",
     rating: 4.6,
     reviewCount: 167,
     deliveryTime: "35-45 min",
     priceRange: "₹₹",
     cityId: "rajkot",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "chinese", "desserts"]
   },
   {
     id: "r23",
@@ -411,56 +450,61 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "15-25 min",
     priceRange: "₹",
     cityId: "rajkot",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["street-food", "fast-food", "sweets"]
   },
-  // Bhavnagar - 5 restaurants (unique names & images)
+  // Bhavnagar - 5 restaurants
   {
     id: "r6",
     name: "Nilambag Palace Kitchen",
-    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400",
     cuisine: "Pure Veg Thali",
     rating: 4.4,
     reviewCount: 156,
     deliveryTime: "35-45 min",
     priceRange: "₹",
     cityId: "bhavnagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "sweets", "street-food"]
   },
   {
     id: "r24",
     name: "Ghogha Circle Dining",
-    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400",
+    image: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400",
     cuisine: "Gujarati Thali",
     rating: 4.5,
     reviewCount: 178,
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "bhavnagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
   {
     id: "r25",
     name: "Takhteshwar View Restaurant",
-    image: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=400",
+    image: "https://images.unsplash.com/photo-1587574293340-e0011c4e8ecf?w=400",
     cuisine: "Traditional Gujarati",
     rating: 4.3,
     reviewCount: 134,
     deliveryTime: "30-40 min",
     priceRange: "₹",
     cityId: "bhavnagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "south-indian", "sweets"]
   },
   {
     id: "r26",
-    name: "Bhavnagar Port Seafood",
-    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400",
+    name: "Bhavnagar Seafood Express",
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400",
     cuisine: "Seafood",
     rating: 4.6,
     reviewCount: 145,
     deliveryTime: "35-45 min",
     priceRange: "₹₹",
     cityId: "bhavnagar",
-    isVeg: false
+    isVeg: false,
+    menuCategories: ["thali", "fast-food", "chinese"]
   },
   {
     id: "r27",
@@ -472,129 +516,140 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "15-25 min",
     priceRange: "₹",
     cityId: "bhavnagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "desserts"]
   },
-  // Patan - 5 restaurants (unique names & images)
+  // Patan - 5 restaurants
   {
     id: "r7",
     name: "Rani Ki Vav Sweets",
-    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
     cuisine: "Sweets & Snacks",
     rating: 4.6,
     reviewCount: 134,
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "patan",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["sweets", "desserts", "street-food"]
   },
   {
     id: "r28",
     name: "Patan Heritage Dining",
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    image: "https://images.unsplash.com/photo-1564759298141-cef86f51d4d4?w=400",
     cuisine: "Traditional Gujarati",
     rating: 4.5,
     reviewCount: 112,
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "patan",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
   {
     id: "r29",
     name: "Sahastralinga Cafe",
-    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400",
+    image: "https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=400",
     cuisine: "Gujarati Thali",
     rating: 4.4,
     reviewCount: 98,
     deliveryTime: "30-40 min",
     priceRange: "₹",
     cityId: "patan",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "south-indian", "sweets"]
   },
   {
     id: "r30",
     name: "Patola Art Diner",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+    image: "https://images.unsplash.com/photo-1560624052-449f5ddf0c31?w=400",
     cuisine: "Multi Cuisine",
     rating: 4.3,
     reviewCount: 87,
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "patan",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "thali"]
   },
   {
     id: "r31",
     name: "Old Patan Bites",
-    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    image: "https://images.unsplash.com/photo-1541544741670-2fb4d54e8c27?w=400",
     cuisine: "Fast Food",
     rating: 4.2,
     reviewCount: 123,
     deliveryTime: "15-25 min",
     priceRange: "₹",
     cityId: "patan",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "street-food", "desserts"]
   },
-  // Gandhinagar - 5 restaurants (unique names & images)
+  // Gandhinagar - 5 restaurants
   {
     id: "r8",
     name: "Capital Food Court",
-    image: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=400",
+    image: "https://images.unsplash.com/photo-1574936145840-28808d77a706?w=400",
     cuisine: "Multi Cuisine",
     rating: 4.3,
     reviewCount: 98,
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "gandhinagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "south-indian", "thali"]
   },
   {
     id: "r32",
     name: "Sachivalaya Canteen",
-    image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400",
+    image: "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?w=400",
     cuisine: "North Indian",
     rating: 4.5,
     reviewCount: 156,
     deliveryTime: "30-40 min",
     priceRange: "₹₹",
     cityId: "gandhinagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "sweets"]
   },
   {
     id: "r33",
     name: "Akshardham Dining",
-    image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400",
+    image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=400",
     cuisine: "Gujarati Thali",
     rating: 4.6,
     reviewCount: 178,
     deliveryTime: "25-35 min",
     priceRange: "₹",
     cityId: "gandhinagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "sweets", "desserts"]
   },
   {
     id: "r34",
     name: "GIFT City Bites",
-    image: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400",
+    image: "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400",
     cuisine: "Fast Food",
     rating: 4.4,
     reviewCount: 234,
     deliveryTime: "15-25 min",
     priceRange: "₹",
     cityId: "gandhinagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["fast-food", "chinese", "south-indian"]
   },
   {
     id: "r35",
     name: "Infocity Cafe",
-    image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
+    image: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400",
     cuisine: "Home Style",
     rating: 4.5,
     reviewCount: 145,
     deliveryTime: "20-30 min",
     priceRange: "₹",
     cityId: "gandhinagar",
-    isVeg: true
+    isVeg: true,
+    menuCategories: ["thali", "street-food", "fast-food"]
   }
 ];
 
@@ -661,6 +716,45 @@ export const foodItems: FoodItem[] = [
     rating: 4.8,
     reviewCount: 156,
     restaurantId: "r6",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f30",
+    name: "Chole Bhature",
+    description: "Spicy chickpea curry served with fluffy deep-fried bread - a North Indian classic",
+    price: 69,
+    image: choleBhatureImage,
+    rating: 4.7,
+    reviewCount: 234,
+    restaurantId: "r12",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f31",
+    name: "Dal Bati Churma",
+    description: "Rajasthani specialty - baked wheat balls with dal and sweet churma",
+    price: 89,
+    image: dalBatiImage,
+    rating: 4.8,
+    reviewCount: 167,
+    restaurantId: "r20",
+    categoryId: "thali",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f32",
+    name: "Rajasthani Thali",
+    description: "Complete Rajasthani meal with dal, bati, churma, gatte and traditional sweets",
+    price: 129,
+    image: rajasthaniThaliImage,
+    rating: 4.7,
+    reviewCount: 189,
+    restaurantId: "r20",
     categoryId: "thali",
     isVeg: true,
     isPopular: true
@@ -783,6 +877,45 @@ export const foodItems: FoodItem[] = [
     isVeg: true,
     isPopular: false
   },
+  {
+    id: "f29",
+    name: "Patra",
+    description: "Traditional Gujarati dish made with colocasia leaves stuffed with spiced gram flour",
+    price: 35,
+    image: patraImage,
+    rating: 4.7,
+    reviewCount: 145,
+    restaurantId: "r3",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f34",
+    name: "Idli Sambhar",
+    description: "Steamed rice cakes served with lentil soup and coconut chutney",
+    price: 39,
+    image: idliImage,
+    rating: 4.6,
+    reviewCount: 198,
+    restaurantId: "r13",
+    categoryId: "south-indian",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f35",
+    name: "Pav Bhaji",
+    description: "Spiced mixed vegetable curry served with buttery toasted bread",
+    price: 55,
+    image: pavBhajiImage,
+    rating: 4.7,
+    reviewCount: 289,
+    restaurantId: "r4",
+    categoryId: "street-food",
+    isVeg: true,
+    isPopular: true
+  },
   // Sweets & Mithai
   {
     id: "f5",
@@ -862,6 +995,19 @@ export const foodItems: FoodItem[] = [
     isVeg: true,
     isPopular: true
   },
+  {
+    id: "f33",
+    name: "Gulab Jamun",
+    description: "Soft milk-solid dumplings soaked in rose-flavored sugar syrup",
+    price: 35,
+    image: gulabJamunImage,
+    rating: 4.8,
+    reviewCount: 312,
+    restaurantId: "r7",
+    categoryId: "desserts",
+    isVeg: true,
+    isPopular: true
+  },
   // Fast Food
   {
     id: "f10",
@@ -885,7 +1031,7 @@ export const foodItems: FoodItem[] = [
     rating: 4.6,
     reviewCount: 198,
     restaurantId: "r6",
-    categoryId: "fast-food",
+    categoryId: "south-indian",
     isVeg: true,
     isPopular: true
   },
@@ -924,7 +1070,7 @@ export const foodItems: FoodItem[] = [
     rating: 4.5,
     reviewCount: 203,
     restaurantId: "r4",
-    categoryId: "fast-food",
+    categoryId: "chinese",
     isVeg: true,
     isPopular: true
   },
@@ -937,7 +1083,7 @@ export const foodItems: FoodItem[] = [
     rating: 4.6,
     reviewCount: 167,
     restaurantId: "r4",
-    categoryId: "fast-food",
+    categoryId: "chinese",
     isVeg: true,
     isPopular: true
   },
@@ -967,95 +1113,69 @@ export const foodItems: FoodItem[] = [
     isVeg: true,
     isPopular: true
   },
+  // Additional food items for better coverage
   {
-    id: "f29",
-    name: "Patra",
-    description: "Traditional Gujarati dish made with colocasia leaves stuffed with spiced gram flour",
-    price: 35,
-    image: patraImage,
-    rating: 4.7,
-    reviewCount: 145,
-    restaurantId: "r3",
-    categoryId: "fast-food",
-    isVeg: true,
-    isPopular: true
-  },
-  // New Food Items
-  {
-    id: "f30",
-    name: "Chole Bhature",
-    description: "Spicy chickpea curry served with fluffy deep-fried bread - a North Indian classic",
-    price: 69,
-    image: choleBhatureImage,
-    rating: 4.7,
+    id: "f36",
+    name: "Vada Pav",
+    description: "Mumbai's famous spicy potato fritter in a bun with garlic chutney",
+    price: 25,
+    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400",
+    rating: 4.5,
     reviewCount: 234,
-    restaurantId: "r12",
-    categoryId: "thali",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f31",
-    name: "Dal Bati Churma",
-    description: "Rajasthani specialty - baked wheat balls with dal and sweet churma",
-    price: 89,
-    image: dalBatiImage,
-    rating: 4.8,
-    reviewCount: 167,
-    restaurantId: "r20",
-    categoryId: "thali",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f32",
-    name: "Rajasthani Thali",
-    description: "Complete Rajasthani meal with dal, bati, churma, gatte and traditional sweets",
-    price: 129,
-    image: rajasthaniThaliImage,
-    rating: 4.7,
-    reviewCount: 189,
-    restaurantId: "r20",
-    categoryId: "thali",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f33",
-    name: "Gulab Jamun",
-    description: "Soft milk-solid dumplings soaked in rose-flavored sugar syrup",
-    price: 35,
-    image: gulabJamunImage,
-    rating: 4.8,
-    reviewCount: 312,
-    restaurantId: "r7",
-    categoryId: "sweets",
-    isVeg: true,
-    isPopular: true
-  },
-  {
-    id: "f34",
-    name: "Idli Sambhar",
-    description: "Steamed rice cakes served with lentil soup and coconut chutney",
-    price: 39,
-    image: idliImage,
-    rating: 4.6,
-    reviewCount: 198,
-    restaurantId: "r13",
+    restaurantId: "r17",
     categoryId: "street-food",
     isVeg: true,
     isPopular: true
   },
   {
-    id: "f35",
-    name: "Pav Bhaji",
-    description: "Spiced mixed vegetable curry served with buttery toasted bread",
+    id: "f37",
+    name: "Fried Rice",
+    description: "Aromatic vegetable fried rice with soy sauce and mixed vegetables",
+    price: 60,
+    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400",
+    rating: 4.4,
+    reviewCount: 178,
+    restaurantId: "r21",
+    categoryId: "chinese",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f38",
+    name: "Spring Rolls",
+    description: "Crispy rolls filled with vegetables, served with sweet chili sauce",
     price: 55,
-    image: pavBhajiImage,
-    rating: 4.7,
-    reviewCount: 289,
-    restaurantId: "r4",
-    categoryId: "street-food",
+    image: "https://images.unsplash.com/photo-1548507200-1ddb0e8adf59?w=400",
+    rating: 4.5,
+    reviewCount: 145,
+    restaurantId: "r18",
+    categoryId: "chinese",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f39",
+    name: "Medu Vada",
+    description: "Crispy lentil donuts served with sambar and coconut chutney",
+    price: 35,
+    image: "https://images.unsplash.com/photo-1630409351217-bc4fa6422075?w=400",
+    rating: 4.6,
+    reviewCount: 167,
+    restaurantId: "r13",
+    categoryId: "south-indian",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f40",
+    name: "Rasmalai",
+    description: "Soft cottage cheese balls soaked in sweetened, thickened milk with cardamom",
+    price: 45,
+    image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=400",
+    rating: 4.8,
+    reviewCount: 234,
+    restaurantId: "r9",
+    categoryId: "desserts",
     isVeg: true,
     isPopular: true
   }
@@ -1088,5 +1208,79 @@ export const reviews: Review[] = [
     comment: "The dhokla here is so soft and fluffy! Just like homemade.",
     date: "2024-01-08",
     itemId: "f2"
+  },
+  {
+    id: "rev4",
+    oderId: "u4@gmail.com",
+    userName: "Amit Kumar",
+    rating: 5,
+    comment: "Amazing food quality and quick delivery. Will order again!",
+    date: "2024-01-12",
+    restaurantId: "r2"
+  },
+  {
+    id: "rev5",
+    oderId: "u5@gmail.com",
+    userName: "Sneha Desai",
+    rating: 4,
+    comment: "Love the variety in their menu. The pav bhaji was fantastic!",
+    date: "2024-01-14",
+    restaurantId: "r4"
   }
 ];
+
+// Helper function to get restaurant menu items by category
+export const getRestaurantMenuByCategory = (restaurantId: string) => {
+  const restaurant = restaurants.find(r => r.id === restaurantId);
+  if (!restaurant) return {};
+  
+  const restaurantItems = foodItems.filter(item => item.restaurantId === restaurantId);
+  const menuByCategory: Record<string, FoodItem[]> = {};
+  
+  // Group items by category
+  restaurantItems.forEach(item => {
+    if (!menuByCategory[item.categoryId]) {
+      menuByCategory[item.categoryId] = [];
+    }
+    menuByCategory[item.categoryId].push(item);
+  });
+  
+  // Also add items from shared categories
+  if (restaurant.menuCategories) {
+    restaurant.menuCategories.forEach(categoryId => {
+      if (!menuByCategory[categoryId]) {
+        // Add some items from this category from other restaurants
+        const categoryItems = foodItems.filter(item => item.categoryId === categoryId).slice(0, 4);
+        if (categoryItems.length > 0) {
+          menuByCategory[categoryId] = categoryItems;
+        }
+      }
+    });
+  }
+  
+  return menuByCategory;
+};
+
+// Helper to get popular items for a restaurant
+export const getRestaurantPopularItems = (restaurantId: string) => {
+  const restaurant = restaurants.find(r => r.id === restaurantId);
+  if (!restaurant) return [];
+  
+  // First get items directly from this restaurant
+  const directItems = foodItems.filter(item => item.restaurantId === restaurantId && item.isPopular);
+  
+  // If not enough, get popular items from same city restaurants
+  if (directItems.length < 4 && restaurant.menuCategories) {
+    const categoryItems = foodItems
+      .filter(item => 
+        item.isPopular && 
+        restaurant.menuCategories?.includes(item.categoryId) &&
+        item.restaurantId !== restaurantId
+      )
+      .slice(0, 4 - directItems.length);
+    
+    return [...directItems, ...categoryItems];
+  }
+  
+  return directItems;
+};
