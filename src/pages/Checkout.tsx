@@ -20,6 +20,7 @@ const checkoutSchema = z.object({
   city: z.string().trim().min(2, 'City must be at least 2 characters').max(100, 'City must be less than 100 characters'),
   pincode: z.string().regex(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits').optional().or(z.literal('')),
 });
+
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
@@ -40,8 +41,11 @@ const Checkout = () => {
     pincode: '',
   });
 
+  const subtotal = getTotalPrice();
   const deliveryFee = 40;
-  const totalWithDelivery = getTotalPrice() + deliveryFee;
+  const taxRate = 0.05; // 5% GST
+  const taxAmount = Math.round(subtotal * taxRate);
+  const totalWithTax = subtotal + deliveryFee + taxAmount;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -97,7 +101,7 @@ const Checkout = () => {
           quantity: item.quantity,
           price: item.price
         })),
-        total: totalWithDelivery,
+        total: totalWithTax,
         address,
         payment_method: paymentMethodText,
         status: paymentMethodText.includes('Online') ? 'confirmed' : 'pending'
@@ -112,7 +116,8 @@ const Checkout = () => {
       navigate('/order-success', { 
         state: { 
           paymentMethod: paymentMethodText,
-          isOnlinePayment: paymentMethodText.includes('Online')
+          isOnlinePayment: paymentMethodText.includes('Online'),
+          totalAmount: totalWithTax
         } 
       });
     } catch (error) {
@@ -298,15 +303,19 @@ const Checkout = () => {
                   <div className="border-t border-border pt-3 space-y-2">
                     <div className="flex justify-between text-muted-foreground">
                       <span>Subtotal</span>
-                      <span>₹{getTotalPrice()}</span>
+                      <span>₹{subtotal}</span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>Delivery Fee</span>
                       <span>₹{deliveryFee}</span>
                     </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>GST (5%)</span>
+                      <span>₹{taxAmount}</span>
+                    </div>
                     <div className="flex justify-between font-bold text-lg pt-2 border-t border-border">
                       <span>Total</span>
-                      <span className="text-primary">₹{totalWithDelivery}</span>
+                      <span className="text-primary">₹{totalWithTax}</span>
                     </div>
                   </div>
 
@@ -317,7 +326,7 @@ const Checkout = () => {
                     size="lg"
                     disabled={isProcessing}
                   >
-                    {isProcessing ? 'Processing...' : paymentMethod === 'online' ? `Pay Online • ₹${totalWithDelivery}` : `Place Order • ₹${totalWithDelivery}`}
+                    {isProcessing ? 'Processing...' : paymentMethod === 'online' ? `Pay Online • ₹${totalWithTax}` : `Place Order • ₹${totalWithTax}`}
                   </Button>
                 </div>
               </div>
@@ -329,7 +338,7 @@ const Checkout = () => {
             isOpen={showQRModal}
             onClose={() => setShowQRModal(false)}
             onPaymentComplete={handleOnlinePaymentComplete}
-            amount={totalWithDelivery}
+            amount={totalWithTax}
           />
         </div>
       </div>

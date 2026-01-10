@@ -332,8 +332,10 @@ const AdminDashboard = () => {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="pending">Pending</SelectItem>
-                              <SelectItem value="in_progress">In Progress</SelectItem>
+                              <SelectItem value="pending">Order Received</SelectItem>
+                              <SelectItem value="confirmed">Confirmed</SelectItem>
+                              <SelectItem value="preparing">Preparing</SelectItem>
+                              <SelectItem value="in_progress">Out for Delivery</SelectItem>
                               <SelectItem value="delivered">Delivered</SelectItem>
                             </SelectContent>
                           </Select>

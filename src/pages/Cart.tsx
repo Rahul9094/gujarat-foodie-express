@@ -8,8 +8,12 @@ import { useAuth } from '@/context/AuthContext';
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
   const { isAuthenticated } = useAuth();
+  
+  const subtotal = getTotalPrice();
   const deliveryFee = cartItems.length > 0 ? 40 : 0;
-  const totalWithDelivery = getTotalPrice() + deliveryFee;
+  const taxRate = 0.05; // 5% GST
+  const taxAmount = Math.round(subtotal * taxRate);
+  const totalWithTax = subtotal + deliveryFee + taxAmount;
 
   if (cartItems.length === 0) {
     return (
@@ -65,9 +69,15 @@ const Cart = () => {
                     <p className="text-sm text-muted-foreground line-clamp-1">
                       {item.description}
                     </p>
-                    <p className="text-primary font-bold mt-2">
-                      ₹{item.price}
-                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <p className="text-primary font-bold">
+                        ₹{item.price}
+                      </p>
+                      <span className="text-muted-foreground">×</span>
+                      <span className="text-muted-foreground">{item.quantity}</span>
+                      <span className="text-muted-foreground">=</span>
+                      <span className="font-semibold">₹{item.price * item.quantity}</span>
+                    </div>
                   </div>
                   <div className="flex flex-col items-end justify-between">
                     <Button
@@ -121,16 +131,20 @@ const Cart = () => {
 
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal ({cartItems.length} items)</span>
-                    <span>₹{getTotalPrice()}</span>
+                    <span>Subtotal ({cartItems.reduce((acc, item) => acc + item.quantity, 0)} items)</span>
+                    <span>₹{subtotal}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Delivery Fee</span>
                     <span>₹{deliveryFee}</span>
                   </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>GST (5%)</span>
+                    <span>₹{taxAmount}</span>
+                  </div>
                   <div className="border-t border-border pt-3 flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span className="text-primary">₹{totalWithDelivery}</span>
+                    <span className="text-primary">₹{totalWithTax}</span>
                   </div>
                 </div>
 

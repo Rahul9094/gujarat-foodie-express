@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2 } from 'lucide-react';
+import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2, ChefHat, PackageCheck } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
@@ -20,9 +20,41 @@ export interface Order {
 }
 
 const statusConfig = {
-  pending: { icon: Clock, label: 'Pending', color: 'text-spice-turmeric' },
-  in_progress: { icon: Truck, label: 'On the way', color: 'text-primary' },
-  delivered: { icon: CheckCircle, label: 'Delivered', color: 'text-accent' },
+  pending: { 
+    icon: Clock, 
+    label: 'Order Received', 
+    color: 'text-spice-turmeric',
+    bgColor: 'bg-spice-turmeric/10',
+    description: 'Your order has been received and is being processed'
+  },
+  confirmed: {
+    icon: PackageCheck,
+    label: 'Confirmed',
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+    description: 'Payment confirmed, preparing your order'
+  },
+  preparing: { 
+    icon: ChefHat, 
+    label: 'Preparing', 
+    color: 'text-orange-500',
+    bgColor: 'bg-orange-500/10',
+    description: 'Our chefs are preparing your delicious food'
+  },
+  in_progress: { 
+    icon: Truck, 
+    label: 'Out for Delivery', 
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    description: 'Your order is on the way!'
+  },
+  delivered: { 
+    icon: CheckCircle, 
+    label: 'Delivered', 
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
+    description: 'Order delivered successfully'
+  },
 };
 
 const Orders = () => {
@@ -32,10 +64,43 @@ const Orders = () => {
   const { addToCart } = useCart();
   const { supabaseUser, isAuthenticated, loading: authLoading } = useAuth();
 
-  // Load user-specific orders from Supabase
+  // Load user-specific orders from Supabase with real-time updates
   useEffect(() => {
     if (supabaseUser?.id) {
       fetchOrders();
+      
+      // Set up real-time subscription
+      const channel = supabase
+        .channel('orders-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'orders',
+            filter: `user_id=eq.${supabaseUser.id}`
+          },
+          (payload) => {
+            console.log('Order update received:', payload);
+            if (payload.eventType === 'UPDATE') {
+              setOrders(prev => prev.map(order => 
+                order.id === payload.new.id 
+                  ? { ...order, ...payload.new, items: payload.new.items as Order['items'] }
+                  : order
+              ));
+              toast.info(`Order status updated to: ${statusConfig[payload.new.status as keyof typeof statusConfig]?.label || payload.new.status}`);
+            } else if (payload.eventType === 'INSERT') {
+              fetchOrders();
+            } else if (payload.eventType === 'DELETE') {
+              setOrders(prev => prev.filter(order => order.id !== payload.old.id));
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     } else if (!authLoading) {
       setOrders([]);
       setLoading(false);
@@ -102,6 +167,19 @@ const Orders = () => {
   };
 
   const deliveredOrdersCount = orders.filter(o => o.status === 'delivered').length;
+
+  // Get status steps for progress tracking
+  const getStatusSteps = (currentStatus: string) => {
+    const allSteps = ['pending', 'confirmed', 'preparing', 'in_progress', 'delivered'];
+    const currentIndex = allSteps.indexOf(currentStatus);
+    
+    return allSteps.map((step, index) => ({
+      ...statusConfig[step as keyof typeof statusConfig],
+      key: step,
+      isComplete: index <= currentIndex,
+      isCurrent: index === currentIndex
+    }));
+  };
 
   if (authLoading || loading) {
     return (
@@ -180,6 +258,7 @@ const Orders = () => {
               {orders.map((order, index) => {
                 const status = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.pending;
                 const StatusIcon = status.icon;
+                const steps = getStatusSteps(order.status);
 
                 return (
                   <div
@@ -201,10 +280,47 @@ const Orders = () => {
                           })}
                         </p>
                       </div>
-                      <div className={`flex items-center gap-2 ${status.color}`}>
-                        <StatusIcon className="w-5 h-5" />
-                        <span className="font-medium">{status.label}</span>
+                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.color}`}>
+                        <StatusIcon className="w-4 h-4" />
+                        <span className="font-medium text-sm">{status.label}</span>
                       </div>
+                    </div>
+
+                    {/* Order Progress Tracker */}
+                    <div className="mb-6 p-4 bg-secondary/30 rounded-lg">
+                      <div className="flex items-center justify-between relative">
+                        {/* Progress line */}
+                        <div className="absolute top-4 left-0 right-0 h-0.5 bg-border" />
+                        <div 
+                          className="absolute top-4 left-0 h-0.5 bg-primary transition-all duration-500"
+                          style={{ 
+                            width: `${(steps.findIndex(s => s.isCurrent) / (steps.length - 1)) * 100}%` 
+                          }}
+                        />
+                        
+                        {steps.map((step, stepIndex) => {
+                          const StepIcon = step.icon;
+                          return (
+                            <div key={step.key} className="flex flex-col items-center relative z-10">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                                step.isComplete 
+                                  ? 'bg-primary text-primary-foreground' 
+                                  : 'bg-secondary text-muted-foreground'
+                              } ${step.isCurrent ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
+                                <StepIcon className="w-4 h-4" />
+                              </div>
+                              <span className={`text-xs mt-2 text-center max-w-[60px] ${
+                                step.isCurrent ? 'font-semibold text-foreground' : 'text-muted-foreground'
+                              }`}>
+                                {step.label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <p className="text-sm text-muted-foreground text-center mt-4">
+                        {status.description}
+                      </p>
                     </div>
 
                     <div className="border-t border-border pt-4">
@@ -271,6 +387,21 @@ const Orders = () => {
               <div className="flex items-center gap-2">
                 <Package className="w-5 h-5 text-primary" />
                 <span className="font-bold text-foreground">#{selectedOrder.id.slice(0, 8)}</span>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <h3 className="font-semibold text-foreground mb-2">Order Status</h3>
+                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                  statusConfig[selectedOrder.status as keyof typeof statusConfig]?.bgColor
+                } ${statusConfig[selectedOrder.status as keyof typeof statusConfig]?.color}`}>
+                  {(() => {
+                    const StatusIcon = statusConfig[selectedOrder.status as keyof typeof statusConfig]?.icon || Clock;
+                    return <StatusIcon className="w-4 h-4" />;
+                  })()}
+                  <span className="font-medium text-sm">
+                    {statusConfig[selectedOrder.status as keyof typeof statusConfig]?.label || selectedOrder.status}
+                  </span>
+                </div>
               </div>
 
               <div className="border-t border-border pt-4">
