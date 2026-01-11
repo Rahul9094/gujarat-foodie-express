@@ -35,6 +35,8 @@ import gulabJamunImage from '@/assets/gulab-jamun.jpeg';
 import idliImage from '@/assets/idli.jpeg';
 import pavBhajiImage from '@/assets/pav-bhaji.jpeg';
 import rajasthaniThaliImage from '@/assets/rajasthani-thali.jpeg';
+import rasmalaiImage from '@/assets/rasmalai.jpeg';
+import springRollsImage from '@/assets/spring-rolls.jpeg';
 
 export interface City {
   id: string;
@@ -1004,7 +1006,7 @@ export const foodItems: FoodItem[] = [
     rating: 4.8,
     reviewCount: 312,
     restaurantId: "r7",
-    categoryId: "desserts",
+    categoryId: "sweets",
     isVeg: true,
     isPopular: true
   },
@@ -1145,7 +1147,7 @@ export const foodItems: FoodItem[] = [
     name: "Spring Rolls",
     description: "Crispy rolls filled with vegetables, served with sweet chili sauce",
     price: 55,
-    image: "https://images.unsplash.com/photo-1548507200-1ddb0e8adf59?w=400",
+    image: springRollsImage,
     rating: 4.5,
     reviewCount: 145,
     restaurantId: "r18",
@@ -1171,10 +1173,76 @@ export const foodItems: FoodItem[] = [
     name: "Rasmalai",
     description: "Soft cottage cheese balls soaked in sweetened, thickened milk with cardamom",
     price: 45,
-    image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=400",
+    image: rasmalaiImage,
     rating: 4.8,
     reviewCount: 234,
     restaurantId: "r9",
+    categoryId: "desserts",
+    isVeg: true,
+    isPopular: true
+  },
+  // More desserts
+  {
+    id: "f41",
+    name: "Kulfi Falooda",
+    description: "Traditional Indian ice cream with vermicelli, basil seeds and rose syrup",
+    price: 55,
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
+    rating: 4.7,
+    reviewCount: 189,
+    restaurantId: "r9",
+    categoryId: "desserts",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f42",
+    name: "Rabdi",
+    description: "Rich, sweetened condensed milk dessert with cardamom and nuts",
+    price: 40,
+    image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=400",
+    rating: 4.6,
+    reviewCount: 156,
+    restaurantId: "r7",
+    categoryId: "desserts",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f43",
+    name: "Ice Cream Sundae",
+    description: "Mixed ice cream with chocolate sauce, nuts, and whipped cream",
+    price: 65,
+    image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400",
+    rating: 4.5,
+    reviewCount: 234,
+    restaurantId: "r15",
+    categoryId: "desserts",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f44",
+    name: "Gajar Ka Halwa",
+    description: "Traditional carrot pudding with milk, ghee and dry fruits",
+    price: 45,
+    image: "https://images.unsplash.com/photo-1571167530149-c1105da4c2c7?w=400",
+    rating: 4.8,
+    reviewCount: 178,
+    restaurantId: "r33",
+    categoryId: "desserts",
+    isVeg: true,
+    isPopular: true
+  },
+  {
+    id: "f45",
+    name: "Chocolate Brownie",
+    description: "Warm chocolate brownie with vanilla ice cream and chocolate sauce",
+    price: 75,
+    image: "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=400",
+    rating: 4.6,
+    reviewCount: 267,
+    restaurantId: "r18",
     categoryId: "desserts",
     isVeg: true,
     isPopular: true

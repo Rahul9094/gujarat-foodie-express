@@ -1,8 +1,8 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Star, Clock, MapPin, Phone, ArrowLeft, Leaf, Navigation, ShoppingCart } from 'lucide-react';
+import { Star, Clock, MapPin, Phone, ArrowLeft, Leaf, Navigation, ShoppingCart, Flame } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { restaurants, cities, foodItems, reviews, categories, getRestaurantPopularItems } from '@/data/mockData';
+import { restaurants, cities, foodItems, reviews, getRestaurantPopularItems } from '@/data/mockData';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
 
@@ -14,33 +14,36 @@ const RestaurantDetail = () => {
   const restaurant = restaurants.find(r => r.id === restaurantId);
   const city = restaurant ? cities.find(c => c.id === restaurant.cityId) : null;
   
-  // Get restaurant menu items grouped by category
-  const restaurantFoods = foodItems.filter(f => f.restaurantId === restaurantId);
+  // Get restaurant menu items - all items without category grouping
+  const getRestaurantMenu = () => {
+    if (!restaurant) return [];
+    
+    // Get items directly from this restaurant
+    const directItems = foodItems.filter(f => f.restaurantId === restaurantId);
+    
+    // Get additional items from restaurant's menu categories to ensure 5-6 items minimum
+    const additionalItems: typeof foodItems = [];
+    if (restaurant.menuCategories && directItems.length < 6) {
+      restaurant.menuCategories.forEach(categoryId => {
+        const categoryItems = foodItems
+          .filter(item => item.categoryId === categoryId && item.restaurantId !== restaurantId)
+          .slice(0, 2);
+        additionalItems.push(...categoryItems);
+      });
+    }
+    
+    // Combine and ensure uniqueness, minimum 5-6 items
+    const allItems = [...directItems, ...additionalItems];
+    const uniqueItems = allItems.filter((item, index, self) => 
+      index === self.findIndex(i => i.id === item.id)
+    );
+    
+    return uniqueItems.slice(0, 12); // Max 12 items for clean display
+  };
+
+  const menuItems = getRestaurantMenu();
   const popularItems = getRestaurantPopularItems(restaurantId || '');
   const restaurantReviews = reviews.filter(r => r.restaurantId === restaurantId);
-
-  // Group menu items by category
-  const menuByCategory: Record<string, typeof foodItems> = {};
-  
-  // Add direct restaurant items
-  restaurantFoods.forEach(item => {
-    if (!menuByCategory[item.categoryId]) {
-      menuByCategory[item.categoryId] = [];
-    }
-    menuByCategory[item.categoryId].push(item);
-  });
-
-  // Add items from restaurant's menu categories
-  if (restaurant?.menuCategories) {
-    restaurant.menuCategories.forEach(categoryId => {
-      if (!menuByCategory[categoryId]) {
-        const categoryItems = foodItems.filter(item => item.categoryId === categoryId).slice(0, 6);
-        if (categoryItems.length > 0) {
-          menuByCategory[categoryId] = categoryItems;
-        }
-      }
-    });
-  }
 
   const handleAddToCart = (item: typeof foodItems[0]) => {
     addToCart(item);
@@ -165,11 +168,12 @@ const RestaurantDetail = () => {
           </div>
         </div>
 
-        {/* Popular Items */}
+        {/* Popular Items / Top Selling Dishes */}
         {popularItems.length > 0 && (
           <div className="container mx-auto px-4 py-12">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-              🔥 Top Selling Dishes
+            <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
+              <Flame className="w-6 h-6 text-primary" />
+              Top Selling Dishes
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {popularItems.slice(0, 8).map((item, index) => (
@@ -219,70 +223,57 @@ const RestaurantDetail = () => {
           </div>
         )}
 
-        {/* Full Menu by Category */}
+        {/* Menu Items - No Categories */}
         <div className="bg-secondary/30 py-12">
           <div className="container mx-auto px-4">
             <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-              📋 Full Menu
+              📋 Menu
             </h2>
             
-            {Object.entries(menuByCategory).map(([categoryId, items]) => {
-              const category = categories.find(c => c.id === categoryId);
-              if (!category || items.length === 0) return null;
-              
-              return (
-                <div key={categoryId} className="mb-8">
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                    {category.name}
-                    <span className="text-sm font-normal text-muted-foreground">({items.length} items)</span>
-                  </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {items.map((item, index) => (
-                      <div
-                        key={item.id}
-                        className="bg-card rounded-xl p-4 shadow-card flex gap-4 animate-fade-in hover:shadow-lg transition-shadow"
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                      >
-                        <Link to={`/food/${item.id}`} className="flex-shrink-0">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-20 h-20 rounded-lg object-cover"
-                          />
-                        </Link>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-medium text-foreground line-clamp-1">{item.name}</h4>
-                              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
-                                {item.rating} ({item.reviewCount})
-                              </div>
-                            </div>
-                            {item.isVeg && (
-                              <div className="w-4 h-4 border border-green-600 flex items-center justify-center">
-                                <div className="w-2 h-2 rounded-full bg-green-600" />
-                              </div>
-                            )}
-                          </div>
-                          <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
-                          <div className="flex items-center justify-between mt-2">
-                            <span className="font-bold text-primary">₹{item.price}</span>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleAddToCart(item)}
-                            >
-                              Add
-                            </Button>
-                          </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {menuItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="bg-card rounded-xl p-4 shadow-card flex gap-4 animate-fade-in hover:shadow-lg transition-shadow"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <Link to={`/food/${item.id}`} className="flex-shrink-0">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-20 h-20 rounded-lg object-cover"
+                    />
+                  </Link>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-medium text-foreground line-clamp-1">{item.name}</h4>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                          <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
+                          {item.rating} ({item.reviewCount})
                         </div>
                       </div>
-                    ))}
+                      {item.isVeg && (
+                        <div className="w-4 h-4 border border-green-600 flex items-center justify-center">
+                          <div className="w-2 h-2 rounded-full bg-green-600" />
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="font-bold text-primary">₹{item.price}</span>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        Add
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
 
