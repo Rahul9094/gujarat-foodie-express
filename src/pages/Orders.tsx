@@ -1,12 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2, ChefHat, PackageCheck } from 'lucide-react';
+import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2, ChefHat, PackageCheck, XCircle, AlertCircle } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export interface Order {
   id: string;
@@ -55,12 +65,21 @@ const statusConfig = {
     bgColor: 'bg-accent/10',
     description: 'Order delivered successfully'
   },
+  cancelled: { 
+    icon: XCircle, 
+    label: 'Cancelled', 
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
+    description: 'Order has been cancelled'
+  },
 };
 
 const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancelOrderId, setCancelOrderId] = useState<string | null>(null);
+  const [cancellingOrder, setCancellingOrder] = useState(false);
   const { addToCart } = useCart();
   const { supabaseUser, isAuthenticated, loading: authLoading } = useAuth();
 
@@ -128,6 +147,39 @@ const Orders = () => {
     setLoading(false);
   };
 
+  const handleCancelOrder = async () => {
+    if (!cancelOrderId) return;
+    
+    setCancellingOrder(true);
+    const order = orders.find(o => o.id === cancelOrderId);
+    
+    const { error } = await supabase
+      .from('orders')
+      .update({ status: 'cancelled' })
+      .eq('id', cancelOrderId);
+
+    if (error) {
+      console.error('Error cancelling order:', error);
+      toast.error('Failed to cancel order');
+    } else {
+      setOrders(prev => prev.map(o => 
+        o.id === cancelOrderId ? { ...o, status: 'cancelled' } : o
+      ));
+      
+      // Show refund message for online payments
+      if (order?.payment_method === 'online') {
+        toast.success('Order cancelled! Your payment amount will be sent to your account within 24 hours.', {
+          duration: 6000
+        });
+      } else {
+        toast.success('Order cancelled successfully!');
+      }
+    }
+    
+    setCancellingOrder(false);
+    setCancelOrderId(null);
+  };
+
   const handleReorder = (order: Order) => {
     order.items.forEach(item => {
       addToCart({
@@ -149,7 +201,7 @@ const Orders = () => {
   const handleClearDeliveredOrders = async () => {
     if (!supabaseUser?.id) return;
     
-    const deliveredOrders = orders.filter(o => o.status === 'delivered');
+    const deliveredOrders = orders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
     
     for (const order of deliveredOrders) {
       const { error } = await supabase
@@ -163,13 +215,21 @@ const Orders = () => {
     }
     
     fetchOrders();
-    toast.success('All delivered orders cleared!');
+    toast.success('All completed/cancelled orders cleared!');
   };
 
-  const deliveredOrdersCount = orders.filter(o => o.status === 'delivered').length;
+  const canCancelOrder = (status: string) => {
+    return status === 'pending' || status === 'confirmed';
+  };
+
+  const deliveredOrdersCount = orders.filter(o => o.status === 'delivered' || o.status === 'cancelled').length;
 
   // Get status steps for progress tracking
   const getStatusSteps = (currentStatus: string) => {
+    if (currentStatus === 'cancelled') {
+      return [{ ...statusConfig.cancelled, key: 'cancelled', isComplete: true, isCurrent: true }];
+    }
+    
     const allSteps = ['pending', 'confirmed', 'preparing', 'in_progress', 'delivered'];
     const currentIndex = allSteps.indexOf(currentStatus);
     
@@ -231,7 +291,7 @@ const Orders = () => {
                 className="text-destructive hover:bg-destructive/10"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
-                Clear Delivered Orders ({deliveredOrdersCount})
+                Clear Completed Orders ({deliveredOrdersCount})
               </Button>
             )}
           </div>
@@ -279,6 +339,9 @@ const Orders = () => {
                             day: 'numeric',
                           })}
                         </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Payment: {order.payment_method === 'online' ? 'Online Payment' : 'Cash on Delivery'}
+                        </p>
                       </div>
                       <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.color}`}>
                         <StatusIcon className="w-4 h-4" />
@@ -287,41 +350,59 @@ const Orders = () => {
                     </div>
 
                     {/* Order Progress Tracker */}
-                    <div className="mb-6 p-4 bg-secondary/30 rounded-lg">
-                      <div className="flex items-center justify-between relative">
-                        {/* Progress line */}
-                        <div className="absolute top-4 left-0 right-0 h-0.5 bg-border" />
-                        <div 
-                          className="absolute top-4 left-0 h-0.5 bg-primary transition-all duration-500"
-                          style={{ 
-                            width: `${(steps.findIndex(s => s.isCurrent) / (steps.length - 1)) * 100}%` 
-                          }}
-                        />
-                        
-                        {steps.map((step, stepIndex) => {
-                          const StepIcon = step.icon;
-                          return (
-                            <div key={step.key} className="flex flex-col items-center relative z-10">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                                step.isComplete 
-                                  ? 'bg-primary text-primary-foreground' 
-                                  : 'bg-secondary text-muted-foreground'
-                              } ${step.isCurrent ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
-                                <StepIcon className="w-4 h-4" />
+                    {order.status !== 'cancelled' && (
+                      <div className="mb-6 p-4 bg-secondary/30 rounded-lg">
+                        <div className="flex items-center justify-between relative">
+                          {/* Progress line */}
+                          <div className="absolute top-4 left-0 right-0 h-0.5 bg-border" />
+                          <div 
+                            className="absolute top-4 left-0 h-0.5 bg-primary transition-all duration-500"
+                            style={{ 
+                              width: `${(steps.findIndex(s => s.isCurrent) / (steps.length - 1)) * 100}%` 
+                            }}
+                          />
+                          
+                          {steps.map((step, stepIndex) => {
+                            const StepIcon = step.icon;
+                            return (
+                              <div key={step.key} className="flex flex-col items-center relative z-10">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                                  step.isComplete 
+                                    ? 'bg-primary text-primary-foreground' 
+                                    : 'bg-secondary text-muted-foreground'
+                                } ${step.isCurrent ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
+                                  <StepIcon className="w-4 h-4" />
+                                </div>
+                                <span className={`text-xs mt-2 text-center max-w-[60px] ${
+                                  step.isCurrent ? 'font-semibold text-foreground' : 'text-muted-foreground'
+                                }`}>
+                                  {step.label}
+                                </span>
                               </div>
-                              <span className={`text-xs mt-2 text-center max-w-[60px] ${
-                                step.isCurrent ? 'font-semibold text-foreground' : 'text-muted-foreground'
-                              }`}>
-                                {step.label}
-                              </span>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
+                        <p className="text-sm text-muted-foreground text-center mt-4">
+                          {status.description}
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground text-center mt-4">
-                        {status.description}
-                      </p>
-                    </div>
+                    )}
+
+                    {/* Cancelled Order Message */}
+                    {order.status === 'cancelled' && (
+                      <div className="mb-6 p-4 bg-destructive/10 rounded-lg border border-destructive/20">
+                        <div className="flex items-center gap-2 text-destructive mb-2">
+                          <XCircle className="w-5 h-5" />
+                          <span className="font-medium">Order Cancelled</span>
+                        </div>
+                        {order.payment_method === 'online' && (
+                          <div className="flex items-start gap-2 text-sm text-muted-foreground mt-2">
+                            <AlertCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                            <p>Your payment amount will be sent to your account within 24 hours.</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="border-t border-border pt-4">
                       <div className="space-y-2 mb-4">
@@ -340,7 +421,7 @@ const Orders = () => {
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-border flex gap-3">
+                    <div className="mt-4 pt-4 border-t border-border flex flex-wrap gap-3">
                       <Button 
                         variant="outline" 
                         size="sm"
@@ -348,6 +429,16 @@ const Orders = () => {
                       >
                         View Details
                       </Button>
+                      {canCancelOrder(order.status) && (
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => setCancelOrderId(order.id)}
+                        >
+                          <XCircle className="w-4 h-4 mr-1" />
+                          Cancel Order
+                        </Button>
+                      )}
                       {order.status === 'delivered' && (
                         <Button 
                           variant="secondary" 
@@ -402,6 +493,13 @@ const Orders = () => {
                     {statusConfig[selectedOrder.status as keyof typeof statusConfig]?.label || selectedOrder.status}
                   </span>
                 </div>
+                
+                {/* Refund message for cancelled online orders */}
+                {selectedOrder.status === 'cancelled' && selectedOrder.payment_method === 'online' && (
+                  <div className="mt-3 p-3 bg-primary/10 rounded-lg text-sm">
+                    <p className="text-foreground">💰 Your payment amount will be sent to your account within 24 hours.</p>
+                  </div>
+                )}
               </div>
 
               <div className="border-t border-border pt-4">
@@ -425,7 +523,9 @@ const Orders = () => {
 
               <div className="border-t border-border pt-4">
                 <h3 className="font-semibold text-foreground mb-2">Payment Method</h3>
-                <p className="text-sm text-muted-foreground">{selectedOrder.payment_method}</p>
+                <p className="text-sm text-muted-foreground">
+                  {selectedOrder.payment_method === 'online' ? 'Online Payment' : 'Cash on Delivery'}
+                </p>
               </div>
 
               <div className="border-t border-border pt-4">
@@ -445,10 +545,22 @@ const Orders = () => {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex gap-3">
+              {canCancelOrder(selectedOrder.status) && (
+                <Button 
+                  variant="destructive" 
+                  className="flex-1"
+                  onClick={() => {
+                    setCancelOrderId(selectedOrder.id);
+                    setSelectedOrder(null);
+                  }}
+                >
+                  Cancel Order
+                </Button>
+              )}
               <Button 
                 variant="hero" 
-                className="w-full"
+                className="flex-1"
                 onClick={() => setSelectedOrder(null)}
               >
                 Close
@@ -457,6 +569,33 @@ const Orders = () => {
           </div>
         </div>
       )}
+
+      {/* Cancel Order Confirmation Dialog */}
+      <AlertDialog open={!!cancelOrderId} onOpenChange={() => setCancelOrderId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Order?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel this order? This action cannot be undone.
+              {orders.find(o => o.id === cancelOrderId)?.payment_method === 'online' && (
+                <span className="block mt-2 text-primary font-medium">
+                  Your payment amount will be sent to your account within 24 hours.
+                </span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={cancellingOrder}>Keep Order</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleCancelOrder}
+              disabled={cancellingOrder}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {cancellingOrder ? 'Cancelling...' : 'Yes, Cancel Order'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 };
