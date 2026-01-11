@@ -14,56 +14,56 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-background py-12">
+    <footer className="bg-foreground text-background py-8 sm:py-12">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-hero flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">G</span>
+          <div className="col-span-2 sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-hero flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm sm:text-lg">G</span>
               </div>
-              <h3 className="font-display text-xl font-bold">Gujarat Food Express</h3>
+              <h3 className="font-display text-lg sm:text-xl font-bold">Gujarat Food Express</h3>
             </div>
-            <p className="text-background/70 text-sm mb-4">
-              Bringing authentic Gujarati flavors to your doorstep. Experience the rich culinary heritage of Gujarat with every order.
+            <p className="text-background/70 text-xs sm:text-sm mb-3 sm:mb-4">
+              Bringing authentic Gujarati flavors to your doorstep.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4">
               <a 
                 href="https://www.instagram.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
                 aria-label="Instagram"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
               <a 
                 href="https://www.facebook.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
                 aria-label="Facebook"
               >
-                <Facebook className="w-5 h-5" />
+                <Facebook className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
               <a 
                 href="https://www.twitter.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
                 aria-label="Twitter"
               >
-                <Twitter className="w-5 h-5" />
+                <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
               <a 
                 href="https://wa.me/917863821747" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-background/10 hover:bg-green-500 hover:text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background/10 hover:bg-green-500 hover:text-white flex items-center justify-center transition-colors"
                 aria-label="WhatsApp"
               >
-                <WhatsAppIcon className="w-5 h-5" />
+                <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
             </div>
           </div>

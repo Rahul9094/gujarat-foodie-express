@@ -14,16 +14,16 @@ const RestaurantDetail = () => {
   const restaurant = restaurants.find(r => r.id === restaurantId);
   const city = restaurant ? cities.find(c => c.id === restaurant.cityId) : null;
   
-  // Get restaurant menu items - all items without category grouping
+  // Get restaurant menu items - exactly 5 items per restaurant
   const getRestaurantMenu = () => {
     if (!restaurant) return [];
     
     // Get items directly from this restaurant
     const directItems = foodItems.filter(f => f.restaurantId === restaurantId);
     
-    // Get additional items from restaurant's menu categories to ensure 5-6 items minimum
+    // Get additional items from restaurant's menu categories if needed
     const additionalItems: typeof foodItems = [];
-    if (restaurant.menuCategories && directItems.length < 6) {
+    if (restaurant.menuCategories && directItems.length < 5) {
       restaurant.menuCategories.forEach(categoryId => {
         const categoryItems = foodItems
           .filter(item => item.categoryId === categoryId && item.restaurantId !== restaurantId)
@@ -32,13 +32,13 @@ const RestaurantDetail = () => {
       });
     }
     
-    // Combine and ensure uniqueness, minimum 5-6 items
+    // Combine and ensure uniqueness, limit to exactly 5 items
     const allItems = [...directItems, ...additionalItems];
     const uniqueItems = allItems.filter((item, index, self) => 
       index === self.findIndex(i => i.id === item.id)
     );
     
-    return uniqueItems.slice(0, 12); // Max 12 items for clean display
+    return uniqueItems.slice(0, 5); // Limit to exactly 5 items
   };
 
   const menuItems = getRestaurantMenu();
@@ -170,12 +170,12 @@ const RestaurantDetail = () => {
 
         {/* Popular Items / Top Selling Dishes */}
         {popularItems.length > 0 && (
-          <div className="container mx-auto px-4 py-12">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
-              <Flame className="w-6 h-6 text-primary" />
+          <div className="container mx-auto px-4 py-8 sm:py-12">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
+              <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               Top Selling Dishes
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {popularItems.slice(0, 8).map((item, index) => (
                 <div
                   key={item.id}
@@ -194,15 +194,15 @@ const RestaurantDetail = () => {
                       </div>
                     </div>
                   </Link>
-                  <div className="p-3">
-                    <h3 className="font-medium text-foreground text-sm line-clamp-1">
+                  <div className="p-2 sm:p-3">
+                    <h3 className="font-medium text-foreground text-xs sm:text-sm line-clamp-1">
                       {item.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5 sm:mt-1 hidden sm:block">
                       {item.description}
                     </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="font-bold text-primary">₹{item.price}</span>
+                    <div className="flex items-center justify-between mt-1 sm:mt-2">
+                      <span className="font-bold text-primary text-sm sm:text-base">₹{item.price}</span>
                       <div className="flex items-center gap-1 text-xs">
                         <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
                         {item.rating}
@@ -210,11 +210,11 @@ const RestaurantDetail = () => {
                     </div>
                     <Button 
                       size="sm" 
-                      className="w-full mt-2"
+                      className="w-full mt-1 sm:mt-2 text-xs sm:text-sm h-7 sm:h-8"
                       onClick={() => handleAddToCart(item)}
                     >
                       <ShoppingCart className="w-3 h-3 mr-1" />
-                      Add to Cart
+                      Add
                     </Button>
                   </div>
                 </div>
@@ -224,47 +224,48 @@ const RestaurantDetail = () => {
         )}
 
         {/* Menu Items - No Categories */}
-        <div className="bg-secondary/30 py-12">
+        <div className="bg-secondary/30 py-8 sm:py-12">
           <div className="container mx-auto px-4">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">
               📋 Menu
             </h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {menuItems.map((item, index) => (
                 <div
                   key={item.id}
-                  className="bg-card rounded-xl p-4 shadow-card flex gap-4 animate-fade-in hover:shadow-lg transition-shadow"
+                  className="bg-card rounded-xl p-3 sm:p-4 shadow-card flex gap-3 sm:gap-4 animate-fade-in hover:shadow-lg transition-shadow"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <Link to={`/food/${item.id}`} className="flex-shrink-0">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-20 h-20 rounded-lg object-cover"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
                     />
                   </Link>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="font-medium text-foreground line-clamp-1">{item.name}</h4>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-medium text-foreground text-sm sm:text-base line-clamp-1">{item.name}</h4>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 sm:mt-1">
                           <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
                           {item.rating} ({item.reviewCount})
                         </div>
                       </div>
                       {item.isVeg && (
-                        <div className="w-4 h-4 border border-green-600 flex items-center justify-center">
+                        <div className="w-4 h-4 border border-green-600 flex items-center justify-center flex-shrink-0">
                           <div className="w-2 h-2 rounded-full bg-green-600" />
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1 hidden sm:block">{item.description}</p>
                     <div className="flex items-center justify-between mt-2">
-                      <span className="font-bold text-primary">₹{item.price}</span>
+                      <span className="font-bold text-primary text-sm sm:text-base">₹{item.price}</span>
                       <Button 
                         size="sm" 
                         variant="outline"
+                        className="h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
                         onClick={() => handleAddToCart(item)}
                       >
                         Add

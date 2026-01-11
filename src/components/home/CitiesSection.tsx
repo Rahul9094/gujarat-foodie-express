@@ -16,7 +16,7 @@ const CitiesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {cities.map((city, index) => (
             <Link
               key={city.id}
@@ -31,12 +31,12 @@ const CitiesSection = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
-              <div className="p-4 text-center">
-                <h3 className="font-display text-lg font-semibold text-foreground flex items-center justify-center gap-1">
-                  <MapPin className="w-4 h-4 text-primary" />
+              <div className="p-2 sm:p-4 text-center">
+                <h3 className="font-display text-sm sm:text-lg font-semibold text-foreground flex items-center justify-center gap-1">
+                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
                   {city.name}
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
                   {city.restaurantCount} Restaurants
                 </p>
               </div>

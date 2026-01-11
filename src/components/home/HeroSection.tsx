@@ -50,31 +50,31 @@ const HeroSection = () => {
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap gap-8 pt-6">
+            <div className="flex flex-wrap gap-4 sm:gap-8 pt-6">
               <div className="flex items-center gap-2">
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                  <Star className="w-6 h-6 text-accent" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                  <Star className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">4.8+</p>
+                  <p className="font-bold text-foreground text-sm sm:text-base">4.8+</p>
                   <p className="text-xs text-muted-foreground">Rating</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-primary" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">30 min</p>
+                  <p className="font-bold text-foreground text-sm sm:text-base">30 min</p>
                   <p className="text-xs text-muted-foreground">Avg. Delivery</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-12 h-12 rounded-full bg-spice-turmeric/20 flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-spice-turmeric" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-spice-turmeric/20 flex items-center justify-center">
+                  <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-spice-turmeric" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">7 Cities</p>
+                  <p className="font-bold text-foreground text-sm sm:text-base">7 Cities</p>
                   <p className="text-xs text-muted-foreground">Covered</p>
                 </div>
               </div>
