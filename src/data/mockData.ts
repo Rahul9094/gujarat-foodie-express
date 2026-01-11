@@ -41,6 +41,13 @@ import pancakeImage from '@/assets/pancake.jpeg';
 import chocolateBrownieImage from '@/assets/chocolate-brownie.jpeg';
 import kulfiFaloodaImage from '@/assets/kulfi-falooda.jpeg';
 import rabdiImage from '@/assets/rabdi.jpeg';
+import undhiyuImage from '@/assets/undhiyu.jpeg';
+import capitalFoodCourtImage from '@/assets/capital-food-court.jpeg';
+import kalyanBhelCenterImage from '@/assets/kalyan-bhel-center.jpeg';
+import kathiyavadiRasoiImage from '@/assets/kathiyavadi-rasoi.jpeg';
+import nilambagPalaceKitchenImage from '@/assets/nilambag-palace-kitchen.jpeg';
+import raniKiVavSweetsImage from '@/assets/rani-ki-vav-sweets.jpeg';
+import sayajiBitesImage from '@/assets/sayaji-bites.jpeg';
 
 export interface City {
   id: string;
@@ -357,7 +364,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r17",
     name: "Kalyan Bhel Center",
-    image: "https://images.unsplash.com/photo-1567337710282-00832b415979?w=400",
+    image: kalyanBhelCenterImage,
     cuisine: "Street Food",
     rating: 4.4,
     reviewCount: 312,
@@ -370,7 +377,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r18",
     name: "Sayaji Bites",
-    image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400",
+    image: sayajiBitesImage,
     cuisine: "Fast Food",
     rating: 4.3,
     reviewCount: 178,
@@ -397,7 +404,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r5",
     name: "Kathiyawadi Rasoi",
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
+    image: kathiyavadiRasoiImage,
     cuisine: "Kathiyawadi",
     rating: 4.7,
     reviewCount: 178,
@@ -463,7 +470,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r6",
     name: "Nilambag Palace Kitchen",
-    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400",
+    image: nilambagPalaceKitchenImage,
     cuisine: "Pure Veg Thali",
     rating: 4.4,
     reviewCount: 156,
@@ -529,7 +536,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r7",
     name: "Rani Ki Vav Sweets",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+    image: raniKiVavSweetsImage,
     cuisine: "Sweets & Snacks",
     rating: 4.6,
     reviewCount: 134,
@@ -595,7 +602,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r8",
     name: "Capital Food Court",
-    image: "https://images.unsplash.com/photo-1574936145840-28808d77a706?w=400",
+    image: capitalFoodCourtImage,
     cuisine: "Multi Cuisine",
     rating: 4.3,
     reviewCount: 98,
@@ -692,7 +699,7 @@ export const foodItems: FoodItem[] = [
     name: "Undhiyu",
     description: "Traditional winter dish with mixed vegetables, fenugreek dumplings cooked in earthen pot",
     price: 89,
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
+    image: undhiyuImage,
     rating: 4.8,
     reviewCount: 234,
     restaurantId: "r2",

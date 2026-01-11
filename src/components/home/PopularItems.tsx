@@ -60,14 +60,14 @@ const PopularItems = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {popularItems.map((item, index) => {
             const city = getRestaurantCity(item.restaurantId);
             
             return (
               <div
                 key={item.id}
-                className="group bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in cursor-pointer"
+                className="group bg-card rounded-xl sm:rounded-2xl overflow-hidden shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in cursor-pointer"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => navigate(`/food/${item.id}`)}
               >
@@ -78,31 +78,31 @@ const PopularItems = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   {item.isVeg && (
-                    <div className="absolute top-3 left-3 bg-accent text-accent-foreground px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
-                      <Leaf className="w-3 h-3" /> Veg
+                    <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-accent text-accent-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                      <Leaf className="w-3 h-3" /> <span className="hidden sm:inline">Veg</span>
                     </div>
                   )}
-                  <div className="absolute top-3 right-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1">
+                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-background/90 backdrop-blur-sm px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md flex items-center gap-1">
                     <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
                     <span className="text-xs font-medium">{item.rating}</span>
                   </div>
                 </div>
 
-                <div className="p-4">
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-1 line-clamp-1">
+                <div className="p-3 sm:p-4">
+                  <h3 className="font-display text-sm sm:text-lg font-semibold text-foreground mb-1 line-clamp-1">
                     {item.name}
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
+                  <p className="text-muted-foreground text-xs sm:text-sm mb-2 line-clamp-2 hidden sm:block">
                     {item.description}
                   </p>
-                  <div className="flex items-center gap-1 mb-3">
-                    <p className="text-xs text-muted-foreground">
-                      by {getRestaurantName(item.restaurantId)}
+                  <div className="flex items-center gap-1 mb-2 sm:mb-3">
+                    <p className="text-xs text-muted-foreground line-clamp-1">
+                      <span className="hidden sm:inline">by </span>{getRestaurantName(item.restaurantId).split(' ').slice(0, 2).join(' ')}
                     </p>
                     {city && (
                       <button
                         onClick={(e) => handleCityClick(e, item.restaurantId)}
-                        className="text-xs text-primary hover:underline"
+                        className="text-xs text-primary hover:underline hidden sm:inline"
                       >
                         • {city.name}
                       </button>
@@ -110,7 +110,7 @@ const PopularItems = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <p className="font-bold text-lg text-primary">
+                    <p className="font-bold text-sm sm:text-lg text-primary">
                       ₹{item.price}
                     </p>
                     <Button
@@ -120,9 +120,9 @@ const PopularItems = () => {
                         e.stopPropagation();
                         handleAddToCart(item);
                       }}
-                      className="rounded-full w-10 h-10 p-0"
+                      className="rounded-full w-8 h-8 sm:w-10 sm:h-10 p-0"
                     >
-                      <Plus className="w-5 h-5" />
+                      <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
                   </div>
                 </div>
