@@ -37,6 +37,10 @@ import pavBhajiImage from '@/assets/pav-bhaji.jpeg';
 import rajasthaniThaliImage from '@/assets/rajasthani-thali.jpeg';
 import rasmalaiImage from '@/assets/rasmalai.jpeg';
 import springRollsImage from '@/assets/spring-rolls.jpeg';
+import pancakeImage from '@/assets/pancake.jpeg';
+import chocolateBrownieImage from '@/assets/chocolate-brownie.jpeg';
+import kulfiFaloodaImage from '@/assets/kulfi-falooda.jpeg';
+import rabdiImage from '@/assets/rabdi.jpeg';
 
 export interface City {
   id: string;
@@ -184,7 +188,7 @@ export const categories: Category[] = [
   {
     id: "desserts",
     name: "Desserts",
-    image: gulabJamunImage,
+    image: pancakeImage,
     itemCount: 18
   }
 ];
@@ -1187,7 +1191,7 @@ export const foodItems: FoodItem[] = [
     name: "Kulfi Falooda",
     description: "Traditional Indian ice cream with vermicelli, basil seeds and rose syrup",
     price: 55,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
+    image: kulfiFaloodaImage,
     rating: 4.7,
     reviewCount: 189,
     restaurantId: "r9",
@@ -1200,7 +1204,7 @@ export const foodItems: FoodItem[] = [
     name: "Rabdi",
     description: "Rich, sweetened condensed milk dessert with cardamom and nuts",
     price: 40,
-    image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=400",
+    image: rabdiImage,
     rating: 4.6,
     reviewCount: 156,
     restaurantId: "r7",
@@ -1223,13 +1227,13 @@ export const foodItems: FoodItem[] = [
   },
   {
     id: "f44",
-    name: "Gajar Ka Halwa",
-    description: "Traditional carrot pudding with milk, ghee and dry fruits",
-    price: 45,
-    image: "https://images.unsplash.com/photo-1571167530149-c1105da4c2c7?w=400",
-    rating: 4.8,
-    reviewCount: 178,
-    restaurantId: "r33",
+    name: "Pancake",
+    description: "Fluffy golden pancakes with butter and maple syrup",
+    price: 55,
+    image: pancakeImage,
+    rating: 4.7,
+    reviewCount: 198,
+    restaurantId: "r15",
     categoryId: "desserts",
     isVeg: true,
     isPopular: true
@@ -1239,7 +1243,7 @@ export const foodItems: FoodItem[] = [
     name: "Chocolate Brownie",
     description: "Warm chocolate brownie with vanilla ice cream and chocolate sauce",
     price: 75,
-    image: "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=400",
+    image: chocolateBrownieImage,
     rating: 4.6,
     reviewCount: 267,
     restaurantId: "r18",
