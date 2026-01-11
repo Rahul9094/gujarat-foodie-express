@@ -201,20 +201,28 @@ const Orders = () => {
   const handleClearDeliveredOrders = async () => {
     if (!supabaseUser?.id) return;
     
-    const deliveredOrders = orders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
+    const completedOrders = orders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
     
-    for (const order of deliveredOrders) {
-      const { error } = await supabase
-        .from('orders')
-        .delete()
-        .eq('id', order.id);
-      
-      if (error) {
-        console.error('Error deleting order:', error);
-      }
+    if (completedOrders.length === 0) {
+      toast.info('No completed or cancelled orders to clear');
+      return;
     }
     
-    fetchOrders();
+    const orderIds = completedOrders.map(o => o.id);
+    
+    const { error } = await supabase
+      .from('orders')
+      .delete()
+      .in('id', orderIds);
+    
+    if (error) {
+      console.error('Error deleting orders:', error);
+      toast.error('Failed to clear orders');
+      return;
+    }
+    
+    // Update local state immediately
+    setOrders(prev => prev.filter(o => !orderIds.includes(o.id)));
     toast.success('All completed/cancelled orders cleared!');
   };
 
