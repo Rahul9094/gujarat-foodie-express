@@ -48,6 +48,7 @@ import kathiyavadiRasoiImage from '@/assets/kathiyavadi-rasoi.jpeg';
 import nilambagPalaceKitchenImage from '@/assets/nilambag-palace-kitchen.jpeg';
 import raniKiVavSweetsImage from '@/assets/rani-ki-vav-sweets.jpeg';
 import sayajiBitesImage from '@/assets/sayaji-bites.jpeg';
+import oldPatanBitesImage from '@/assets/old-patan-bites.jpeg';
 
 export interface City {
   id: string;
@@ -588,7 +589,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r31",
     name: "Old Patan Bites",
-    image: "https://images.unsplash.com/photo-1541544741670-2fb4d54e8c27?w=400",
+    image: oldPatanBitesImage,
     cuisine: "Fast Food",
     rating: 4.2,
     reviewCount: 123,
