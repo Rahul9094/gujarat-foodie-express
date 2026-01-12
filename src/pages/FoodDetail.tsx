@@ -178,14 +178,14 @@ const FoodDetail = () => {
             {/* Food Info */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <div>
-                <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-2">
+                <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 break-words">
                   {food.name}
                 </h1>
-                <div className="flex items-center gap-4 text-sm">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm">
                   <div className="flex items-center gap-1">
-                    <Star className="w-5 h-5 text-spice-turmeric fill-spice-turmeric" />
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 text-spice-turmeric fill-spice-turmeric" />
                     <span className="font-semibold">{food.rating}</span>
-                    <span className="text-muted-foreground">({food.reviewCount} reviews)</span>
+                    <span className="text-muted-foreground text-xs sm:text-sm">({food.reviewCount} reviews)</span>
                   </div>
                 </div>
               </div>
@@ -194,27 +194,27 @@ const FoodDetail = () => {
                 {food.description}
               </p>
 
-              <div className="text-4xl font-bold text-primary">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary">
                 ₹{food.price}
               </div>
 
               {/* Quantity & Add to Cart */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-3 bg-secondary rounded-xl p-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                <div className="flex items-center justify-center gap-3 bg-secondary rounded-xl p-2">
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="h-10 w-10"
+                    className="h-9 w-9 sm:h-10 sm:w-10"
                   >
                     <Minus className="w-4 h-4" />
                   </Button>
-                  <span className="w-12 text-center font-bold text-xl">{quantity}</span>
+                  <span className="w-10 sm:w-12 text-center font-bold text-lg sm:text-xl">{quantity}</span>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="h-10 w-10"
+                    className="h-9 w-9 sm:h-10 sm:w-10"
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -223,10 +223,10 @@ const FoodDetail = () => {
                   variant="hero"
                   size="lg"
                   onClick={handleAddToCart}
-                  className="flex-1"
+                  className="flex-1 text-sm sm:text-base"
                 >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart • ₹{food.price * quantity}
+                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <span className="truncate">Add to Cart • ₹{food.price * quantity}</span>
                 </Button>
               </div>
 
