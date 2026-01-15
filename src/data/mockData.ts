@@ -49,6 +49,7 @@ import nilambagPalaceKitchenImage from '@/assets/nilambag-palace-kitchen.jpeg';
 import raniKiVavSweetsImage from '@/assets/rani-ki-vav-sweets.jpeg';
 import sayajiBitesImage from '@/assets/sayaji-bites.jpeg';
 import oldPatanBitesImage from '@/assets/old-patan-bites.jpeg';
+import patanHeritageDiningImage from '@/assets/patan-heritage-dining.jpeg';
 
 export interface City {
   id: string;
@@ -550,7 +551,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "r28",
     name: "Patan Heritage Dining",
-    image: "https://images.unsplash.com/photo-1564759298141-cef86f51d4d4?w=400",
+    image: patanHeritageDiningImage,
     cuisine: "Traditional Gujarati",
     rating: 4.5,
     reviewCount: 112,
