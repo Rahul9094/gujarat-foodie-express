@@ -97,25 +97,25 @@ const RestaurantDetail = () => {
             </div>
 
             {/* Restaurant Info */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <div className="space-y-4 sm:space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <div>
-                <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-2">
+                <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2 leading-tight">
                   {restaurant.name}
                 </h1>
-                <p className="text-lg text-muted-foreground">{restaurant.cuisine}</p>
+                <p className="text-base sm:text-lg text-muted-foreground">{restaurant.cuisine}</p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-1 bg-secondary px-3 py-2 rounded-lg">
-                  <Star className="w-5 h-5 text-spice-turmeric fill-spice-turmeric" />
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-1 bg-secondary px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base">
+                  <Star className="w-4 h-4 sm:w-5 sm:h-5 text-spice-turmeric fill-spice-turmeric flex-shrink-0" />
                   <span className="font-semibold">{restaurant.rating}</span>
-                  <span className="text-muted-foreground">({restaurant.reviewCount} reviews)</span>
+                  <span className="text-muted-foreground text-xs sm:text-sm">({restaurant.reviewCount})</span>
                 </div>
-                <div className="flex items-center gap-1 bg-secondary px-3 py-2 rounded-lg">
-                  <Clock className="w-5 h-5 text-primary" />
-                  <span>{restaurant.deliveryTime}</span>
+                <div className="flex items-center gap-1 bg-secondary px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+                  <span className="whitespace-nowrap">{restaurant.deliveryTime}</span>
                 </div>
-                <div className="bg-secondary px-3 py-2 rounded-lg font-medium">
+                <div className="bg-secondary px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-medium text-sm sm:text-base">
                   {restaurant.priceRange}
                 </div>
               </div>
@@ -146,20 +146,20 @@ const RestaurantDetail = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                 <a
                   href={`https://www.google.com/maps/search/${encodeURIComponent(restaurant.name + ', ' + city.name + ', Gujarat')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1"
                 >
-                  <Button variant="hero" className="w-full">
-                    <Navigation className="w-4 h-4 mr-2" />
-                    Get Directions
+                  <Button variant="hero" className="w-full text-sm sm:text-base">
+                    <Navigation className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">Get Directions</span>
                   </Button>
                 </a>
                 <Link to={`/menu?restaurant=${restaurant.id}`} className="flex-1">
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full text-sm sm:text-base">
                     View Full Menu
                   </Button>
                 </Link>

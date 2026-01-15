@@ -42,9 +42,9 @@ const Cart = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background py-8">
+      <div className="min-h-screen bg-background py-4 sm:py-8">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground mb-8">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-8">
             Your Cart
           </h1>
 
@@ -54,22 +54,22 @@ const Cart = () => {
               {cartItems.map((item, index) => (
                 <div
                   key={item.id}
-                  className="bg-card rounded-xl p-4 shadow-card flex gap-4 animate-fade-in"
+                  className="bg-card rounded-xl p-3 sm:p-4 shadow-card flex gap-3 sm:gap-4 animate-fade-in"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-24 h-24 rounded-lg object-cover"
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover flex-shrink-0"
                   />
-                  <div className="flex-1">
-                    <h3 className="font-display text-lg font-semibold text-foreground">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display text-sm sm:text-lg font-semibold text-foreground line-clamp-1">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 hidden sm:block">
                       {item.description}
                     </p>
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-2 text-xs sm:text-sm">
                       <p className="text-primary font-bold">
                         ₹{item.price}
                       </p>
@@ -78,8 +78,41 @@ const Cart = () => {
                       <span className="text-muted-foreground">=</span>
                       <span className="font-semibold">₹{item.price * item.quantity}</span>
                     </div>
+                    {/* Mobile quantity controls */}
+                    <div className="flex items-center justify-between mt-2 sm:hidden">
+                      <div className="flex items-center gap-1 bg-secondary rounded-lg p-0.5">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        >
+                          <Minus className="w-3 h-3" />
+                        </Button>
+                        <span className="w-6 text-center font-medium text-sm">
+                          {item.quantity}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          <Plus className="w-3 h-3" />
+                        </Button>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeFromCart(item.id)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 h-7 w-7"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end justify-between">
+                  {/* Desktop quantity controls */}
+                  <div className="hidden sm:flex flex-col items-end justify-between">
                     <Button
                       variant="ghost"
                       size="icon"

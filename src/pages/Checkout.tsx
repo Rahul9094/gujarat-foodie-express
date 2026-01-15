@@ -142,17 +142,17 @@ const Checkout = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background py-8">
+      <div className="min-h-screen bg-background py-4 sm:py-8">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
             onClick={() => navigate('/cart')}
-            className="mb-4"
+            className="mb-3 sm:mb-4 -ml-2 sm:ml-0"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Cart
           </Button>
 
-          <h1 className="font-display text-3xl font-bold text-foreground mb-8">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-8">
             Checkout
           </h1>
 
@@ -161,9 +161,9 @@ const Checkout = () => {
               {/* Delivery Details */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Delivery Address */}
-                <div className="bg-card rounded-xl p-6 shadow-card">
-                  <h2 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-primary" />
+                <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
                     Delivery Address
                   </h2>
 
@@ -227,8 +227,8 @@ const Checkout = () => {
                 </div>
 
                 {/* Payment Method */}
-                <div className="bg-card rounded-xl p-6 shadow-card">
-                  <h2 className="font-display text-xl font-bold text-foreground mb-4">
+                <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
                     Payment Method
                   </h2>
 
@@ -236,46 +236,46 @@ const Checkout = () => {
                     <button
                       type="button"
                       onClick={() => setPaymentMethod('cod')}
-                      className={`w-full flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${
+                      className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-2 transition-all ${
                         paymentMethod === 'cod'
                           ? 'border-primary bg-primary/5'
                           : 'border-border hover:border-primary/50'
                       }`}
                     >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         paymentMethod === 'cod' ? 'bg-primary text-primary-foreground' : 'bg-secondary'
                       }`}>
-                        <Banknote className="w-5 h-5" />
+                        <Banknote className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
-                      <div className="flex-1 text-left">
-                        <p className="font-medium text-foreground">Cash on Delivery</p>
-                        <p className="text-sm text-muted-foreground">Pay when your order arrives</p>
+                      <div className="flex-1 text-left min-w-0">
+                        <p className="font-medium text-foreground text-sm sm:text-base">Cash on Delivery</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground truncate">Pay when your order arrives</p>
                       </div>
                       {paymentMethod === 'cod' && (
-                        <Check className="w-5 h-5 text-primary" />
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
                       )}
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setPaymentMethod('online')}
-                      className={`w-full flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${
+                      className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-2 transition-all ${
                         paymentMethod === 'online'
                           ? 'border-primary bg-primary/5'
                           : 'border-border hover:border-primary/50'
                       }`}
                     >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         paymentMethod === 'online' ? 'bg-primary text-primary-foreground' : 'bg-secondary'
                       }`}>
-                        <CreditCard className="w-5 h-5" />
+                        <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
-                      <div className="flex-1 text-left">
-                        <p className="font-medium text-foreground">Online Payment</p>
-                        <p className="text-sm text-muted-foreground">Pay via UPI, Card, Net Banking (Demo Mode)</p>
+                      <div className="flex-1 text-left min-w-0">
+                        <p className="font-medium text-foreground text-sm sm:text-base">Online Payment</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground truncate">Pay via UPI, Card, Net Banking</p>
                       </div>
                       {paymentMethod === 'online' && (
-                        <Check className="w-5 h-5 text-primary" />
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
                       )}
                     </button>
                   </div>
@@ -284,8 +284,8 @@ const Checkout = () => {
 
               {/* Order Summary */}
               <div className="lg:col-span-1">
-                <div className="bg-card rounded-xl p-6 shadow-card sticky top-24">
-                  <h2 className="font-display text-xl font-bold text-foreground mb-4">
+                <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card sticky top-24">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
                     Order Summary
                   </h2>
 

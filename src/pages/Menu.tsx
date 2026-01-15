@@ -64,12 +64,13 @@ const Menu = () => {
             </div>
 
             {/* Category Filters */}
-            <div className="flex flex-wrap items-center gap-2">
-              <Filter className="w-5 h-5 text-muted-foreground" />
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0" />
               <Button
                 variant={selectedCategory === 'all' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedCategory('all')}
+                className="text-xs sm:text-sm px-2 sm:px-3 h-7 sm:h-8"
               >
                 All
               </Button>
@@ -79,17 +80,21 @@ const Menu = () => {
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedCategory(category.id)}
+                  className="text-xs sm:text-sm px-2 sm:px-3 h-7 sm:h-8"
                 >
-                  {category.name}
+                  <span className="truncate max-w-[80px] sm:max-w-none">{category.name}</span>
                 </Button>
               ))}
-              <div className="border-l border-border pl-2">
+              <div className="border-l border-border pl-1.5 sm:pl-2">
                 <Button
                   variant={vegOnly ? 'accent' : 'outline'}
                   size="sm"
                   onClick={() => setVegOnly(!vegOnly)}
+                  className="text-xs sm:text-sm px-2 sm:px-3 h-7 sm:h-8"
                 >
-                  <Leaf className="w-4 h-4 mr-1" /> Veg Only
+                  <Leaf className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" /> 
+                  <span className="hidden xs:inline">Veg Only</span>
+                  <span className="xs:hidden">Veg</span>
                 </Button>
               </div>
             </div>
