@@ -132,17 +132,17 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">Contact Us</h4>
             <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-background/70 text-sm">
-                <MapPin className="w-4 h-4 text-primary" />
-                Patan, Gujarat, India
+              <li className="flex items-start gap-2 text-background/70 text-sm">
+                <MapPin className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <span>Patan, Gujarat, India</span>
               </li>
-              <li className="flex items-center gap-2 text-background/70 text-sm">
-                <Phone className="w-4 h-4 text-primary" />
-                +91 78638 21747
+              <li className="flex items-start gap-2 text-background/70 text-sm">
+                <Phone className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <span>+91 78638 21747</span>
               </li>
-              <li className="flex items-center gap-2 text-background/70 text-sm">
-                <Mail className="w-4 h-4 text-primary" />
-                rahulsinh123123123@gmail.com
+              <li className="flex items-start gap-2 text-background/70 text-sm">
+                <Mail className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <span className="break-all">rahulsinh123123123@gmail.com</span>
               </li>
             </ul>
           </div>
