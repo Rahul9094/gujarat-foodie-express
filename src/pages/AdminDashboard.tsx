@@ -10,7 +10,8 @@ import {
   Eye,
   Mail,
   MailOpen,
-  Trash2
+  Trash2,
+  XCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +22,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import {
   Select,
   SelectContent,
@@ -57,6 +69,7 @@ const statusConfig = {
   pending: { icon: Clock, label: 'Pending', color: 'bg-yellow-500/20 text-yellow-600' },
   in_progress: { icon: Truck, label: 'In Progress', color: 'bg-blue-500/20 text-blue-600' },
   delivered: { icon: CheckCircle2, label: 'Delivered', color: 'bg-green-500/20 text-green-600' },
+  cancelled: { icon: XCircle, label: 'Cancelled', color: 'bg-red-500/20 text-red-600' },
 };
 
 const AdminDashboard = () => {
@@ -151,11 +164,49 @@ const AdminDashboard = () => {
     fetchMessages();
   };
 
+  const deleteOrder = async (orderId: string) => {
+    const { error } = await supabase
+      .from('orders')
+      .delete()
+      .eq('id', orderId);
+    
+    if (error) {
+      toast.error('Failed to delete order');
+      console.error('Error deleting order:', error);
+      return;
+    }
+    
+    toast.success('Order deleted successfully');
+    fetchOrders();
+    setSelectedOrder(null);
+  };
+
+  const clearAllMessages = async () => {
+    const { error } = await supabase
+      .from('contact_messages')
+      .delete()
+      .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all messages
+    
+    if (error) {
+      toast.error('Failed to clear messages');
+      console.error('Error clearing messages:', error);
+      return;
+    }
+    
+    toast.success('All messages cleared successfully');
+    fetchMessages();
+  };
+
   const handleViewMessage = (message: ContactMessage) => {
     setSelectedMessage(message);
     if (!message.is_read) {
       markMessageAsRead(message.id);
     }
+  };
+
+  const handleReplyEmail = (email: string, subject: string | null, name: string) => {
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent(`Re: ${subject || 'Your message to Gujarat Food Express'}`)}&body=${encodeURIComponent(`Dear ${name},\n\nThank you for contacting Gujarat Food Express.\n\n`)}`;
+    window.open(gmailUrl, '_blank');
   };
 
   const handleLogout = async () => {
@@ -348,6 +399,30 @@ const AdminDashboard = () => {
                             <Eye className="w-4 h-4 mr-1" />
                             View
                           </Button>
+                          {(order.status === 'delivered' || order.status === 'cancelled') && (
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="destructive" size="sm">
+                                  <Trash2 className="w-4 h-4 mr-1" />
+                                  Delete
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Order</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to permanently delete this order? This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteOrder(order.id)}>
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          )}
                         </div>
                       </div>
                       <div className="mt-3 pt-3 border-t border-border flex justify-between text-sm">
@@ -365,6 +440,32 @@ const AdminDashboard = () => {
 
           {/* Messages Tab */}
           <TabsContent value="messages" className="space-y-4">
+            {messages.length > 0 && (
+              <div className="flex justify-end mb-4">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Clear All Messages
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Clear All Messages</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to permanently delete all messages? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={clearAllMessages}>
+                        Clear All
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            )}
             {messages.length === 0 ? (
               <div className="bg-card rounded-xl p-8 text-center">
                 <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
@@ -509,10 +610,10 @@ const AdminDashboard = () => {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => window.location.href = `mailto:${selectedMessage.email}`}
+                onClick={() => handleReplyEmail(selectedMessage.email, selectedMessage.subject, selectedMessage.name)}
               >
                 <Mail className="w-4 h-4 mr-2" />
-                Reply via Email
+                Reply via Gmail
               </Button>
             </div>
           )}
