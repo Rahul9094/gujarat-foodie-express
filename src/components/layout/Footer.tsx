@@ -57,7 +57,7 @@ const Footer = () => {
                 <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
               <a 
-                href="https://wa.me/917863821747" 
+                href="https://wa.me/919913840111" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background/10 hover:bg-green-500 hover:text-white flex items-center justify-center transition-colors"
@@ -134,15 +134,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-background/70 text-sm">
                 <MapPin className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <span>Patan, Gujarat, India</span>
+                <span>Kutch, Gujarat, India</span>
               </li>
               <li className="flex items-start gap-2 text-background/70 text-sm">
                 <Phone className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <span>+91 78638 21747</span>
+                <span>+91 99138 40111</span>
               </li>
               <li className="flex items-start gap-2 text-background/70 text-sm">
                 <Mail className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <span className="break-all">rahulsinh123123123@gmail.com</span>
+                <span className="break-all">prajapatijagruti74@gmail.com</span>
               </li>
             </ul>
           </div>

@@ -181,7 +181,7 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Address</h3>
                       <p className="text-muted-foreground">
-                        Patan, Gujarat, India
+                        Kutch, Gujarat, India
                       </p>
                     </div>
                   </div>
@@ -193,8 +193,8 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Phone</h3>
                       <p className="text-muted-foreground">
-                        <a href="tel:+917863821747" className="hover:text-primary">
-                          +91 78638 21747
+                        <a href="tel:+919913840111" className="hover:text-primary">
+                          +91 99138 40111
                         </a>
                       </p>
                     </div>
@@ -207,8 +207,8 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Email</h3>
                       <p className="text-muted-foreground">
-                        <a href="mailto:rahulsinh123123123@gmail.com" className="hover:text-primary">
-                          rahulsinh123123123@gmail.com
+                        <a href="mailto:prajapatijagruti74@gmail.com" className="hover:text-primary">
+                          prajapatijagruti74@gmail.com
                         </a>
                       </p>
                     </div>
