@@ -13,7 +13,7 @@ interface QRPaymentModalProps {
   amount: number;
 }
 
-type PaymentStatus = 'input' | 'pending' | 'camera' | 'scanning' | 'processing' | 'completed';
+type PaymentStatus = 'input' | 'pending' | 'camera' | 'scanned' | 'processing' | 'completed';
 
 const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymentModalProps) => {
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('input');
@@ -97,36 +97,30 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
       setCameraActive(true);
       setPaymentStatus('camera');
       toast.info('Point your camera at the QR code');
-      
-      // Simulate QR code detection after 2 seconds
-      setTimeout(() => {
-        if (streamRef.current) {
-          processPaymentAfterScan();
-        }
-      }, 2000);
     } catch (error) {
       console.error('Camera access error:', error);
       toast.error('Could not access camera. Please complete payment manually.');
-      simulatePayment();
     }
   };
 
-  const processPaymentAfterScan = () => {
+  const handleQRScanned = () => {
     stopCamera();
-    setPaymentStatus('scanning');
-    toast.success('QR Code detected!');
+    setPaymentStatus('scanned');
+    toast.success('QR Code scanned! Click "Confirm Payment" to complete.');
+  };
+
+  const confirmPayment = () => {
+    setPaymentStatus('processing');
+    toast.info('Processing your payment...');
     
     setTimeout(() => {
-      setPaymentStatus('processing');
+      setPaymentStatus('completed');
+      toast.success('Payment completed successfully!');
       
       setTimeout(() => {
-        setPaymentStatus('completed');
-        
-        setTimeout(() => {
-          onPaymentComplete();
-        }, 1500);
-      }, 2000);
-    }, 1000);
+        onPaymentComplete();
+      }, 1500);
+    }, 2000);
   };
 
   const formatTime = (seconds: number) => {
@@ -136,19 +130,8 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
   };
 
   const simulatePayment = () => {
-    setPaymentStatus('scanning');
-    
-    setTimeout(() => {
-      setPaymentStatus('processing');
-      
-      setTimeout(() => {
-        setPaymentStatus('completed');
-        
-        setTimeout(() => {
-          onPaymentComplete();
-        }, 1500);
-      }, 2000);
-    }, 1500);
+    setPaymentStatus('scanned');
+    toast.success('Ready to confirm payment');
   };
 
   const getStatusMessage = () => {
@@ -158,9 +141,9 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
       case 'pending':
         return 'Scan QR code with your UPI app to pay';
       case 'camera':
-        return 'Scanning for QR code...';
-      case 'scanning':
-        return 'QR Code detected!';
+        return 'Point camera at QR code';
+      case 'scanned':
+        return 'QR Code scanned! Confirm to pay';
       case 'processing':
         return 'Processing payment...';
       case 'completed':
@@ -176,8 +159,8 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
         return <QrCode className="w-6 h-6 text-primary" />;
       case 'camera':
         return <Camera className="w-6 h-6 text-yellow-500 animate-pulse" />;
-      case 'scanning':
-        return <Smartphone className="w-6 h-6 text-yellow-500 animate-pulse" />;
+      case 'scanned':
+        return <CheckCircle2 className="w-6 h-6 text-green-500" />;
       case 'processing':
         return <Loader2 className="w-6 h-6 text-primary animate-spin" />;
       case 'completed':
@@ -186,7 +169,7 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
   };
 
   const handleClose = () => {
-    if (paymentStatus === 'input' || paymentStatus === 'pending' || paymentStatus === 'camera') {
+    if (paymentStatus === 'input' || paymentStatus === 'pending' || paymentStatus === 'camera' || paymentStatus === 'scanned') {
       stopCamera();
       onClose();
     }
@@ -194,9 +177,20 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
 
   // Generate UPI payment link for real payments
   const getUpiPaymentLink = () => {
+    const merchantUpiId = 'gujaratfoodexpress@upi'; // Merchant's UPI ID
     const merchantName = 'Gujarat Food Express';
     const transactionNote = 'Food Order Payment';
-    return `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+    return `upi://pay?pa=${encodeURIComponent(merchantUpiId)}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+  };
+
+  const handleOpenUpiApp = () => {
+    // Try to open UPI app
+    window.location.href = getUpiPaymentLink();
+    
+    // After a short delay, show confirmation option
+    setTimeout(() => {
+      toast.info('Complete payment in your UPI app, then confirm here');
+    }, 1000);
   };
 
   return (
@@ -302,7 +296,7 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
                 ) : (
                   <div className={`bg-white p-4 rounded-xl border-2 transition-all ${
                     paymentStatus === 'completed' ? 'border-green-500' : 
-                    paymentStatus === 'scanning' || paymentStatus === 'processing' ? 'border-yellow-500' : 
+                    paymentStatus === 'scanned' || paymentStatus === 'processing' ? 'border-yellow-500' : 
                     'border-border'
                   }`}>
                     {/* QR Code SVG with UPI payment data */}
@@ -412,18 +406,14 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
 
               {/* Open in UPI App */}
               {paymentStatus === 'pending' && (
-                <a 
-                  href={getUpiPaymentLink()}
+                <Button 
+                  onClick={handleOpenUpiApp}
                   className="w-full"
+                  variant="hero"
                 >
-                  <Button 
-                    className="w-full"
-                    variant="hero"
-                  >
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    Open UPI App to Pay
-                  </Button>
-                </a>
+                  <Smartphone className="w-4 h-4 mr-2" />
+                  Open UPI App to Pay
+                </Button>
               )}
 
               {/* Scan with Camera Button */}
@@ -435,6 +425,30 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
                 >
                   <Camera className="w-4 h-4 mr-2" />
                   Scan with Camera
+                </Button>
+              )}
+
+              {/* Camera Scan Button - when camera is active */}
+              {paymentStatus === 'camera' && (
+                <Button 
+                  onClick={handleQRScanned}
+                  className="w-full"
+                  variant="hero"
+                >
+                  <QrCode className="w-4 h-4 mr-2" />
+                  I've Scanned the QR Code
+                </Button>
+              )}
+
+              {/* Confirm Payment Button - after scanning */}
+              {paymentStatus === 'scanned' && (
+                <Button 
+                  onClick={confirmPayment}
+                  className="w-full"
+                  variant="hero"
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Confirm Payment
                 </Button>
               )}
 
@@ -451,7 +465,7 @@ const QRPaymentModal = ({ isOpen, onClose, onPaymentComplete, amount }: QRPaymen
               )}
 
               {/* Cancel Button */}
-              {(paymentStatus === 'pending' || paymentStatus === 'camera') && (
+              {(paymentStatus === 'pending' || paymentStatus === 'camera' || paymentStatus === 'scanned') && (
                 <Button 
                   variant="ghost" 
                   onClick={handleClose}
