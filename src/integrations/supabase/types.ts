@@ -44,6 +44,125 @@ export type Database = {
         }
         Relationships: []
       }
+      db_categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string | null
+          item_count: number
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          item_count?: number
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          item_count?: number
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      db_cities: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          lat: number | null
+          lng: number | null
+          name: string
+          restaurant_count: number
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          lat?: number | null
+          lng?: number | null
+          name: string
+          restaurant_count?: number
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          restaurant_count?: number
+          slug?: string
+        }
+        Relationships: []
+      }
+      db_restaurants: {
+        Row: {
+          city_id: string
+          created_at: string
+          cuisine: string | null
+          delivery_time: string | null
+          id: string
+          image_url: string | null
+          is_veg: boolean
+          menu_categories: string[] | null
+          name: string
+          price_range: string | null
+          rating: number
+          review_count: number
+          slug: string
+        }
+        Insert: {
+          city_id: string
+          created_at?: string
+          cuisine?: string | null
+          delivery_time?: string | null
+          id?: string
+          image_url?: string | null
+          is_veg?: boolean
+          menu_categories?: string[] | null
+          name: string
+          price_range?: string | null
+          rating?: number
+          review_count?: number
+          slug: string
+        }
+        Update: {
+          city_id?: string
+          created_at?: string
+          cuisine?: string | null
+          delivery_time?: string | null
+          id?: string
+          image_url?: string | null
+          is_veg?: boolean
+          menu_categories?: string[] | null
+          name?: string
+          price_range?: string | null
+          rating?: number
+          review_count?: number
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "db_restaurants_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "db_cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           address: string
@@ -82,6 +201,88 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      products: {
+        Row: {
+          category_id: string | null
+          city_id: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          image_url: string | null
+          is_available: boolean
+          is_popular: boolean
+          is_published: boolean
+          is_veg: boolean
+          name: string
+          price: number
+          rating: number
+          restaurant_id: string
+          review_count: number
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          city_id: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_popular?: boolean
+          is_published?: boolean
+          is_veg?: boolean
+          name: string
+          price?: number
+          rating?: number
+          restaurant_id: string
+          review_count?: number
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          city_id?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_popular?: boolean
+          is_published?: boolean
+          is_veg?: boolean
+          name?: string
+          price?: number
+          rating?: number
+          restaurant_id?: string
+          review_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "db_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "db_cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "db_restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
