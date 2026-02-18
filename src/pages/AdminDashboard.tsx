@@ -11,7 +11,8 @@ import {
   Mail,
   MailOpen,
   Trash2,
-  XCircle
+  XCircle,
+  ShoppingBag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,6 +44,7 @@ import {
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import ProductManagement from '@/components/admin/ProductManagement';
 
 interface Order {
   id: string;
@@ -325,10 +327,14 @@ const AdminDashboard = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-lg grid-cols-3">
             <TabsTrigger value="orders" className="gap-2">
               <Package className="w-4 h-4" />
               Orders ({orders.length})
+            </TabsTrigger>
+            <TabsTrigger value="products" className="gap-2">
+              <ShoppingBag className="w-4 h-4" />
+              Products
             </TabsTrigger>
             <TabsTrigger value="messages" className="gap-2">
               <MessageSquare className="w-4 h-4" />
@@ -436,6 +442,11 @@ const AdminDashboard = () => {
                 })}
               </div>
             )}
+          </TabsContent>
+
+          {/* Products Tab */}
+          <TabsContent value="products">
+            <ProductManagement />
           </TabsContent>
 
           {/* Messages Tab */}
