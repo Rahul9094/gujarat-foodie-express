@@ -179,7 +179,8 @@ const ProductManagement = () => {
       .from('product-images')
       .upload(fileName, file);
     if (error) {
-      toast.error('Failed to upload image');
+      console.error('Image upload error:', error);
+      toast.error(`Failed to upload image: ${error.message}`);
       return null;
     }
     const { data } = supabase.storage.from('product-images').getPublicUrl(fileName);
@@ -221,7 +222,8 @@ const ProductManagement = () => {
         .update(payload)
         .eq('id', editingProduct.id);
       if (error) {
-        toast.error('Failed to update product');
+        console.error('Update product error:', error);
+        toast.error(`Failed to update product: ${error.message}`);
         setSaving(false);
         return;
       }
@@ -231,7 +233,8 @@ const ProductManagement = () => {
         .from('products')
         .insert(payload);
       if (error) {
-        toast.error('Failed to add product');
+        console.error('Insert product error:', error);
+        toast.error(`Failed to add product: ${error.message}`);
         setSaving(false);
         return;
       }
