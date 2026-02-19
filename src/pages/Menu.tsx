@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Star, Plus, Filter, Leaf, Search, Eye } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { foodItems, categories, restaurants } from '@/data/mockData';
+import { useProducts, useDbCategories, useDbRestaurants } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
 
@@ -17,13 +17,54 @@ const Menu = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { addToCart } = useCart();
 
-  const filteredItems = foodItems.filter(item => {
-    const categoryMatch = selectedCategory === 'all' || item.categoryId === selectedCategory;
-    const vegMatch = !vegOnly || item.isVeg;
-    const searchMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return categoryMatch && vegMatch && searchMatch;
-  });
+  // Fetch DB products (published & available)
+  const { products: dbProducts, loading } = useProducts();
+  const { categories: dbCategories } = useDbCategories();
+  const { restaurants: dbRestaurants } = useDbRestaurants();
+
+  // Merge mock + DB products, DB products take priority
+  const allItems = useMemo(() => {
+    const dbIds = new Set(dbProducts.map(p => p.id));
+    const mockFiltered = foodItems.filter(item => !dbIds.has(item.id));
+    return [...dbProducts, ...mockFiltered];
+  }, [dbProducts]);
+
+  // Build category list from both sources
+  const allCategories = useMemo(() => {
+    const dbCatMap = new Map(dbCategories.map(c => [c.slug, c]));
+    const merged = categories.map(c => {
+      const dbCat = dbCatMap.get(c.id);
+      return dbCat ? { ...c, id: dbCat.slug } : c;
+    });
+    // Add any DB categories not in mock
+    dbCategories.forEach(dc => {
+      if (!categories.find(c => c.id === dc.slug)) {
+        merged.push({ id: dc.slug, name: dc.name, image: dc.image_url || '/placeholder.svg', itemCount: dc.item_count });
+      }
+    });
+    return merged;
+  }, [dbCategories]);
+
+  // Filter logic - match category by slug or categoryId
+  const filteredItems = useMemo(() => {
+    return allItems.filter(item => {
+      // Category match: check mock categoryId or DB category slug
+      let categoryMatch = selectedCategory === 'all';
+      if (!categoryMatch) {
+        if (item.categoryId === selectedCategory) {
+          categoryMatch = true;
+        } else {
+          // Check if item's category_id maps to the selected slug
+          const dbCat = dbCategories.find(c => c.id === item.categoryId);
+          if (dbCat && dbCat.slug === selectedCategory) categoryMatch = true;
+        }
+      }
+      const vegMatch = !vegOnly || item.isVeg;
+      const searchMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return categoryMatch && vegMatch && searchMatch;
+    });
+  }, [allItems, selectedCategory, vegOnly, searchQuery, dbCategories]);
 
   const handleAddToCart = (item: typeof foodItems[0]) => {
     addToCart(item);
@@ -31,6 +72,8 @@ const Menu = () => {
   };
 
   const getRestaurantName = (restaurantId: string) => {
+    const dbR = dbRestaurants.find(r => r.id === restaurantId);
+    if (dbR) return dbR.name;
     return restaurants.find(r => r.id === restaurantId)?.name || 'Unknown';
   };
 
@@ -52,18 +95,16 @@ const Menu = () => {
         {/* Search & Filters */}
         <div className="container mx-auto px-4 py-6">
           <div className="bg-card rounded-xl shadow-card p-4 space-y-4">
-            {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
+              <input
                 placeholder="Search dishes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
             </div>
 
-            {/* Category Filters */}
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0" />
               <Button
@@ -74,7 +115,7 @@ const Menu = () => {
               >
                 All
               </Button>
-              {categories.map(category => (
+              {allCategories.map(category => (
                 <Button
                   key={category.id}
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
@@ -104,7 +145,7 @@ const Menu = () => {
         {/* Menu Grid */}
         <div className="container mx-auto px-4 pb-16">
           <div className="mb-4 text-muted-foreground">
-            Showing {filteredItems.length} items
+            {loading ? 'Loading...' : `Showing ${filteredItems.length} items`}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -135,7 +176,6 @@ const Menu = () => {
                       <Star className="w-3 h-3 text-spice-turmeric fill-spice-turmeric" />
                       <span className="text-xs font-medium">{item.rating}</span>
                     </div>
-                    {/* View Details Overlay */}
                     <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <div className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
                         <Eye className="w-4 h-4" /> View Details
@@ -185,7 +225,7 @@ const Menu = () => {
             ))}
           </div>
 
-          {filteredItems.length === 0 && (
+          {filteredItems.length === 0 && !loading && (
             <div className="text-center py-16">
               <p className="text-muted-foreground mb-4">
                 No items found with the selected filters.

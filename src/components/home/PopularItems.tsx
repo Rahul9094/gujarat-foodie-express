@@ -2,14 +2,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Star, Plus, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foodItems, restaurants, cities } from '@/data/mockData';
+import { useProducts, useDbRestaurants, useDbCities } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
-import mohanthalImage from '@/assets/mohanthal.webp';
+import { useMemo } from 'react';
 
 const PopularItems = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
-  const popularItems = foodItems.filter(item => item.isPopular).slice(0, 8);
+  
+  // Fetch popular DB products
+  const { products: dbPopular } = useProducts({ popularOnly: true });
+  const { restaurants: dbRestaurantsList } = useDbRestaurants();
+  const { cities: dbCitiesList } = useDbCities();
+
+  // Merge: DB popular + mock popular
+  const popularItems = useMemo(() => {
+    const dbIds = new Set(dbPopular.map(p => p.id));
+    const mockPopular = foodItems.filter(item => item.isPopular && !dbIds.has(item.id));
+    return [...dbPopular, ...mockPopular].slice(0, 8);
+  }, [dbPopular]);
 
   const handleAddToCart = (item: typeof foodItems[0]) => {
     addToCart(item);
@@ -17,13 +29,23 @@ const PopularItems = () => {
   };
 
   const getRestaurantName = (restaurantId: string) => {
+    const dbR = dbRestaurantsList.find(r => r.id === restaurantId);
+    if (dbR) return dbR.name;
     return restaurants.find(r => r.id === restaurantId)?.name || 'Unknown';
   };
 
   const getRestaurantCity = (restaurantId: string) => {
+    // Check DB restaurants first
+    const dbR = dbRestaurantsList.find(r => r.id === restaurantId);
+    if (dbR) {
+      const dbCity = dbCitiesList.find(c => c.id === dbR.city_id);
+      if (dbCity) return { id: dbCity.slug, name: dbCity.name };
+    }
+    // Fallback to mock
     const restaurant = restaurants.find(r => r.id === restaurantId);
     if (restaurant) {
-      return cities.find(c => c.id === restaurant.cityId);
+      const city = cities.find(c => c.id === restaurant.cityId);
+      if (city) return { id: city.id, name: city.name };
     }
     return null;
   };
@@ -34,13 +56,6 @@ const PopularItems = () => {
     if (city) {
       navigate(`/cities/${city.id}`);
     }
-  };
-
-  const getItemImage = (item: typeof foodItems[0]) => {
-    if (item.name === 'Mohanthal') {
-      return mohanthalImage;
-    }
-    return item.image;
   };
 
   return (
@@ -73,7 +88,7 @@ const PopularItems = () => {
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
-                    src={getItemImage(item)}
+                    src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
