@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Star, Plus, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { foodItems, restaurants, cities } from '@/data/mockData';
 import { useProducts, useDbRestaurants, useDbCities } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
@@ -16,36 +15,24 @@ const PopularItems = () => {
   const { restaurants: dbRestaurantsList } = useDbRestaurants();
   const { cities: dbCitiesList } = useDbCities();
 
-  // Merge: DB popular + mock popular
   const popularItems = useMemo(() => {
-    const dbIds = new Set(dbPopular.map(p => p.id));
-    const mockPopular = foodItems.filter(item => item.isPopular && !dbIds.has(item.id));
-    return [...dbPopular, ...mockPopular].slice(0, 8);
+    return dbPopular.slice(0, 8);
   }, [dbPopular]);
 
-  const handleAddToCart = (item: typeof foodItems[0]) => {
+  const handleAddToCart = (item: typeof dbPopular[0]) => {
     addToCart(item);
     toast.success(`${item.name} added to cart!`);
   };
 
   const getRestaurantName = (restaurantId: string) => {
-    const dbR = dbRestaurantsList.find(r => r.id === restaurantId);
-    if (dbR) return dbR.name;
-    return restaurants.find(r => r.id === restaurantId)?.name || 'Unknown';
+    return dbRestaurantsList.find(r => r.id === restaurantId)?.name || 'Unknown';
   };
 
   const getRestaurantCity = (restaurantId: string) => {
-    // Check DB restaurants first
     const dbR = dbRestaurantsList.find(r => r.id === restaurantId);
     if (dbR) {
       const dbCity = dbCitiesList.find(c => c.id === dbR.city_id);
       if (dbCity) return { id: dbCity.slug, name: dbCity.name };
-    }
-    // Fallback to mock
-    const restaurant = restaurants.find(r => r.id === restaurantId);
-    if (restaurant) {
-      const city = cities.find(c => c.id === restaurant.cityId);
-      if (city) return { id: city.id, name: city.name };
     }
     return null;
   };
