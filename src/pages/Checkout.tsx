@@ -40,6 +40,8 @@ const Checkout = () => {
     city: '',
     pincode: '',
   });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const subtotal = getTotalPrice();
   const deliveryFee = 40;
@@ -47,21 +49,54 @@ const Checkout = () => {
   const taxAmount = Math.round(subtotal * taxRate);
   const totalWithTax = subtotal + deliveryFee + taxAmount;
 
+  const isFormValid = formData.name.trim() !== '' && formData.phone.trim() !== '' && formData.address.trim().length >= 5 && formData.city.trim().length >= 2;
+
+  const validateField = (name: string, value: string) => {
+    const partial = { ...formData, [name]: value };
+    const result = checkoutSchema.safeParse(partial);
+    if (!result.success) {
+      const fieldError = result.error.errors.find(e => e.path[0] === name);
+      return fieldError?.message || '';
+    }
+    return '';
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setFieldErrors(prev => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    const error = validateField(name, value);
+    setFieldErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Mark all fields as touched
+    setTouched({ name: true, phone: true, address: true, city: true, pincode: true });
+    
     // Validate form data using Zod schema
     const validationResult = checkoutSchema.safeParse(formData);
     
     if (!validationResult.success) {
-      const firstError = validationResult.error.errors[0];
-      toast.error(firstError.message);
+      const errors: Record<string, string> = {};
+      validationResult.error.errors.forEach(err => {
+        const field = err.path[0] as string;
+        if (!errors[field]) errors[field] = err.message;
+      });
+      setFieldErrors(errors);
+      toast.error('Please fill all required fields correctly');
       return;
     }
+    setFieldErrors({});
 
     if (!supabaseUser?.id || !user?.email) {
       toast.error('Please login to place an order');
@@ -175,9 +210,11 @@ const Checkout = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="Enter your name"
-                        required
+                        className={fieldErrors.name && touched.name ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.name && touched.name && <p className="text-xs text-destructive mt-1">{fieldErrors.name}</p>}
                     </div>
                     <div>
                       <Label htmlFor="phone">Phone Number *</Label>
@@ -187,9 +224,11 @@ const Checkout = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="+91 98765 43210"
-                        required
+                        className={fieldErrors.phone && touched.phone ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.phone && touched.phone && <p className="text-xs text-destructive mt-1">{fieldErrors.phone}</p>}
                     </div>
                     <div className="sm:col-span-2">
                       <Label htmlFor="address">Address *</Label>
@@ -198,9 +237,11 @@ const Checkout = () => {
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="House/Flat No., Street, Landmark"
-                        required
+                        className={fieldErrors.address && touched.address ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.address && touched.address && <p className="text-xs text-destructive mt-1">{fieldErrors.address}</p>}
                     </div>
                     <div>
                       <Label htmlFor="city">City *</Label>
@@ -209,9 +250,11 @@ const Checkout = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="Ahmedabad"
-                        required
+                        className={fieldErrors.city && touched.city ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.city && touched.city && <p className="text-xs text-destructive mt-1">{fieldErrors.city}</p>}
                     </div>
                     <div>
                       <Label htmlFor="pincode">Pincode</Label>
@@ -220,8 +263,11 @@ const Checkout = () => {
                         name="pincode"
                         value={formData.pincode}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="380001"
+                        className={fieldErrors.pincode && touched.pincode ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.pincode && touched.pincode && <p className="text-xs text-destructive mt-1">{fieldErrors.pincode}</p>}
                     </div>
                   </div>
                 </div>
@@ -324,7 +370,7 @@ const Checkout = () => {
                     variant="hero"
                     className="w-full mt-6"
                     size="lg"
-                    disabled={isProcessing}
+                    disabled={isProcessing || !isFormValid}
                   >
                     {isProcessing ? 'Processing...' : paymentMethod === 'online' ? `Pay Online • ₹${totalWithTax}` : `Place Order • ₹${totalWithTax}`}
                   </Button>
