@@ -40,6 +40,8 @@ const Checkout = () => {
     city: '',
     pincode: '',
   });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const subtotal = getTotalPrice();
   const deliveryFee = 40;
@@ -47,21 +49,54 @@ const Checkout = () => {
   const taxAmount = Math.round(subtotal * taxRate);
   const totalWithTax = subtotal + deliveryFee + taxAmount;
 
+  const isFormValid = formData.name.trim() !== '' && formData.phone.trim() !== '' && formData.address.trim().length >= 5 && formData.city.trim().length >= 2;
+
+  const validateField = (name: string, value: string) => {
+    const partial = { ...formData, [name]: value };
+    const result = checkoutSchema.safeParse(partial);
+    if (!result.success) {
+      const fieldError = result.error.errors.find(e => e.path[0] === name);
+      return fieldError?.message || '';
+    }
+    return '';
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setFieldErrors(prev => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    const error = validateField(name, value);
+    setFieldErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Mark all fields as touched
+    setTouched({ name: true, phone: true, address: true, city: true, pincode: true });
+    
     // Validate form data using Zod schema
     const validationResult = checkoutSchema.safeParse(formData);
     
     if (!validationResult.success) {
-      const firstError = validationResult.error.errors[0];
-      toast.error(firstError.message);
+      const errors: Record<string, string> = {};
+      validationResult.error.errors.forEach(err => {
+        const field = err.path[0] as string;
+        if (!errors[field]) errors[field] = err.message;
+      });
+      setFieldErrors(errors);
+      toast.error('Please fill all required fields correctly');
       return;
     }
+    setFieldErrors({});
 
     if (!supabaseUser?.id || !user?.email) {
       toast.error('Please login to place an order');
