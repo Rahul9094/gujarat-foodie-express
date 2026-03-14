@@ -217,27 +217,39 @@ const ProductManagement = () => {
     };
 
     if (editingProduct) {
-      const { error } = await supabase
+      console.log('Updating product:', editingProduct.id, payload);
+      const { data, error } = await supabase
         .from('products')
         .update(payload)
-        .eq('id', editingProduct.id);
+        .eq('id', editingProduct.id)
+        .select();
       if (error) {
         console.error('Update product error:', error);
         toast.error(`Failed to update product: ${error.message}`);
         setSaving(false);
         return;
       }
+      if (!data || data.length === 0) {
+        console.error('Update returned no rows - possible RLS issue');
+        toast.error('Update failed: No permission or product not found. Please re-login as admin.');
+        setSaving(false);
+        return;
+      }
+      console.log('Product updated successfully:', data);
       toast.success('Product updated successfully');
     } else {
-      const { error } = await supabase
+      console.log('Inserting product:', payload);
+      const { data, error } = await supabase
         .from('products')
-        .insert(payload);
+        .insert(payload)
+        .select();
       if (error) {
         console.error('Insert product error:', error);
         toast.error(`Failed to add product: ${error.message}`);
         setSaving(false);
         return;
       }
+      console.log('Product inserted successfully:', data);
       toast.success('Product added successfully');
     }
 
