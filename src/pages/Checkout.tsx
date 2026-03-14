@@ -370,7 +370,7 @@ const Checkout = () => {
                     variant="hero"
                     className="w-full mt-6"
                     size="lg"
-                    disabled={isProcessing}
+                    disabled={isProcessing || !isFormValid}
                   >
                     {isProcessing ? 'Processing...' : paymentMethod === 'online' ? `Pay Online • ₹${totalWithTax}` : `Place Order • ₹${totalWithTax}`}
                   </Button>
