@@ -210,9 +210,11 @@ const Checkout = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="Enter your name"
-                        required
+                        className={fieldErrors.name && touched.name ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.name && touched.name && <p className="text-xs text-destructive mt-1">{fieldErrors.name}</p>}
                     </div>
                     <div>
                       <Label htmlFor="phone">Phone Number *</Label>
@@ -222,9 +224,11 @@ const Checkout = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="+91 98765 43210"
-                        required
+                        className={fieldErrors.phone && touched.phone ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.phone && touched.phone && <p className="text-xs text-destructive mt-1">{fieldErrors.phone}</p>}
                     </div>
                     <div className="sm:col-span-2">
                       <Label htmlFor="address">Address *</Label>
@@ -233,9 +237,11 @@ const Checkout = () => {
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="House/Flat No., Street, Landmark"
-                        required
+                        className={fieldErrors.address && touched.address ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.address && touched.address && <p className="text-xs text-destructive mt-1">{fieldErrors.address}</p>}
                     </div>
                     <div>
                       <Label htmlFor="city">City *</Label>
@@ -244,9 +250,11 @@ const Checkout = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="Ahmedabad"
-                        required
+                        className={fieldErrors.city && touched.city ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.city && touched.city && <p className="text-xs text-destructive mt-1">{fieldErrors.city}</p>}
                     </div>
                     <div>
                       <Label htmlFor="pincode">Pincode</Label>
@@ -255,8 +263,11 @@ const Checkout = () => {
                         name="pincode"
                         value={formData.pincode}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="380001"
+                        className={fieldErrors.pincode && touched.pincode ? 'border-destructive' : ''}
                       />
+                      {fieldErrors.pincode && touched.pincode && <p className="text-xs text-destructive mt-1">{fieldErrors.pincode}</p>}
                     </div>
                   </div>
                 </div>
