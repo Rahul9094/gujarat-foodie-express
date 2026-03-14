@@ -3,7 +3,6 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Star, Plus, Filter, Leaf, Search, Eye } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { foodItems, categories, restaurants } from '@/data/mockData';
 import { useProducts, useDbCategories, useDbRestaurants } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
@@ -22,39 +21,19 @@ const Menu = () => {
   const { categories: dbCategories } = useDbCategories();
   const { restaurants: dbRestaurants } = useDbRestaurants();
 
-  // Merge mock + DB products, DB products take priority
-  const allItems = useMemo(() => {
-    const dbIds = new Set(dbProducts.map(p => p.id));
-    const mockFiltered = foodItems.filter(item => !dbIds.has(item.id));
-    return [...dbProducts, ...mockFiltered];
-  }, [dbProducts]);
-
-  // Build category list from both sources
+  // Build category list from DB
   const allCategories = useMemo(() => {
-    const dbCatMap = new Map(dbCategories.map(c => [c.slug, c]));
-    const merged = categories.map(c => {
-      const dbCat = dbCatMap.get(c.id);
-      return dbCat ? { ...c, id: dbCat.slug } : c;
-    });
-    // Add any DB categories not in mock
-    dbCategories.forEach(dc => {
-      if (!categories.find(c => c.id === dc.slug)) {
-        merged.push({ id: dc.slug, name: dc.name, image: dc.image_url || '/placeholder.svg', itemCount: dc.item_count });
-      }
-    });
-    return merged;
+    return dbCategories.map(c => ({ id: c.slug, name: c.name, image: c.image_url || '/placeholder.svg', itemCount: c.item_count }));
   }, [dbCategories]);
 
-  // Filter logic - match category by slug or categoryId
+  // Filter logic
   const filteredItems = useMemo(() => {
-    return allItems.filter(item => {
-      // Category match: check mock categoryId or DB category slug
+    return dbProducts.filter(item => {
       let categoryMatch = selectedCategory === 'all';
       if (!categoryMatch) {
         if (item.categoryId === selectedCategory) {
           categoryMatch = true;
         } else {
-          // Check if item's category_id maps to the selected slug
           const dbCat = dbCategories.find(c => c.id === item.categoryId);
           if (dbCat && dbCat.slug === selectedCategory) categoryMatch = true;
         }
@@ -64,17 +43,15 @@ const Menu = () => {
                           item.description.toLowerCase().includes(searchQuery.toLowerCase());
       return categoryMatch && vegMatch && searchMatch;
     });
-  }, [allItems, selectedCategory, vegOnly, searchQuery, dbCategories]);
+  }, [dbProducts, selectedCategory, vegOnly, searchQuery, dbCategories]);
 
-  const handleAddToCart = (item: typeof foodItems[0]) => {
+  const handleAddToCart = (item: typeof dbProducts[0]) => {
     addToCart(item);
     toast.success(`${item.name} added to cart!`);
   };
 
   const getRestaurantName = (restaurantId: string) => {
-    const dbR = dbRestaurants.find(r => r.id === restaurantId);
-    if (dbR) return dbR.name;
-    return restaurants.find(r => r.id === restaurantId)?.name || 'Unknown';
+    return dbRestaurants.find(r => r.id === restaurantId)?.name || 'Unknown';
   };
 
   return (
