@@ -153,3 +153,85 @@ export const useDbRestaurants = (cityId?: string) => {
 
   return { restaurants, loading };
 };
+
+// Fetch a single product by ID from the database
+export const useProductById = (productId: string | undefined) => {
+  const [product, setProduct] = useState<FoodItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!productId) { setLoading(false); return; }
+    const fetch = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', productId)
+        .maybeSingle();
+      if (error || !data) {
+        setProduct(null);
+      } else {
+        setProduct(dbProductToFoodItem(data as unknown as DbProduct));
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [productId]);
+
+  return { product, loading };
+};
+
+// Fetch a single restaurant by ID
+export const useDbRestaurantById = (restaurantId: string | undefined) => {
+  const [restaurant, setRestaurant] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!restaurantId) { setLoading(false); return; }
+    const fetch = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from('db_restaurants')
+        .select('*')
+        .eq('id', restaurantId)
+        .maybeSingle();
+      setRestaurant(data);
+      setLoading(false);
+    };
+    fetch();
+  }, [restaurantId]);
+
+  return { restaurant, loading };
+};
+
+// Fetch a single city by ID or slug
+export const useDbCityById = (cityIdOrSlug: string | undefined) => {
+  const [city, setCity] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!cityIdOrSlug) { setLoading(false); return; }
+    const fetch = async () => {
+      setLoading(true);
+      // Try by slug first, then by id
+      let { data } = await supabase
+        .from('db_cities')
+        .select('*')
+        .eq('slug', cityIdOrSlug)
+        .maybeSingle();
+      if (!data) {
+        const res = await supabase
+          .from('db_cities')
+          .select('*')
+          .eq('id', cityIdOrSlug)
+          .maybeSingle();
+        data = res.data;
+      }
+      setCity(data);
+      setLoading(false);
+    };
+    fetch();
+  }, [cityIdOrSlug]);
+
+  return { city, loading };
+};
