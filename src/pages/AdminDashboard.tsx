@@ -461,7 +461,17 @@ const AdminDashboard = () => {
             <ProductManagement />
           </TabsContent>
 
-          {/* Messages Tab */}
+          {/* Cities Tab */}
+          <TabsContent value="cities">
+            <CityManagement />
+          </TabsContent>
+
+          {/* Restaurants Tab */}
+          <TabsContent value="restaurants">
+            <RestaurantManagement />
+          </TabsContent>
+
+
           <TabsContent value="messages" className="space-y-4">
             {messages.length > 0 && (
               <div className="flex justify-end mb-4">
