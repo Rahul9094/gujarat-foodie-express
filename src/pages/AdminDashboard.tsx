@@ -331,18 +331,26 @@ const AdminDashboard = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-3">
+          <TabsList className="grid w-full max-w-2xl grid-cols-5">
             <TabsTrigger value="orders" className="gap-2">
               <Package className="w-4 h-4" />
-              Orders ({orders.length})
+              <span className="hidden sm:inline">Orders ({orders.length})</span>
             </TabsTrigger>
             <TabsTrigger value="products" className="gap-2">
               <ShoppingBag className="w-4 h-4" />
-              Products
+              <span className="hidden sm:inline">Products</span>
+            </TabsTrigger>
+            <TabsTrigger value="cities" className="gap-2">
+              <MapPin className="w-4 h-4" />
+              <span className="hidden sm:inline">Cities</span>
+            </TabsTrigger>
+            <TabsTrigger value="restaurants" className="gap-2">
+              <Store className="w-4 h-4" />
+              <span className="hidden sm:inline">Restaurants</span>
             </TabsTrigger>
             <TabsTrigger value="messages" className="gap-2">
               <MessageSquare className="w-4 h-4" />
-              Messages ({messages.length})
+              <span className="hidden sm:inline">Messages ({messages.length})</span>
               {unreadCount > 0 && (
                 <Badge variant="destructive" className="ml-1 h-5 w-5 p-0 justify-center">
                   {unreadCount}
