@@ -14,6 +14,8 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 const Footer = () => {
+  const { cities } = useDbCities();
+
   return (
     <footer className="bg-foreground text-background py-8 sm:py-12">
       <div className="container mx-auto px-4">
