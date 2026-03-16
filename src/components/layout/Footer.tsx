@@ -107,27 +107,16 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">We Deliver In</h4>
             <ul className="space-y-2">
-              <li>
-                <Link to="/cities/ahmedabad" className="text-background/70 hover:text-primary transition-colors text-sm">Ahmedabad</Link>
-              </li>
-              <li>
-                <Link to="/cities/surat" className="text-background/70 hover:text-primary transition-colors text-sm">Surat</Link>
-              </li>
-              <li>
-                <Link to="/cities/vadodara" className="text-background/70 hover:text-primary transition-colors text-sm">Vadodara</Link>
-              </li>
-              <li>
-                <Link to="/cities/rajkot" className="text-background/70 hover:text-primary transition-colors text-sm">Rajkot</Link>
-              </li>
-              <li>
-                <Link to="/cities/bhavnagar" className="text-background/70 hover:text-primary transition-colors text-sm">Bhavnagar</Link>
-              </li>
-              <li>
-                <Link to="/cities/patan" className="text-background/70 hover:text-primary transition-colors text-sm">Patan</Link>
-              </li>
-              <li>
-                <Link to="/cities/gandhinagar" className="text-background/70 hover:text-primary transition-colors text-sm">Gandhinagar</Link>
-              </li>
+              {cities.map((city) => (
+                <li key={city.id}>
+                  <Link 
+                    to={`/cities/${city.slug}`} 
+                    className="text-background/70 hover:text-primary transition-colors text-sm"
+                  >
+                    {city.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
