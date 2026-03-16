@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter } from 'lucide-react';
+import { useDbCities } from '@/hooks/useProducts';
 
 // WhatsApp icon component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
