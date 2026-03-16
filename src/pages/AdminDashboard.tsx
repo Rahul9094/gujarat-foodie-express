@@ -12,7 +12,9 @@ import {
   MailOpen,
   Trash2,
   XCircle,
-  ShoppingBag
+  ShoppingBag,
+  MapPin,
+  Store
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +47,8 @@ import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import ProductManagement from '@/components/admin/ProductManagement';
+import CityManagement from '@/components/admin/CityManagement';
+import RestaurantManagement from '@/components/admin/RestaurantManagement';
 
 interface Order {
   id: string;
@@ -327,18 +331,26 @@ const AdminDashboard = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-3">
+          <TabsList className="grid w-full max-w-2xl grid-cols-5">
             <TabsTrigger value="orders" className="gap-2">
               <Package className="w-4 h-4" />
-              Orders ({orders.length})
+              <span className="hidden sm:inline">Orders ({orders.length})</span>
             </TabsTrigger>
             <TabsTrigger value="products" className="gap-2">
               <ShoppingBag className="w-4 h-4" />
-              Products
+              <span className="hidden sm:inline">Products</span>
+            </TabsTrigger>
+            <TabsTrigger value="cities" className="gap-2">
+              <MapPin className="w-4 h-4" />
+              <span className="hidden sm:inline">Cities</span>
+            </TabsTrigger>
+            <TabsTrigger value="restaurants" className="gap-2">
+              <Store className="w-4 h-4" />
+              <span className="hidden sm:inline">Restaurants</span>
             </TabsTrigger>
             <TabsTrigger value="messages" className="gap-2">
               <MessageSquare className="w-4 h-4" />
-              Messages ({messages.length})
+              <span className="hidden sm:inline">Messages ({messages.length})</span>
               {unreadCount > 0 && (
                 <Badge variant="destructive" className="ml-1 h-5 w-5 p-0 justify-center">
                   {unreadCount}
@@ -449,7 +461,17 @@ const AdminDashboard = () => {
             <ProductManagement />
           </TabsContent>
 
-          {/* Messages Tab */}
+          {/* Cities Tab */}
+          <TabsContent value="cities">
+            <CityManagement />
+          </TabsContent>
+
+          {/* Restaurants Tab */}
+          <TabsContent value="restaurants">
+            <RestaurantManagement />
+          </TabsContent>
+
+
           <TabsContent value="messages" className="space-y-4">
             {messages.length > 0 && (
               <div className="flex justify-end mb-4">

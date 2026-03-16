@@ -1,9 +1,21 @@
 import { Link } from 'react-router-dom';
 import { MapPin, ChevronRight } from 'lucide-react';
-import { cities } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
+import { useDbCities } from '@/hooks/useProducts';
 
 const CitiesSection = () => {
+  const { cities, loading } = useDbCities();
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
@@ -20,13 +32,13 @@ const CitiesSection = () => {
           {cities.map((city, index) => (
             <Link
               key={city.id}
-              to={`/cities/${city.id}`}
+              to={`/cities/${city.slug}`}
               className="group relative bg-card rounded-xl overflow-hidden shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="aspect-[4/3] overflow-hidden">
                 <img
-                  src={city.image}
+                  src={city.image_url || '/placeholder.svg'}
                   alt={city.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -37,7 +49,7 @@ const CitiesSection = () => {
                   {city.name}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
-                  {city.restaurantCount} Restaurants
+                  {city.restaurant_count} Restaurants
                 </p>
               </div>
               <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -49,9 +61,7 @@ const CitiesSection = () => {
 
         <div className="text-center mt-8">
           <Link to="/cities">
-            <Button variant="outline" size="lg">
-              View All Cities
-            </Button>
+            <Button variant="outline" size="lg">View All Cities</Button>
           </Link>
         </div>
       </div>
