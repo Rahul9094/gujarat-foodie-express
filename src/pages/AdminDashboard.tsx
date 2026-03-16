@@ -45,6 +45,8 @@ import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import ProductManagement from '@/components/admin/ProductManagement';
+import CityManagement from '@/components/admin/CityManagement';
+import RestaurantManagement from '@/components/admin/RestaurantManagement';
 
 interface Order {
   id: string;
