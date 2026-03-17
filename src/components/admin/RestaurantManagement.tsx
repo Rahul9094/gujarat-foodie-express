@@ -286,6 +286,10 @@ const RestaurantManagement = () => {
               <div><Label>Rating</Label><Input type="number" step="0.1" min="0" max="5" value={form.rating} onChange={e => setForm(prev => ({ ...prev, rating: e.target.value }))} /></div>
               <div><Label>Review Count</Label><Input type="number" value={form.review_count} onChange={e => setForm(prev => ({ ...prev, review_count: e.target.value }))} /></div>
             </div>
+            <div>
+              <Label>Address</Label>
+              <Input value={form.address} onChange={e => setForm(prev => ({ ...prev, address: e.target.value }))} placeholder="e.g. 123, Main Road, Near City Center" />
+            </div>
             <div className="flex items-center gap-3">
               <Switch checked={form.is_veg} onCheckedChange={v => setForm(prev => ({ ...prev, is_veg: v }))} />
               <Label>Pure Veg Restaurant</Label>
