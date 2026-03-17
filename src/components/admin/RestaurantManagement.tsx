@@ -134,7 +134,7 @@ const RestaurantManagement = () => {
       image_url: imageUrl, cuisine: form.cuisine || null,
       delivery_time: form.delivery_time || null, price_range: form.price_range || null,
       rating: parseFloat(form.rating) || 0, review_count: parseInt(form.review_count) || 0,
-      is_veg: form.is_veg,
+      is_veg: form.is_veg, address: form.address || null,
     };
 
     if (editingRest) {
