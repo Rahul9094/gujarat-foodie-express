@@ -109,6 +109,7 @@ export type Database = {
       }
       db_restaurants: {
         Row: {
+          address: string | null
           city_id: string
           created_at: string
           cuisine: string | null
@@ -124,6 +125,7 @@ export type Database = {
           slug: string
         }
         Insert: {
+          address?: string | null
           city_id: string
           created_at?: string
           cuisine?: string | null
@@ -139,6 +141,7 @@ export type Database = {
           slug: string
         }
         Update: {
+          address?: string | null
           city_id?: string
           created_at?: string
           cuisine?: string | null
