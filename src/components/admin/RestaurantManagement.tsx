@@ -48,10 +48,11 @@ interface RestaurantFormData {
   rating: string;
   review_count: string;
   is_veg: boolean;
+  address: string;
 }
 
 const defaultForm: RestaurantFormData = {
-  name: '', slug: '', city_id: '', cuisine: '', delivery_time: '', price_range: '', rating: '0', review_count: '0', is_veg: true,
+  name: '', slug: '', city_id: '', cuisine: '', delivery_time: '', price_range: '', rating: '0', review_count: '0', is_veg: true, address: '',
 };
 
 const RestaurantManagement = () => {
