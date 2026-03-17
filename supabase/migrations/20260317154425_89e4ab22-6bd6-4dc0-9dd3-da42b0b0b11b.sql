@@ -1,0 +1,1 @@
+ALTER TABLE public.db_restaurants ADD COLUMN address text NULL;

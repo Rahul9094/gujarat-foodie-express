@@ -107,10 +107,11 @@ const RestaurantDetail = () => {
                   </div>
                   <div>
                     <p className="font-medium text-foreground">{city.name}, Gujarat</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      123, Main Market Road, Near City Center<br />
-                      {city.name} - 380001, Gujarat, India
-                    </p>
+                    {restaurant.address && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {restaurant.address}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t border-border flex items-center gap-3">

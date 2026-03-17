@@ -34,6 +34,7 @@ interface Restaurant {
   review_count: number;
   is_veg: boolean;
   menu_categories: string[] | null;
+  address: string | null;
   created_at: string;
 }
 
@@ -47,10 +48,11 @@ interface RestaurantFormData {
   rating: string;
   review_count: string;
   is_veg: boolean;
+  address: string;
 }
 
 const defaultForm: RestaurantFormData = {
-  name: '', slug: '', city_id: '', cuisine: '', delivery_time: '', price_range: '', rating: '0', review_count: '0', is_veg: true,
+  name: '', slug: '', city_id: '', cuisine: '', delivery_time: '', price_range: '', rating: '0', review_count: '0', is_veg: true, address: '',
 };
 
 const RestaurantManagement = () => {
@@ -94,6 +96,7 @@ const RestaurantManagement = () => {
       cuisine: r.cuisine || '', delivery_time: r.delivery_time || '',
       price_range: r.price_range || '', rating: String(r.rating),
       review_count: String(r.review_count), is_veg: r.is_veg,
+      address: r.address || '',
     });
     setImageFile(null);
     setImagePreview(r.image_url || null);
@@ -131,7 +134,7 @@ const RestaurantManagement = () => {
       image_url: imageUrl, cuisine: form.cuisine || null,
       delivery_time: form.delivery_time || null, price_range: form.price_range || null,
       rating: parseFloat(form.rating) || 0, review_count: parseInt(form.review_count) || 0,
-      is_veg: form.is_veg,
+      is_veg: form.is_veg, address: form.address || null,
     };
 
     if (editingRest) {
@@ -282,6 +285,10 @@ const RestaurantManagement = () => {
             <div className="grid grid-cols-2 gap-3">
               <div><Label>Rating</Label><Input type="number" step="0.1" min="0" max="5" value={form.rating} onChange={e => setForm(prev => ({ ...prev, rating: e.target.value }))} /></div>
               <div><Label>Review Count</Label><Input type="number" value={form.review_count} onChange={e => setForm(prev => ({ ...prev, review_count: e.target.value }))} /></div>
+            </div>
+            <div>
+              <Label>Address</Label>
+              <Input value={form.address} onChange={e => setForm(prev => ({ ...prev, address: e.target.value }))} placeholder="e.g. 123, Main Road, Near City Center" />
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={form.is_veg} onCheckedChange={v => setForm(prev => ({ ...prev, is_veg: v }))} />
