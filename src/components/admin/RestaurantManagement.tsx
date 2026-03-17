@@ -96,6 +96,7 @@ const RestaurantManagement = () => {
       cuisine: r.cuisine || '', delivery_time: r.delivery_time || '',
       price_range: r.price_range || '', rating: String(r.rating),
       review_count: String(r.review_count), is_veg: r.is_veg,
+      address: r.address || '',
     });
     setImageFile(null);
     setImagePreview(r.image_url || null);
