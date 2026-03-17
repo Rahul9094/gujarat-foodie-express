@@ -34,6 +34,7 @@ interface Restaurant {
   review_count: number;
   is_veg: boolean;
   menu_categories: string[] | null;
+  address: string | null;
   created_at: string;
 }
 
