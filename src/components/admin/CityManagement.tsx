@@ -13,6 +13,15 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
+
+const citySchema = z.object({
+  name: z.string().trim().min(1, 'City name is required').max(100, 'Name must be less than 100 characters'),
+  slug: z.string().trim().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  restaurant_count: z.string().refine(v => { const n = parseInt(v); return !isNaN(n) && n >= 0; }, 'Must be a positive number'),
+  lat: z.string().refine(v => v === '' || (!isNaN(parseFloat(v)) && parseFloat(v) >= -90 && parseFloat(v) <= 90), 'Latitude must be between -90 and 90').optional(),
+  lng: z.string().refine(v => v === '' || (!isNaN(parseFloat(v)) && parseFloat(v) >= -180 && parseFloat(v) <= 180), 'Longitude must be between -180 and 180').optional(),
+});
 
 interface City {
   id: string;
@@ -33,13 +42,7 @@ interface CityFormData {
   lng: string;
 }
 
-const defaultForm: CityFormData = {
-  name: '',
-  slug: '',
-  restaurant_count: '0',
-  lat: '',
-  lng: '',
-};
+const defaultForm: CityFormData = { name: '', slug: '', restaurant_count: '0', lat: '', lng: '' };
 
 const CityManagement = () => {
   const [cities, setCities] = useState<City[]>([]);
@@ -51,6 +54,8 @@ const CityManagement = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   useEffect(() => { fetchCities(); }, []);
 
@@ -61,44 +66,63 @@ const CityManagement = () => {
     setLoading(false);
   };
 
+  const validateField = (name: string, value: string) => {
+    const partial = { ...form, [name]: value };
+    const result = citySchema.safeParse(partial);
+    if (!result.success) {
+      const fieldError = result.error.errors.find(e => e.path[0] === name);
+      return fieldError?.message || '';
+    }
+    return '';
+  };
+
+  const handleFieldChange = (name: string, value: string) => {
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setFieldErrors(prev => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleFieldBlur = (name: string) => {
+    setTouched(prev => ({ ...prev, [name]: true }));
+    const error = validateField(name, form[name as keyof CityFormData]);
+    setFieldErrors(prev => ({ ...prev, [name]: error }));
+  };
+
   const openAddDialog = () => {
     setEditingCity(null);
     setForm(defaultForm);
     setImageFile(null);
     setImagePreview(null);
+    setFieldErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
   const openEditDialog = (city: City) => {
     setEditingCity(city);
     setForm({
-      name: city.name,
-      slug: city.slug,
-      restaurant_count: String(city.restaurant_count),
-      lat: city.lat ? String(city.lat) : '',
-      lng: city.lng ? String(city.lng) : '',
+      name: city.name, slug: city.slug, restaurant_count: String(city.restaurant_count),
+      lat: city.lat ? String(city.lat) : '', lng: city.lng ? String(city.lng) : '',
     });
     setImageFile(null);
     setImagePreview(city.image_url || null);
+    setFieldErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
+    if (file) { setImageFile(file); setImagePreview(URL.createObjectURL(file)); }
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
     const ext = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
     const { error } = await supabase.storage.from('city-images').upload(fileName, file);
-    if (error) {
-      toast.error(`Failed to upload image: ${error.message}`);
-      return null;
-    }
+    if (error) { toast.error(`Failed to upload image: ${error.message}`); return null; }
     const { data } = supabase.storage.from('city-images').getPublicUrl(fileName);
     return data.publicUrl;
   };
@@ -106,22 +130,30 @@ const CityManagement = () => {
   const generateSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   const handleSubmit = async () => {
-    if (!form.name || !form.slug) {
-      toast.error('Name and slug are required');
+    const allTouched: Record<string, boolean> = { name: true, slug: true, restaurant_count: true };
+    if (form.lat) allTouched.lat = true;
+    if (form.lng) allTouched.lng = true;
+    setTouched(allTouched);
+
+    const result = citySchema.safeParse(form);
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach(err => {
+        const field = err.path[0] as string;
+        if (!errors[field]) errors[field] = err.message;
+      });
+      setFieldErrors(errors);
+      toast.error('Please fill all required fields correctly');
       return;
     }
+    setFieldErrors({});
     setSaving(true);
 
     let imageUrl = editingCity?.image_url || null;
-    if (imageFile) {
-      const uploaded = await uploadImage(imageFile);
-      if (uploaded) imageUrl = uploaded;
-    }
+    if (imageFile) { const uploaded = await uploadImage(imageFile); if (uploaded) imageUrl = uploaded; }
 
     const payload = {
-      name: form.name,
-      slug: form.slug,
-      image_url: imageUrl,
+      name: form.name.trim(), slug: form.slug.trim(), image_url: imageUrl,
       restaurant_count: parseInt(form.restaurant_count) || 0,
       lat: form.lat ? parseFloat(form.lat) : null,
       lng: form.lng ? parseFloat(form.lng) : null,
@@ -149,9 +181,9 @@ const CityManagement = () => {
     fetchCities();
   };
 
-  const filtered = cities.filter(c =>
-    !searchQuery || c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = cities.filter(c => !searchQuery || c.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  const getInputClass = (name: string) => fieldErrors[name] && touched[name] ? 'border-destructive' : '';
 
   if (loading) {
     return <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>;
@@ -231,19 +263,61 @@ const CityManagement = () => {
           <div className="space-y-4">
             <div>
               <Label>City Name *</Label>
-              <Input value={form.name} onChange={e => { setForm(prev => ({ ...prev, name: e.target.value, slug: editingCity ? prev.slug : generateSlug(e.target.value) })); }} placeholder="e.g. Ahmedabad" />
+              <Input
+                value={form.name}
+                onChange={e => { handleFieldChange('name', e.target.value); if (!editingCity) setForm(prev => ({ ...prev, slug: generateSlug(e.target.value) })); }}
+                onBlur={() => handleFieldBlur('name')}
+                placeholder="e.g. Ahmedabad"
+                className={getInputClass('name')}
+                maxLength={100}
+              />
+              {fieldErrors.name && touched.name && <p className="text-xs text-destructive mt-1">{fieldErrors.name}</p>}
             </div>
             <div>
               <Label>Slug *</Label>
-              <Input value={form.slug} onChange={e => setForm(prev => ({ ...prev, slug: e.target.value }))} placeholder="e.g. ahmedabad" />
+              <Input
+                value={form.slug}
+                onChange={e => handleFieldChange('slug', e.target.value)}
+                onBlur={() => handleFieldBlur('slug')}
+                placeholder="e.g. ahmedabad"
+                className={getInputClass('slug')}
+              />
+              {fieldErrors.slug && touched.slug && <p className="text-xs text-destructive mt-1">{fieldErrors.slug}</p>}
             </div>
             <div>
               <Label>Restaurant Count</Label>
-              <Input type="number" value={form.restaurant_count} onChange={e => setForm(prev => ({ ...prev, restaurant_count: e.target.value }))} />
+              <Input
+                type="number" min="0"
+                value={form.restaurant_count}
+                onChange={e => handleFieldChange('restaurant_count', e.target.value)}
+                onBlur={() => handleFieldBlur('restaurant_count')}
+                className={getInputClass('restaurant_count')}
+              />
+              {fieldErrors.restaurant_count && touched.restaurant_count && <p className="text-xs text-destructive mt-1">{fieldErrors.restaurant_count}</p>}
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><Label>Latitude</Label><Input value={form.lat} onChange={e => setForm(prev => ({ ...prev, lat: e.target.value }))} placeholder="e.g. 23.03" /></div>
-              <div><Label>Longitude</Label><Input value={form.lng} onChange={e => setForm(prev => ({ ...prev, lng: e.target.value }))} placeholder="e.g. 72.58" /></div>
+              <div>
+                <Label>Latitude</Label>
+                <Input
+                  value={form.lat}
+                  onChange={e => handleFieldChange('lat', e.target.value)}
+                  onBlur={() => handleFieldBlur('lat')}
+                  placeholder="e.g. 23.03"
+                  className={getInputClass('lat')}
+                />
+                {fieldErrors.lat && touched.lat && <p className="text-xs text-destructive mt-1">{fieldErrors.lat}</p>}
+              </div>
+              <div>
+                <Label>Longitude</Label>
+                <Input
+                  value={form.lng}
+                  onChange={e => handleFieldChange('lng', e.target.value)}
+                  onBlur={() => handleFieldBlur('lng')}
+                  placeholder="e.g. 72.58"
+                  className={getInputClass('lng')}
+                />
+                {fieldErrors.lng && touched.lng && <p className="text-xs text-destructive mt-1">{fieldErrors.lng}</p>}
+              </div>
             </div>
             <div>
               <Label>City Image</Label>
