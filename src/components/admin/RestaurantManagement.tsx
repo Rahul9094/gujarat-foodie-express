@@ -18,6 +18,19 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
+
+const restaurantSchema = z.object({
+  name: z.string().trim().min(1, 'Restaurant name is required').max(200, 'Name must be less than 200 characters'),
+  slug: z.string().trim().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  city_id: z.string().min(1, 'City is required'),
+  cuisine: z.string().max(200, 'Cuisine must be less than 200 characters').optional(),
+  delivery_time: z.string().max(50, 'Delivery time must be less than 50 characters').optional(),
+  price_range: z.string().max(20, 'Price range must be less than 20 characters').optional(),
+  rating: z.string().refine(v => { const n = parseFloat(v); return !isNaN(n) && n >= 0 && n <= 5; }, 'Rating must be a number between 0 and 5'),
+  review_count: z.string().refine(v => { const n = parseInt(v); return !isNaN(n) && n >= 0; }, 'Review count must be a positive number'),
+  address: z.string().max(500, 'Address must be less than 500 characters').optional(),
+});
 
 interface DbCity { id: string; name: string; }
 
@@ -67,6 +80,8 @@ const RestaurantManagement = () => {
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCity, setFilterCity] = useState('all');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   useEffect(() => { fetchAll(); }, []);
 
@@ -81,11 +96,37 @@ const RestaurantManagement = () => {
     setLoading(false);
   };
 
+  const validateField = (name: string, value: string) => {
+    const partial = { ...form, [name]: value };
+    const result = restaurantSchema.safeParse(partial);
+    if (!result.success) {
+      const fieldError = result.error.errors.find(e => e.path[0] === name);
+      return fieldError?.message || '';
+    }
+    return '';
+  };
+
+  const handleFieldChange = (name: string, value: string) => {
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setFieldErrors(prev => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleFieldBlur = (name: string) => {
+    setTouched(prev => ({ ...prev, [name]: true }));
+    const error = validateField(name, form[name as keyof RestaurantFormData] as string);
+    setFieldErrors(prev => ({ ...prev, [name]: error }));
+  };
+
   const openAddDialog = () => {
     setEditingRest(null);
     setForm(defaultForm);
     setImageFile(null);
     setImagePreview(null);
+    setFieldErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -100,6 +141,8 @@ const RestaurantManagement = () => {
     });
     setImageFile(null);
     setImagePreview(r.image_url || null);
+    setFieldErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -120,21 +163,33 @@ const RestaurantManagement = () => {
   const generateSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   const handleSubmit = async () => {
-    if (!form.name || !form.slug || !form.city_id) {
-      toast.error('Name, slug, and city are required');
+    // Mark all required fields as touched
+    const allTouched: Record<string, boolean> = { name: true, slug: true, city_id: true, rating: true, review_count: true };
+    setTouched(allTouched);
+
+    const result = restaurantSchema.safeParse(form);
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach(err => {
+        const field = err.path[0] as string;
+        if (!errors[field]) errors[field] = err.message;
+      });
+      setFieldErrors(errors);
+      toast.error('Please fill all required fields correctly');
       return;
     }
+    setFieldErrors({});
     setSaving(true);
 
     let imageUrl = editingRest?.image_url || null;
     if (imageFile) { const uploaded = await uploadImage(imageFile); if (uploaded) imageUrl = uploaded; }
 
     const payload = {
-      name: form.name, slug: form.slug, city_id: form.city_id,
-      image_url: imageUrl, cuisine: form.cuisine || null,
-      delivery_time: form.delivery_time || null, price_range: form.price_range || null,
+      name: form.name.trim(), slug: form.slug.trim(), city_id: form.city_id,
+      image_url: imageUrl, cuisine: form.cuisine.trim() || null,
+      delivery_time: form.delivery_time.trim() || null, price_range: form.price_range.trim() || null,
       rating: parseFloat(form.rating) || 0, review_count: parseInt(form.review_count) || 0,
-      is_veg: form.is_veg, address: form.address || null,
+      is_veg: form.is_veg, address: form.address.trim() || null,
     };
 
     if (editingRest) {
@@ -166,6 +221,8 @@ const RestaurantManagement = () => {
     const matchCity = filterCity === 'all' || r.city_id === filterCity;
     return matchSearch && matchCity;
   });
+
+  const getInputClass = (name: string) => fieldErrors[name] && touched[name] ? 'border-destructive' : '';
 
   if (loading) {
     return <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>;
@@ -261,34 +318,75 @@ const RestaurantManagement = () => {
           <div className="space-y-4">
             <div>
               <Label>Restaurant Name *</Label>
-              <Input value={form.name} onChange={e => setForm(prev => ({ ...prev, name: e.target.value, slug: editingRest ? prev.slug : generateSlug(e.target.value) }))} placeholder="e.g. Kathiyavadi Rasoi" />
+              <Input
+                value={form.name}
+                onChange={e => { handleFieldChange('name', e.target.value); if (!editingRest) setForm(prev => ({ ...prev, slug: generateSlug(e.target.value) })); }}
+                onBlur={() => handleFieldBlur('name')}
+                placeholder="e.g. Kathiyavadi Rasoi"
+                className={getInputClass('name')}
+                maxLength={200}
+              />
+              {fieldErrors.name && touched.name && <p className="text-xs text-destructive mt-1">{fieldErrors.name}</p>}
             </div>
             <div>
               <Label>Slug *</Label>
-              <Input value={form.slug} onChange={e => setForm(prev => ({ ...prev, slug: e.target.value }))} />
+              <Input
+                value={form.slug}
+                onChange={e => handleFieldChange('slug', e.target.value)}
+                onBlur={() => handleFieldBlur('slug')}
+                className={getInputClass('slug')}
+              />
+              {fieldErrors.slug && touched.slug && <p className="text-xs text-destructive mt-1">{fieldErrors.slug}</p>}
             </div>
             <div>
               <Label>City *</Label>
-              <Select value={form.city_id} onValueChange={v => setForm(prev => ({ ...prev, city_id: v }))}>
-                <SelectTrigger><SelectValue placeholder="Select city" /></SelectTrigger>
+              <Select value={form.city_id} onValueChange={v => { handleFieldChange('city_id', v); setTouched(prev => ({ ...prev, city_id: true })); }}>
+                <SelectTrigger className={getInputClass('city_id')}><SelectValue placeholder="Select city" /></SelectTrigger>
                 <SelectContent>{cities.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
               </Select>
+              {fieldErrors.city_id && touched.city_id && <p className="text-xs text-destructive mt-1">{fieldErrors.city_id}</p>}
             </div>
             <div>
               <Label>Cuisine</Label>
-              <Input value={form.cuisine} onChange={e => setForm(prev => ({ ...prev, cuisine: e.target.value }))} placeholder="e.g. Gujarati, Kathiyawadi" />
+              <Input value={form.cuisine} onChange={e => handleFieldChange('cuisine', e.target.value)} placeholder="e.g. Gujarati, Kathiyawadi" maxLength={200} />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><Label>Delivery Time</Label><Input value={form.delivery_time} onChange={e => setForm(prev => ({ ...prev, delivery_time: e.target.value }))} placeholder="e.g. 30-45 min" /></div>
-              <div><Label>Price Range</Label><Input value={form.price_range} onChange={e => setForm(prev => ({ ...prev, price_range: e.target.value }))} placeholder="e.g. ₹₹" /></div>
+              <div>
+                <Label>Delivery Time</Label>
+                <Input value={form.delivery_time} onChange={e => handleFieldChange('delivery_time', e.target.value)} placeholder="e.g. 30-45 min" maxLength={50} />
+              </div>
+              <div>
+                <Label>Price Range</Label>
+                <Input value={form.price_range} onChange={e => handleFieldChange('price_range', e.target.value)} placeholder="e.g. ₹₹" maxLength={20} />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><Label>Rating</Label><Input type="number" step="0.1" min="0" max="5" value={form.rating} onChange={e => setForm(prev => ({ ...prev, rating: e.target.value }))} /></div>
-              <div><Label>Review Count</Label><Input type="number" value={form.review_count} onChange={e => setForm(prev => ({ ...prev, review_count: e.target.value }))} /></div>
+              <div>
+                <Label>Rating</Label>
+                <Input
+                  type="number" step="0.1" min="0" max="5"
+                  value={form.rating}
+                  onChange={e => handleFieldChange('rating', e.target.value)}
+                  onBlur={() => handleFieldBlur('rating')}
+                  className={getInputClass('rating')}
+                />
+                {fieldErrors.rating && touched.rating && <p className="text-xs text-destructive mt-1">{fieldErrors.rating}</p>}
+              </div>
+              <div>
+                <Label>Review Count</Label>
+                <Input
+                  type="number" min="0"
+                  value={form.review_count}
+                  onChange={e => handleFieldChange('review_count', e.target.value)}
+                  onBlur={() => handleFieldBlur('review_count')}
+                  className={getInputClass('review_count')}
+                />
+                {fieldErrors.review_count && touched.review_count && <p className="text-xs text-destructive mt-1">{fieldErrors.review_count}</p>}
+              </div>
             </div>
             <div>
               <Label>Address</Label>
-              <Input value={form.address} onChange={e => setForm(prev => ({ ...prev, address: e.target.value }))} placeholder="e.g. 123, Main Road, Near City Center" />
+              <Input value={form.address} onChange={e => handleFieldChange('address', e.target.value)} placeholder="e.g. 123, Main Road, Near City Center" maxLength={500} />
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={form.is_veg} onCheckedChange={v => setForm(prev => ({ ...prev, is_veg: v }))} />
