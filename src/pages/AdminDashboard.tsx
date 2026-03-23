@@ -477,6 +477,7 @@ const AdminDashboard = () => {
                               <SelectItem value="partial">Partial</SelectItem>
                               <SelectItem value="paid">Paid</SelectItem>
                             </SelectContent>
+                          </Select>
                           <Button
                             variant="outline"
                             size="sm"
