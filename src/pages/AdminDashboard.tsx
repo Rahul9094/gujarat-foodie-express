@@ -97,6 +97,32 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
       fetchData();
+
+      // Real-time subscription for orders
+      const channel = supabase
+        .channel('admin-orders-changes')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'orders' },
+          (payload) => {
+            if (payload.eventType === 'UPDATE') {
+              setOrders(prev => prev.map(order =>
+                order.id === payload.new.id
+                  ? { ...order, ...payload.new, items: payload.new.items as Order['items'] }
+                  : order
+              ));
+            } else if (payload.eventType === 'INSERT') {
+              fetchOrders();
+            } else if (payload.eventType === 'DELETE') {
+              setOrders(prev => prev.filter(order => order.id !== payload.old.id));
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [isAuthenticated, isAdmin]);
 
