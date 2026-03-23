@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2, ChefHat, PackageCheck, XCircle, AlertCircle } from 'lucide-react';
+import { Package, Clock, CheckCircle, Truck, ShoppingBag, X, Trash2, ChefHat, PackageCheck, XCircle, AlertCircle, CreditCard, Banknote, CircleDollarSign } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
@@ -22,6 +22,7 @@ export interface Order {
   id: string;
   created_at: string;
   status: string;
+  payment_status: string;
   items: { name: string; quantity: number; price: number }[];
   total: number;
   address: string;
@@ -72,6 +73,12 @@ const statusConfig = {
     bgColor: 'bg-destructive/10',
     description: 'Order has been cancelled'
   },
+};
+
+const paymentStatusConfig: Record<string, { icon: any; label: string; color: string; bgColor: string }> = {
+  pending: { icon: Clock, label: 'Payment Pending', color: 'text-yellow-600', bgColor: 'bg-yellow-500/10' },
+  partial: { icon: CircleDollarSign, label: 'Partially Paid', color: 'text-orange-500', bgColor: 'bg-orange-500/10' },
+  paid: { icon: CreditCard, label: 'Paid', color: 'text-green-600', bgColor: 'bg-green-500/10' },
 };
 
 const Orders = () => {
@@ -351,9 +358,21 @@ const Orders = () => {
                           Payment: {order.payment_method === 'online' ? 'Online Payment' : 'Cash on Delivery'}
                         </p>
                       </div>
-                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.color}`}>
-                        <StatusIcon className="w-4 h-4" />
-                        <span className="font-medium text-sm">{status.label}</span>
+                      <div className="flex flex-col items-end gap-2">
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.color}`}>
+                          <StatusIcon className="w-4 h-4" />
+                          <span className="font-medium text-sm">{status.label}</span>
+                        </div>
+                        {(() => {
+                          const ps = paymentStatusConfig[order.payment_status] || paymentStatusConfig.pending;
+                          const PsIcon = ps.icon;
+                          return (
+                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${ps.bgColor} ${ps.color}`}>
+                              <PsIcon className="w-4 h-4" />
+                              <span className="font-medium text-sm">{ps.label}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -537,7 +556,20 @@ const Orders = () => {
               </div>
 
               <div className="border-t border-border pt-4">
-                <h3 className="font-semibold text-foreground mb-2">Order Date</h3>
+                <h3 className="font-semibold text-foreground mb-2">Payment Status</h3>
+                {(() => {
+                  const ps = paymentStatusConfig[selectedOrder.payment_status] || paymentStatusConfig.pending;
+                  const PsIcon = ps.icon;
+                  return (
+                    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${ps.bgColor} ${ps.color}`}>
+                      <PsIcon className="w-4 h-4" />
+                      <span className="font-medium text-sm">{ps.label}</span>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              <div className="border-t border-border pt-4">
                 <p className="text-sm text-muted-foreground">
                   {new Date(selectedOrder.created_at).toLocaleDateString('en-IN', {
                     year: 'numeric',
