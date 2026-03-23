@@ -57,6 +57,7 @@ interface Order {
   total: number;
   address: string;
   payment_method: string;
+  payment_status: string;
   status: string;
   created_at: string;
 }
@@ -76,6 +77,12 @@ const statusConfig = {
   in_progress: { icon: Truck, label: 'In Progress', color: 'bg-blue-500/20 text-blue-600' },
   delivered: { icon: CheckCircle2, label: 'Delivered', color: 'bg-green-500/20 text-green-600' },
   cancelled: { icon: XCircle, label: 'Cancelled', color: 'bg-red-500/20 text-red-600' },
+};
+
+const paymentStatusConfig: Record<string, { label: string; color: string }> = {
+  pending: { label: 'Payment Pending', color: 'bg-yellow-500/20 text-yellow-600' },
+  partial: { label: 'Partially Paid', color: 'bg-orange-500/20 text-orange-600' },
+  paid: { label: 'Paid', color: 'bg-green-500/20 text-green-600' },
 };
 
 const AdminDashboard = () => {
@@ -179,6 +186,24 @@ const AdminDashboard = () => {
     fetchOrders();
     if (selectedOrder?.id === orderId) {
       setSelectedOrder({ ...selectedOrder, status: newStatus });
+    }
+  };
+
+  const updatePaymentStatus = async (orderId: string, newPaymentStatus: string) => {
+    const { error } = await supabase
+      .from('orders')
+      .update({ payment_status: newPaymentStatus })
+      .eq('id', orderId);
+    
+    if (error) {
+      toast.error('Failed to update payment status');
+      return;
+    }
+    
+    toast.success(`Payment status updated to ${paymentStatusConfig[newPaymentStatus]?.label || newPaymentStatus}`);
+    fetchOrders();
+    if (selectedOrder?.id === orderId) {
+      setSelectedOrder({ ...selectedOrder, payment_status: newPaymentStatus });
     }
   };
 
@@ -411,6 +436,11 @@ const AdminDashboard = () => {
                               {statusInfo.label}
                             </Badge>
                           </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge className={paymentStatusConfig[order.payment_status]?.color || paymentStatusConfig.pending.color}>
+                              {paymentStatusConfig[order.payment_status]?.label || 'Payment Pending'}
+                            </Badge>
+                          </div>
                           <p className="text-sm text-muted-foreground">
                             {formatDate(order.created_at)}
                           </p>
@@ -435,6 +465,18 @@ const AdminDashboard = () => {
                               <SelectItem value="cancelled">Cancelled</SelectItem>
                             </SelectContent>
                           </Select>
+                          <Select
+                            value={order.payment_status || 'pending'}
+                            onValueChange={(value) => updatePaymentStatus(order.id, value)}
+                          >
+                            <SelectTrigger className="w-[140px]">
+                              <SelectValue placeholder="Payment" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">Pending</SelectItem>
+                              <SelectItem value="partial">Partial</SelectItem>
+                              <SelectItem value="paid">Paid</SelectItem>
+                            </SelectContent>
                           <Button
                             variant="outline"
                             size="sm"
@@ -600,6 +642,12 @@ const AdminDashboard = () => {
                 <div>
                   <p className="text-muted-foreground">Payment</p>
                   <p className="font-medium">{selectedOrder.payment_method}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Payment Status</p>
+                  <Badge className={paymentStatusConfig[selectedOrder.payment_status]?.color || paymentStatusConfig.pending.color}>
+                    {paymentStatusConfig[selectedOrder.payment_status]?.label || 'Payment Pending'}
+                  </Badge>
                 </div>
               </div>
               

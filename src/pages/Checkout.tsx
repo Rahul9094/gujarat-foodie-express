@@ -139,7 +139,8 @@ const Checkout = () => {
         total: totalWithTax,
         address,
         payment_method: paymentMethodText,
-        status: paymentMethodText.includes('Online') ? 'confirmed' : 'pending'
+        status: paymentMethodText.includes('Online') ? 'confirmed' : 'pending',
+        payment_status: paymentMethodText.includes('Online') ? 'paid' : 'pending'
       });
 
       if (error) {

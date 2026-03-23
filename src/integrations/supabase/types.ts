@@ -173,6 +173,7 @@ export type Database = {
           id: string
           items: Json
           payment_method: string
+          payment_status: string
           status: string
           total: number
           updated_at: string
@@ -185,6 +186,7 @@ export type Database = {
           id?: string
           items: Json
           payment_method: string
+          payment_status?: string
           status?: string
           total: number
           updated_at?: string
@@ -197,6 +199,7 @@ export type Database = {
           id?: string
           items?: Json
           payment_method?: string
+          payment_status?: string
           status?: string
           total?: number
           updated_at?: string
