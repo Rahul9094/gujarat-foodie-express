@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import QRPaymentModal from '@/components/checkout/QRPaymentModal';
-import { useDbCities } from '@/hooks/useProducts';
+import { useDbCities, useDbRestaurants } from '@/hooks/useProducts';
 
 // Validation schema for checkout form
 const checkoutSchema = z.object({
