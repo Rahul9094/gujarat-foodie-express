@@ -291,6 +291,25 @@ const Checkout = () => {
                       {fieldErrors.address && touched.address && <p className="text-xs text-destructive mt-1">{fieldErrors.address}</p>}
                     </div>
                     <div>
+                      <Label htmlFor="pincode">Pincode *</Label>
+                      <div className="relative">
+                        <Input
+                          id="pincode"
+                          name="pincode"
+                          value={formData.pincode}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          placeholder="380001"
+                          maxLength={6}
+                          className={fieldErrors.pincode && touched.pincode ? 'border-destructive' : ''}
+                        />
+                        {isFetchingCity && (
+                          <Loader2 className="w-4 h-4 animate-spin absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        )}
+                      </div>
+                      {fieldErrors.pincode && touched.pincode && <p className="text-xs text-destructive mt-1">{fieldErrors.pincode}</p>}
+                    </div>
+                    <div>
                       <Label htmlFor="city">City *</Label>
                       <Input
                         id="city"
@@ -298,23 +317,12 @@ const Checkout = () => {
                         value={formData.city}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        placeholder="Ahmedabad"
-                        className={fieldErrors.city && touched.city ? 'border-destructive' : ''}
+                        placeholder="Pincode se auto-fill hoga"
+                        readOnly={cityReadOnly}
+                        className={`${fieldErrors.city && touched.city ? 'border-destructive' : ''} ${cityReadOnly ? 'bg-muted cursor-not-allowed' : ''}`}
                       />
                       {fieldErrors.city && touched.city && <p className="text-xs text-destructive mt-1">{fieldErrors.city}</p>}
-                    </div>
-                    <div>
-                      <Label htmlFor="pincode">Pincode</Label>
-                      <Input
-                        id="pincode"
-                        name="pincode"
-                        value={formData.pincode}
-                        onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        placeholder="380001"
-                        className={fieldErrors.pincode && touched.pincode ? 'border-destructive' : ''}
-                      />
-                      {fieldErrors.pincode && touched.pincode && <p className="text-xs text-destructive mt-1">{fieldErrors.pincode}</p>}
+                      {cityReadOnly && <p className="text-xs text-green-600 mt-1">✓ Pincode se city auto-detect hui</p>}
                     </div>
                   </div>
                 </div>
