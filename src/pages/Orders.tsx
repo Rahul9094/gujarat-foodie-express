@@ -534,6 +534,15 @@ const Orders = () => {
                 )}
               </div>
 
+              {selectedOrder.items[0]?.restaurant_name && (
+                <div className="border-t border-border pt-4">
+                  <h3 className="font-semibold text-foreground mb-2">Restaurant & City</h3>
+                  <p className="text-sm text-muted-foreground">
+                    🍽️ {selectedOrder.items[0].restaurant_name} • 📍 {selectedOrder.items[0].city_name}
+                  </p>
+                </div>
+              )}
+
               <div className="border-t border-border pt-4">
                 <h3 className="font-semibold text-foreground mb-2">Order Items</h3>
                 <div className="space-y-2">

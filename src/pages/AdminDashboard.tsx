@@ -657,6 +657,15 @@ const AdminDashboard = () => {
                 <p className="text-sm bg-secondary/50 p-3 rounded-lg">{selectedOrder.address}</p>
               </div>
 
+              {(selectedOrder.items as any[])[0]?.restaurant_name && (
+                <div>
+                  <p className="text-muted-foreground text-sm mb-2">Restaurant & City</p>
+                  <p className="text-sm bg-secondary/50 p-3 rounded-lg">
+                    🍽️ {(selectedOrder.items as any[])[0].restaurant_name} • 📍 {(selectedOrder.items as any[])[0].city_name}
+                  </p>
+                </div>
+              )}
+
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Items</p>
                 <div className="space-y-2">

@@ -178,11 +178,17 @@ const Checkout = () => {
       const { error } = await supabase.from('orders').insert({
         user_id: supabaseUser.id,
         user_email: user.email,
-        items: cartItems.map(item => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        })),
+        items: cartItems.map(item => {
+          const restaurant = restaurants.find(r => r.id === item.restaurantId);
+          const city = restaurant ? cities.find(c => c.id === restaurant.city_id) : null;
+          return {
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            restaurant_name: restaurant?.name || 'Unknown',
+            city_name: city?.name || 'Unknown',
+          };
+        }),
         total: totalWithTax,
         address,
         payment_method: paymentMethodText,
