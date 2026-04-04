@@ -23,7 +23,7 @@ export interface Order {
   created_at: string;
   status: string;
   payment_status: string;
-  items: { name: string; quantity: number; price: number }[];
+  items: { name: string; quantity: number; price: number; restaurant_name?: string; city_name?: string }[];
   total: number;
   address: string;
   payment_method: string;
