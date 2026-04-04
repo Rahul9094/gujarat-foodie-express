@@ -27,6 +27,7 @@ const Checkout = () => {
   const { cartItems, getTotalPrice, clearCart } = useCart();
   const { user, supabaseUser } = useAuth();
   const { cities } = useDbCities();
+  const { restaurants } = useDbRestaurants();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isFetchingCity, setIsFetchingCity] = useState(false);
