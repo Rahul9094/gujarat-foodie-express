@@ -357,6 +357,11 @@ const Orders = () => {
                         <p className="text-xs text-muted-foreground mt-1">
                           Payment: {order.payment_method === 'online' ? 'Online Payment' : 'Cash on Delivery'}
                         </p>
+                        {order.items[0]?.restaurant_name && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            🍽️ {order.items[0].restaurant_name} • 📍 {order.items[0].city_name}
+                          </p>
+                        )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.color}`}>
