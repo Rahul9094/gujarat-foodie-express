@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, CreditCard, Banknote, ArrowLeft, Check } from 'lucide-react';
+import { MapPin, CreditCard, Banknote, ArrowLeft, Check, Loader2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import QRPaymentModal from '@/components/checkout/QRPaymentModal';
+import { useDbCities } from '@/hooks/useProducts';
 
 // Validation schema for checkout form
 const checkoutSchema = z.object({
@@ -25,8 +26,10 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
   const { user, supabaseUser } = useAuth();
+  const { cities } = useDbCities();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isFetchingCity, setIsFetchingCity] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [pendingOrderData, setPendingOrderData] = useState<{
     address: string;
@@ -40,6 +43,7 @@ const Checkout = () => {
     city: '',
     pincode: '',
   });
+  const [cityReadOnly, setCityReadOnly] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
@@ -61,12 +65,54 @@ const Checkout = () => {
     return '';
   };
 
+  const fetchCityFromPincode = useCallback(async (pincode: string) => {
+    if (!/^[0-9]{6}$/.test(pincode)) {
+      setCityReadOnly(false);
+      return;
+    }
+    setIsFetchingCity(true);
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data?.[0]?.Status === 'Success' && data[0].PostOffice?.length > 0) {
+        const district = data[0].PostOffice[0].District;
+        // Check if this city exists in our DB cities
+        const matchedCity = cities.find(
+          (c) => c.name.toLowerCase() === district.toLowerCase()
+        );
+        if (matchedCity) {
+          setFormData(prev => ({ ...prev, city: matchedCity.name }));
+          setCityReadOnly(true);
+          setFieldErrors(prev => ({ ...prev, city: '', pincode: '' }));
+        } else {
+          setFormData(prev => ({ ...prev, city: '' }));
+          setCityReadOnly(false);
+          toast.error(`Sorry, we don't deliver in ${district}. We currently deliver only in: ${cities.map(c => c.name).join(', ')}`);
+          setFieldErrors(prev => ({ ...prev, pincode: `We don't deliver in ${district}` }));
+        }
+      } else {
+        setCityReadOnly(false);
+        setFieldErrors(prev => ({ ...prev, pincode: 'Invalid pincode' }));
+      }
+    } catch {
+      setCityReadOnly(false);
+    } finally {
+      setIsFetchingCity(false);
+    }
+  }, [cities]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (touched[name]) {
       const error = validateField(name, value);
       setFieldErrors(prev => ({ ...prev, [name]: error }));
+    }
+    // Auto-fetch city when pincode is 6 digits
+    if (name === 'pincode' && /^[0-9]{6}$/.test(value)) {
+      fetchCityFromPincode(value);
+    } else if (name === 'pincode' && value.length < 6) {
+      setCityReadOnly(false);
     }
   };
 
@@ -245,6 +291,25 @@ const Checkout = () => {
                       {fieldErrors.address && touched.address && <p className="text-xs text-destructive mt-1">{fieldErrors.address}</p>}
                     </div>
                     <div>
+                      <Label htmlFor="pincode">Pincode *</Label>
+                      <div className="relative">
+                        <Input
+                          id="pincode"
+                          name="pincode"
+                          value={formData.pincode}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          placeholder="380001"
+                          maxLength={6}
+                          className={fieldErrors.pincode && touched.pincode ? 'border-destructive' : ''}
+                        />
+                        {isFetchingCity && (
+                          <Loader2 className="w-4 h-4 animate-spin absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        )}
+                      </div>
+                      {fieldErrors.pincode && touched.pincode && <p className="text-xs text-destructive mt-1">{fieldErrors.pincode}</p>}
+                    </div>
+                    <div>
                       <Label htmlFor="city">City *</Label>
                       <Input
                         id="city"
@@ -252,23 +317,12 @@ const Checkout = () => {
                         value={formData.city}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        placeholder="Ahmedabad"
-                        className={fieldErrors.city && touched.city ? 'border-destructive' : ''}
+                        placeholder="Pincode se auto-fill hoga"
+                        readOnly={cityReadOnly}
+                        className={`${fieldErrors.city && touched.city ? 'border-destructive' : ''} ${cityReadOnly ? 'bg-muted cursor-not-allowed' : ''}`}
                       />
                       {fieldErrors.city && touched.city && <p className="text-xs text-destructive mt-1">{fieldErrors.city}</p>}
-                    </div>
-                    <div>
-                      <Label htmlFor="pincode">Pincode</Label>
-                      <Input
-                        id="pincode"
-                        name="pincode"
-                        value={formData.pincode}
-                        onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        placeholder="380001"
-                        className={fieldErrors.pincode && touched.pincode ? 'border-destructive' : ''}
-                      />
-                      {fieldErrors.pincode && touched.pincode && <p className="text-xs text-destructive mt-1">{fieldErrors.pincode}</p>}
+                      {cityReadOnly && <p className="text-xs text-primary mt-1">✓ Pincode se city auto-detect hui</p>}
                     </div>
                   </div>
                 </div>
