@@ -65,12 +65,54 @@ const Checkout = () => {
     return '';
   };
 
+  const fetchCityFromPincode = useCallback(async (pincode: string) => {
+    if (!/^[0-9]{6}$/.test(pincode)) {
+      setCityReadOnly(false);
+      return;
+    }
+    setIsFetchingCity(true);
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data?.[0]?.Status === 'Success' && data[0].PostOffice?.length > 0) {
+        const district = data[0].PostOffice[0].District;
+        // Check if this city exists in our DB cities
+        const matchedCity = cities.find(
+          (c) => c.name.toLowerCase() === district.toLowerCase()
+        );
+        if (matchedCity) {
+          setFormData(prev => ({ ...prev, city: matchedCity.name }));
+          setCityReadOnly(true);
+          setFieldErrors(prev => ({ ...prev, city: '', pincode: '' }));
+        } else {
+          setFormData(prev => ({ ...prev, city: '' }));
+          setCityReadOnly(false);
+          toast.error(`Sorry, we don't deliver in ${district}. We currently deliver only in: ${cities.map(c => c.name).join(', ')}`);
+          setFieldErrors(prev => ({ ...prev, pincode: `We don't deliver in ${district}` }));
+        }
+      } else {
+        setCityReadOnly(false);
+        setFieldErrors(prev => ({ ...prev, pincode: 'Invalid pincode' }));
+      }
+    } catch {
+      setCityReadOnly(false);
+    } finally {
+      setIsFetchingCity(false);
+    }
+  }, [cities]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (touched[name]) {
       const error = validateField(name, value);
       setFieldErrors(prev => ({ ...prev, [name]: error }));
+    }
+    // Auto-fetch city when pincode is 6 digits
+    if (name === 'pincode' && /^[0-9]{6}$/.test(value)) {
+      fetchCityFromPincode(value);
+    } else if (name === 'pincode' && value.length < 6) {
+      setCityReadOnly(false);
     }
   };
 
