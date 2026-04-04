@@ -26,8 +26,10 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
   const { user, supabaseUser } = useAuth();
+  const { cities } = useDbCities();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isFetchingCity, setIsFetchingCity] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [pendingOrderData, setPendingOrderData] = useState<{
     address: string;
@@ -41,6 +43,7 @@ const Checkout = () => {
     city: '',
     pincode: '',
   });
+  const [cityReadOnly, setCityReadOnly] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
