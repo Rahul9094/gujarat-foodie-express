@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, CreditCard, Banknote, ArrowLeft, Check } from 'lucide-react';
+import { MapPin, CreditCard, Banknote, ArrowLeft, Check, Loader2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import QRPaymentModal from '@/components/checkout/QRPaymentModal';
+import { useDbCities } from '@/hooks/useProducts';
 
 // Validation schema for checkout form
 const checkoutSchema = z.object({
