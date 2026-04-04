@@ -322,7 +322,7 @@ const Checkout = () => {
                         className={`${fieldErrors.city && touched.city ? 'border-destructive' : ''} ${cityReadOnly ? 'bg-muted cursor-not-allowed' : ''}`}
                       />
                       {fieldErrors.city && touched.city && <p className="text-xs text-destructive mt-1">{fieldErrors.city}</p>}
-                      {cityReadOnly && <p className="text-xs text-green-600 mt-1">✓ Pincode se city auto-detect hui</p>}
+                      {cityReadOnly && <p className="text-xs text-primary mt-1">✓ Pincode se city auto-detect hui</p>}
                     </div>
                   </div>
                 </div>
