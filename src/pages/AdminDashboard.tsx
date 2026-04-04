@@ -53,7 +53,7 @@ import RestaurantManagement from '@/components/admin/RestaurantManagement';
 interface Order {
   id: string;
   user_email: string;
-  items: Array<{ name: string; price: number; quantity: number }>;
+  items: Array<{ name: string; price: number; quantity: number; restaurant_name?: string; city_name?: string }>;
   total: number;
   address: string;
   payment_method: string;
