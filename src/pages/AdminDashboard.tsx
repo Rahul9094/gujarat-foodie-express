@@ -53,7 +53,7 @@ import RestaurantManagement from '@/components/admin/RestaurantManagement';
 interface Order {
   id: string;
   user_email: string;
-  items: Array<{ name: string; price: number; quantity: number }>;
+  items: Array<{ name: string; price: number; quantity: number; restaurant_name?: string; city_name?: string }>;
   total: number;
   address: string;
   payment_method: string;
@@ -656,6 +656,15 @@ const AdminDashboard = () => {
                 <p className="text-muted-foreground text-sm mb-2">Delivery Address</p>
                 <p className="text-sm bg-secondary/50 p-3 rounded-lg">{selectedOrder.address}</p>
               </div>
+
+              {(selectedOrder.items as any[])[0]?.restaurant_name && (
+                <div>
+                  <p className="text-muted-foreground text-sm mb-2">Restaurant & City</p>
+                  <p className="text-sm bg-secondary/50 p-3 rounded-lg">
+                    🍽️ {(selectedOrder.items as any[])[0].restaurant_name} • 📍 {(selectedOrder.items as any[])[0].city_name}
+                  </p>
+                </div>
+              )}
 
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Items</p>

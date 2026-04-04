@@ -23,7 +23,7 @@ export interface Order {
   created_at: string;
   status: string;
   payment_status: string;
-  items: { name: string; quantity: number; price: number }[];
+  items: { name: string; quantity: number; price: number; restaurant_name?: string; city_name?: string }[];
   total: number;
   address: string;
   payment_method: string;
@@ -357,6 +357,11 @@ const Orders = () => {
                         <p className="text-xs text-muted-foreground mt-1">
                           Payment: {order.payment_method === 'online' ? 'Online Payment' : 'Cash on Delivery'}
                         </p>
+                        {order.items[0]?.restaurant_name && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            🍽️ {order.items[0].restaurant_name} • 📍 {order.items[0].city_name}
+                          </p>
+                        )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.color}`}>
@@ -528,6 +533,15 @@ const Orders = () => {
                   </div>
                 )}
               </div>
+
+              {selectedOrder.items[0]?.restaurant_name && (
+                <div className="border-t border-border pt-4">
+                  <h3 className="font-semibold text-foreground mb-2">Restaurant & City</h3>
+                  <p className="text-sm text-muted-foreground">
+                    🍽️ {selectedOrder.items[0].restaurant_name} • 📍 {selectedOrder.items[0].city_name}
+                  </p>
+                </div>
+              )}
 
               <div className="border-t border-border pt-4">
                 <h3 className="font-semibold text-foreground mb-2">Order Items</h3>

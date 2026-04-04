@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import QRPaymentModal from '@/components/checkout/QRPaymentModal';
-import { useDbCities } from '@/hooks/useProducts';
+import { useDbCities, useDbRestaurants } from '@/hooks/useProducts';
 
 // Validation schema for checkout form
 const checkoutSchema = z.object({
@@ -27,6 +27,7 @@ const Checkout = () => {
   const { cartItems, getTotalPrice, clearCart } = useCart();
   const { user, supabaseUser } = useAuth();
   const { cities } = useDbCities();
+  const { restaurants } = useDbRestaurants();
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isFetchingCity, setIsFetchingCity] = useState(false);
@@ -177,11 +178,17 @@ const Checkout = () => {
       const { error } = await supabase.from('orders').insert({
         user_id: supabaseUser.id,
         user_email: user.email,
-        items: cartItems.map(item => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        })),
+        items: cartItems.map(item => {
+          const restaurant = restaurants.find(r => r.id === item.restaurantId);
+          const city = restaurant ? cities.find(c => c.id === restaurant.city_id) : null;
+          return {
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            restaurant_name: restaurant?.name || 'Unknown',
+            city_name: city?.name || 'Unknown',
+          };
+        }),
         total: totalWithTax,
         address,
         payment_method: paymentMethodText,
