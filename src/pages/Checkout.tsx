@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, CreditCard, Banknote, ArrowLeft, Check, Loader2 } from 'lucide-react';
+import { MapPin, CreditCard, Banknote, ArrowLeft, Check, Loader2, Store } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -44,9 +45,25 @@ const Checkout = () => {
     city: '',
     pincode: '',
   });
+  const [selectedCityId, setSelectedCityId] = useState<string>('');
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string>('');
   const [cityReadOnly, setCityReadOnly] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  // Filter restaurants by selected city
+  const cityRestaurants = useMemo(() => {
+    if (!selectedCityId) return [];
+    return restaurants.filter((r: any) => r.city_id === selectedCityId);
+  }, [restaurants, selectedCityId]);
+
+  const selectedRestaurant = useMemo(() => {
+    return restaurants.find((r: any) => r.id === selectedRestaurantId) || null;
+  }, [restaurants, selectedRestaurantId]);
+
+  const selectedCity = useMemo(() => {
+    return cities.find(c => c.id === selectedCityId) || null;
+  }, [cities, selectedCityId]);
 
   const subtotal = getTotalPrice();
   const deliveryFee = 40;
@@ -54,7 +71,7 @@ const Checkout = () => {
   const taxAmount = Math.round(subtotal * taxRate);
   const totalWithTax = subtotal + deliveryFee + taxAmount;
 
-  const isFormValid = formData.name.trim() !== '' && formData.phone.trim() !== '' && formData.address.trim().length >= 5 && formData.city.trim().length >= 2;
+  const isFormValid = formData.name.trim() !== '' && formData.phone.trim() !== '' && formData.address.trim().length >= 5 && formData.city.trim().length >= 2 && selectedRestaurantId !== '';
 
   const validateField = (name: string, value: string) => {
     const partial = { ...formData, [name]: value };
@@ -69,6 +86,8 @@ const Checkout = () => {
   const fetchCityFromPincode = useCallback(async (pincode: string) => {
     if (!/^[0-9]{6}$/.test(pincode)) {
       setCityReadOnly(false);
+      setSelectedCityId('');
+      setSelectedRestaurantId('');
       return;
     }
     setIsFetchingCity(true);
@@ -77,22 +96,27 @@ const Checkout = () => {
       const data = await res.json();
       if (data?.[0]?.Status === 'Success' && data[0].PostOffice?.length > 0) {
         const district = data[0].PostOffice[0].District;
-        // Check if this city exists in our DB cities
         const matchedCity = cities.find(
           (c) => c.name.toLowerCase() === district.toLowerCase()
         );
         if (matchedCity) {
           setFormData(prev => ({ ...prev, city: matchedCity.name }));
           setCityReadOnly(true);
+          setSelectedCityId(matchedCity.id);
+          setSelectedRestaurantId(''); // Reset restaurant when city changes
           setFieldErrors(prev => ({ ...prev, city: '', pincode: '' }));
         } else {
           setFormData(prev => ({ ...prev, city: '' }));
           setCityReadOnly(false);
+          setSelectedCityId('');
+          setSelectedRestaurantId('');
           toast.error(`Sorry, we don't deliver in ${district}. We currently deliver only in: ${cities.map(c => c.name).join(', ')}`);
           setFieldErrors(prev => ({ ...prev, pincode: `We don't deliver in ${district}` }));
         }
       } else {
         setCityReadOnly(false);
+        setSelectedCityId('');
+        setSelectedRestaurantId('');
         setFieldErrors(prev => ({ ...prev, pincode: 'Invalid pincode' }));
       }
     } catch {
@@ -109,11 +133,12 @@ const Checkout = () => {
       const error = validateField(name, value);
       setFieldErrors(prev => ({ ...prev, [name]: error }));
     }
-    // Auto-fetch city when pincode is 6 digits
     if (name === 'pincode' && /^[0-9]{6}$/.test(value)) {
       fetchCityFromPincode(value);
     } else if (name === 'pincode' && value.length < 6) {
       setCityReadOnly(false);
+      setSelectedCityId('');
+      setSelectedRestaurantId('');
     }
   };
 
@@ -127,10 +152,8 @@ const Checkout = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Mark all fields as touched
     setTouched({ name: true, phone: true, address: true, city: true, pincode: true });
     
-    // Validate form data using Zod schema
     const validationResult = checkoutSchema.safeParse(formData);
     
     if (!validationResult.success) {
@@ -143,6 +166,12 @@ const Checkout = () => {
       toast.error('Please fill all required fields correctly');
       return;
     }
+
+    if (!selectedRestaurantId) {
+      toast.error('Please select a restaurant for pickup');
+      return;
+    }
+
     setFieldErrors({});
 
     if (!supabaseUser?.id || !user?.email) {
@@ -151,11 +180,9 @@ const Checkout = () => {
       return;
     }
 
-    // Use validated data
     const validatedData = validationResult.data;
     const fullAddress = `${validatedData.address}, ${validatedData.city}${validatedData.pincode ? `, ${validatedData.pincode}` : ''}, Gujarat, India`;
 
-    // If online payment, show QR modal
     if (paymentMethod === 'online') {
       setPendingOrderData({
         address: fullAddress,
@@ -165,7 +192,6 @@ const Checkout = () => {
       return;
     }
 
-    // For COD, proceed directly
     await placeOrder(fullAddress, 'Cash on Delivery');
   };
 
@@ -174,21 +200,20 @@ const Checkout = () => {
     
     setIsProcessing(true);
 
+    const orderRestaurantName = selectedRestaurant?.name || 'Unknown';
+    const orderCityName = selectedCity?.name || 'Unknown';
+
     try {
       const { error } = await supabase.from('orders').insert({
         user_id: supabaseUser.id,
         user_email: user.email,
-        items: cartItems.map(item => {
-          const restaurant = restaurants.find(r => r.id === item.restaurantId);
-          const city = restaurant ? cities.find(c => c.id === restaurant.city_id) : null;
-          return {
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            restaurant_name: restaurant?.name || 'Unknown',
-            city_name: city?.name || 'Unknown',
-          };
-        }),
+        items: cartItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          restaurant_name: orderRestaurantName,
+          city_name: orderCityName,
+        })),
         total: totalWithTax,
         address,
         payment_method: paymentMethodText,
@@ -334,6 +359,51 @@ const Checkout = () => {
                   </div>
                 </div>
 
+                {/* Restaurant Selection */}
+                <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+                    <Store className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+                    Pickup Restaurant *
+                  </h2>
+
+                  {!selectedCityId ? (
+                    <p className="text-sm text-muted-foreground">
+                      Pehle pincode daalo taki aapki city ke restaurants dikhaye ja sake.
+                    </p>
+                  ) : cityRestaurants.length === 0 ? (
+                    <p className="text-sm text-destructive">
+                      Is city mein koi restaurant available nahi hai.
+                    </p>
+                  ) : (
+                    <div>
+                      <Select value={selectedRestaurantId} onValueChange={setSelectedRestaurantId}>
+                        <SelectTrigger className={!selectedRestaurantId && touched.restaurant ? 'border-destructive' : ''}>
+                          <SelectValue placeholder="Restaurant select karo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cityRestaurants.map((r: any) => (
+                            <SelectItem key={r.id} value={r.id}>
+                              <div className="flex items-center gap-2">
+                                <span>{r.name}</span>
+                                {r.is_veg && <span className="text-xs text-green-600">🟢 Veg</span>}
+                                {r.rating > 0 && <span className="text-xs text-muted-foreground">⭐ {r.rating}</span>}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedRestaurant && (
+                        <div className="mt-2 p-2 bg-primary/5 rounded-lg text-sm">
+                          <p className="font-medium text-foreground">🍽️ {selectedRestaurant.name}</p>
+                          <p className="text-muted-foreground text-xs">
+                            📍 {selectedCity?.name} • {selectedRestaurant.delivery_time || '30-45 min'} • {selectedRestaurant.cuisine || 'Multi-cuisine'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 {/* Payment Method */}
                 <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card">
                   <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
@@ -396,6 +466,12 @@ const Checkout = () => {
                   <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
                     Order Summary
                   </h2>
+
+                  {selectedRestaurant && selectedCity && (
+                    <div className="mb-3 p-2 bg-accent/50 rounded-lg text-xs text-muted-foreground">
+                      🍽️ {selectedRestaurant.name} • 📍 {selectedCity.name}
+                    </div>
+                  )}
 
                   <div className="space-y-3 mb-4">
                     {cartItems.map(item => (
