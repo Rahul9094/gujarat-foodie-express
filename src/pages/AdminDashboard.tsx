@@ -440,7 +440,15 @@ const AdminDashboard = () => {
                             </Badge>
                           </div>
                           <div className="flex items-center gap-2 mt-1">
+                            <Badge className={order.payment_method === 'cash_on_delivery' || order.payment_method === 'Cash on Delivery' 
+                              ? 'bg-orange-500/20 text-orange-600' 
+                              : 'bg-emerald-500/20 text-emerald-600'}>
+                              {order.payment_method === 'cash_on_delivery' || order.payment_method === 'Cash on Delivery' 
+                                ? <><Banknote className="w-3 h-3 mr-1" /> COD</> 
+                                : <><CreditCard className="w-3 h-3 mr-1" /> Online</>}
+                            </Badge>
                             <Badge className={paymentStatusConfig[order.payment_status]?.color || paymentStatusConfig.pending.color}>
+                              <IndianRupee className="w-3 h-3 mr-1" />
                               {paymentStatusConfig[order.payment_status]?.label || 'Payment Pending'}
                             </Badge>
                           </div>
