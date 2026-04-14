@@ -525,7 +525,7 @@ const AdminDashboard = () => {
                       </div>
                       <div className="mt-3 pt-3 border-t border-border flex justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {(order.items as any[]).length} items • {order.payment_method}
+                          {(order.items as any[]).length} items • Payment: {order.payment_method === 'cash_on_delivery' || order.payment_method === 'Cash on Delivery' ? 'Cash on Delivery' : 'Online Payment'}
                         </span>
                         <span className="font-semibold text-primary">₹{order.total}</span>
                       </div>
