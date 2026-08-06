@@ -1,0 +1,203 @@
+<svg width="1054" height="1492" viewBox="0 0 1054 1492" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&amp;family=Playfair+Display:ital,wght@1,700&amp;display=swap');
+      .text-red { fill: #E31E24; }
+      .text-navy { fill: #002147; }
+      .text-white { fill: #FFFFFF; }
+      .font-sans { font-family: 'Montserrat', Arial, sans-serif; }
+      .font-serif { font-family: 'Playfair Display', 'Times New Roman', serif; }
+      .bold { font-weight: 700; }
+      .heavy { font-weight: 800; }
+      .italic { font-style: italic; }
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1054" height="1492" fill="#F8F9FA"/>
+  
+  <!-- Subtle Header Pattern/Gradient -->
+  <path d="M0 0 H1054 V300 Q527 400 0 300 Z" fill="#FFFFFF" opacity="0.8"/>
+  
+  <!-- Company Branding (Top Left) -->
+  <image x="40" y="40" width="410" height="110" xlink:href="data:image/png;base64,REPLACE_LOGO"/>
+  <text x="180" y="180" class="font-sans text-red bold" font-size="22">Strong Bags. <tspan class="text-navy">Stronger Future.</tspan></text>
+
+  <!-- "You're Invited!" (Top Right) -->
+  <text x="600" y="100" class="font-serif text-red italic" font-size="48">You're</text>
+  <text x="660" y="180" class="font-sans text-navy heavy" font-size="90" letter-spacing="-2">INVITED!</text>
+  <line x1="720" y1="200" x2="980" y2="200" stroke="#E31E24" stroke-width="3"/>
+  <circle cx="850" cy="200" r="4" fill="#E31E24"/>
+
+  <!-- Left Content Area -->
+  <text x="70" y="270" class="font-sans text-navy bold" font-size="28">JOIN US AT</text>
+  <line x1="70" y1="285" x2="220" y2="285" stroke="#E31E24" stroke-width="2"/>
+
+  <text x="70" y="370" class="font-sans text-navy heavy" font-size="78">PACK EXPO</text>
+  <text x="70" y="460" class="font-sans text-navy heavy" font-size="78">INTERNATIONAL</text>
+
+  <!-- Chicago 2026 Capsule -->
+  <rect x="70" y="490" width="400" height="70" rx="35" fill="#002147"/>
+  <line x1="90" y1="525" x2="140" y2="525" stroke="#E31E24" stroke-width="3"/>
+  <text x="155" y="540" class="font-sans text-white bold" font-size="36" letter-spacing="4">CHICAGO 2026</text>
+  <line x1="400" y1="525" x2="450" y2="525" stroke="#E31E24" stroke-width="3"/>
+
+  <!-- Invitation Body Text -->
+  <g transform="translate(70, 640)">
+    <text class="font-sans text-navy" font-size="24" line-height="1.4">
+      <tspan x="0" dy="0">We cordially invite you to visit us at</tspan>
+      <tspan x="0" dy="40" class="text-red bold">PACK EXPO INTERNATIONAL 2026</tspan>
+      <tspan x="0" dy="40">and explore our wide range of</tspan>
+      <tspan x="0" dy="40">high-quality PP woven packaging</tspan>
+      <tspan x="0" dy="40">solutions for every industry.</tspan>
+    </text>
+  </g>
+
+  <!-- Visit Us Banner -->
+  <path d="M0 830 H480 L520 880 L480 980 H0 Z" fill="#E31E24"/>
+  <path d="M0 830 H380 L420 880 L380 980 H0 Z" fill="#002147"/>
+  <text x="50" y="870" class="font-sans text-white bold" font-size="28">VISIT US AT</text>
+  
+  <g transform="translate(0, 900)">
+    <line x1="220" y1="20" x2="220" y2="60" stroke="#FFFFFF" stroke-width="1"/>
+    <text x="90" y="20" class="font-sans text-white" font-size="22" text-anchor="middle">HALL NO.</text>
+    <text x="90" y="70" class="font-sans text-white bold" font-size="48" text-anchor="middle">S-4004</text>
+    
+    <text x="350" y="20" class="font-sans text-white" font-size="22" text-anchor="middle">BOOTH NO.</text>
+    <text x="350" y="70" class="font-sans text-white bold" font-size="48" text-anchor="middle">B-126</text>
+  </g>
+
+  <!-- Right Side Decorative Area -->
+  <g filter="url(#shadow)">
+    <!-- Main Frame -->
+    <path d="M520 230 H1000 Q1054 230 1054 280 V800 Q1054 850 1000 850 H520 Z" fill="#FFFFFF" stroke="#DEE2E6" stroke-width="1"/>
+    
+    <!-- Blue accent top left -->
+    <path d="M520 230 H700 L680 450 L520 400 Z" fill="#E1F0FF"/>
+    
+    <image x="550" y="250" width="130" height="130" xlink:href="data:image/png;base64,REPLACE_PACK_EXPO"/>
+    <g transform="translate(690, 280)">
+      <text class="font-sans text-navy bold" font-size="24">PACK EXPO</text>
+      <text x="0" y="30" class="font-sans text-navy bold" font-size="24">INTERNATIONAL</text>
+      <text x="0" y="60" class="font-sans text-red bold" font-size="24">CHICAGO 2026</text>
+    </g>
+    
+    <!-- Skyline Image -->
+    <image x="720" y="380" width="334" height="420" xlink:href="data:image/png;base64,REPLACE_SKYLINE" preserveAspectRatio="xMidYMax slice"/>
+    
+    <!-- Details with Icons -->
+    <g transform="translate(560, 430)">
+      <circle cx="20" cy="20" r="20" fill="#E31E24" opacity="0.1"/>
+      <path d="M10 20 H30 M20 10 V30" stroke="#E31E24" stroke-width="2"/> <!-- Mock Icon -->
+      <text x="50" y="25" class="font-sans text-navy" font-size="20">November 1-4, 2026</text>
+      
+      <g transform="translate(0, 70)">
+        <circle cx="20" cy="20" r="20" fill="#E31E24" opacity="0.1"/>
+        <path d="M20 10 Q25 10 25 20 Q25 30 20 35 Q15 30 15 20 Q15 10 20 10" stroke="#E31E24" stroke-width="2" fill="none"/> <!-- Mock Pin -->
+        <text x="50" y="15" class="font-sans text-navy" font-size="20">McCormick Place</text>
+        <text x="50" y="40" class="font-sans text-navy" font-size="18">Chicago, IL, USA</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Product Showcase -->
+  <g transform="translate(520, 700)">
+    <image x="0" y="0" width="220" height="300" xlink:href="data:image/png;base64,REPLACE_JUMBO"/>
+    <image x="250" y="150" width="120" height="180" xlink:href="data:image/png;base64,REPLACE_BAG_CEMENT"/>
+    <image x="380" y="150" width="120" height="180" xlink:href="data:image/png;base64,REPLACE_BAG_SUGAR"/>
+    <image x="510" y="150" width="120" height="180" xlink:href="data:image/png;base64,REPLACE_BAG_FERT"/>
+    <image x="620" y="160" width="200" height="160" xlink:href="data:image/png;base64,REPLACE_ROLLS"/>
+    
+    <!-- Feature Icons row -->
+    <g transform="translate(-450, 320)">
+      <!-- Mocking the icons as simple vectors for now, since they are standard -->
+      <g transform="translate(50, 0)" text-anchor="middle">
+        <circle cx="0" cy="0" r="30" fill="none" stroke="#E31E24" stroke-width="1"/>
+        <text y="50" class="font-sans text-navy bold" font-size="14">PREMIUM QUALITY</text>
+      </g>
+      <g transform="translate(180, 0)" text-anchor="middle">
+        <circle cx="0" cy="0" r="30" fill="none" stroke="#E31E24" stroke-width="1"/>
+        <text y="50" class="font-sans text-navy bold" font-size="14">GLOBAL PRESENCE</text>
+      </g>
+      <g transform="translate(310, 0)" text-anchor="middle">
+        <circle cx="0" cy="0" r="30" fill="none" stroke="#E31E24" stroke-width="1"/>
+        <text y="50" class="font-sans text-navy bold" font-size="14">ADVANCED MFG</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Solutions Bar -->
+  <g transform="translate(0, 1150)">
+    <rect width="1054" height="40" fill="#002147"/>
+    <text x="527" y="28" class="font-sans text-white bold" font-size="20" text-anchor="middle">OUR PACKAGING SOLUTIONS</text>
+    
+    <g transform="translate(50, 60)">
+        <!-- Thumbnails row -->
+        <g transform="translate(50, 0)" text-anchor="middle">
+            <rect x="-40" y="0" width="80" height="100" fill="#F0F0F0"/>
+            <text y="120" font-size="12" class="font-sans bold text-navy">FIBC / JUMBO BAGS</text>
+        </g>
+        <g transform="translate(200, 0)" text-anchor="middle">
+            <rect x="-40" y="0" width="80" height="100" fill="#F0F0F0"/>
+            <text y="120" font-size="12" class="font-sans bold text-navy">CEMENT BAGS</text>
+        </g>
+        <g transform="translate(350, 0)" text-anchor="middle">
+            <rect x="-40" y="0" width="80" height="100" fill="#F0F0F0"/>
+            <text y="120" font-size="12" class="font-sans bold text-navy">SUGAR BAGS</text>
+        </g>
+        <g transform="translate(500, 0)" text-anchor="middle">
+            <rect x="-40" y="0" width="80" height="100" fill="#F0F0F0"/>
+            <text y="120" font-size="12" class="font-sans bold text-navy">FERTILIZER BAGS</text>
+        </g>
+        <g transform="translate(650, 0)" text-anchor="middle">
+            <rect x="-40" y="0" width="80" height="100" fill="#F0F0F0"/>
+            <text y="120" font-size="12" class="font-sans bold text-navy">PP WOVEN FABRICS</text>
+        </g>
+        <g transform="translate(800, 0)" text-anchor="middle">
+            <rect x="-40" y="0" width="80" height="100" fill="#F0F0F0"/>
+            <text y="120" font-size="12" class="font-sans bold text-navy">TARPAULIN</text>
+        </g>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <g transform="translate(0, 1380)">
+    <rect width="1054" height="112" fill="#002147"/>
+    <rect width="250" height="112" x="804" fill="#E31E24"/>
+    
+    <!-- Contact Info -->
+    <g transform="translate(40, 40)">
+        <circle cx="20" cy="20" r="20" fill="#E31E24"/>
+        <text x="50" y="15" class="font-sans text-white" font-size="14">CALL US</text>
+        <text x="50" y="35" class="font-sans text-white bold" font-size="18">+91 98250 65130</text>
+    </g>
+    <g transform="translate(300, 40)">
+        <circle cx="20" cy="20" r="20" fill="#E31E24"/>
+        <text x="50" y="15" class="font-sans text-white" font-size="14">EMAIL US</text>
+        <text x="50" y="35" class="font-sans text-white bold" font-size="18">ashish.patel@jaylaxmipolyplast.in</text>
+    </g>
+    <g transform="translate(600, 40)">
+        <circle cx="20" cy="20" r="20" fill="#E31E24"/>
+        <text x="50" y="15" class="font-sans text-white" font-size="14">VISIT OUR WEBSITE</text>
+        <text x="50" y="35" class="font-sans text-white bold" font-size="18">www.jaylaxmipolyplast.in</text>
+    </g>
+    
+    <g transform="translate(820, 20)">
+        <image x="0" y="0" width="70" height="70" xlink:href="data:image/png;base64,REPLACE_QR"/>
+        <text x="80" y="30" class="font-sans text-white bold" font-size="16">SCAN TO</text>
+        <text x="80" y="55" class="font-sans text-white bold" font-size="16">CONNECT</text>
+    </g>
+  </g>
+
+</svg>
