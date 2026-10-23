@@ -1,4 +1,6 @@
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { corsHeaders, createClient } from 'npm:@supabase/supabase-js@2';
+
+export { corsHeaders };
 
 export function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -41,12 +43,31 @@ export async function verifyHmacSha256Hex(
 
 /**
  * Supabase client with service-role privileges (bypasses RLS) for edge functions.
- * The JWT comes from the request and is validated separately with the anon client.
  */
 export function createServiceClient() {
-  const { createClient } = require('npm:@supabase/supabase-js@2');
   return createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   );
+}
+
+/**
+ * Validate the caller's Supabase JWT and return the user id, or null when invalid.
+ */
+export async function getAuthUserId(req: Request): Promise<string | null> {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  const token = authHeader.slice('Bearer '.length).trim();
+  if (!token) return null;
+  try {
+    const anon = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!
+    );
+    const { data, error } = await anon.auth.getUser(token);
+    if (error || !data.user) return null;
+    return data.user.id;
+  } catch {
+    return null;
+  }
 }
