@@ -1,0 +1,3 @@
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS razorpay_order_id text;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS razorpay_payment_id text;
+CREATE INDEX IF NOT EXISTS orders_razorpay_order_id_idx ON public.orders (razorpay_order_id);
